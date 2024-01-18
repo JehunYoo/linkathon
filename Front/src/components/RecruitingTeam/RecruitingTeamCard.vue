@@ -70,6 +70,7 @@ const props = defineProps({
   font-style: normal;
   font-weight: 600;
   line-height: 28px;
+  transition: background-color 0.3s ease;
 }
 
 .recruiting-button:hover {

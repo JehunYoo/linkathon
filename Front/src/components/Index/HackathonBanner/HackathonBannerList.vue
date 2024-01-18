@@ -110,6 +110,7 @@ dummy.push(
 }
 
 .list-button {
+  transition: background-color 0.3s ease;
   color: #7D3CFF;
   width: 89px;
   height: 31px;
