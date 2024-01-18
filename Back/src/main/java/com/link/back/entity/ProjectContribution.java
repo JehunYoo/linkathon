@@ -27,7 +27,7 @@ public class ProjectContribution {
 	private String author;
 
 	@Column(nullable = false)
-	private Integer row; // 총 입력 줄 수
+	private Integer totalRows; // 총 입력 줄 수
 
 	@Column(nullable = false)
 	private Double ratioInComments; // 리뷰 작성 비율
@@ -42,9 +42,9 @@ public class ProjectContribution {
 	private Integer deletions;
 
 	@Column(nullable = false)
-	private Double rationInChanges; // 변화 비율
+	private Double ratioInChanges; // 변화 비율
 
 	@ManyToOne
 	@JoinColumn(name = "project_id")
-	private  Project project;
+	private Project project;
 }
