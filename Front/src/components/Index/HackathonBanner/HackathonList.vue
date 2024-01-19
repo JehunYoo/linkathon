@@ -60,7 +60,9 @@ dummy.push(
           {{ title }}
         </div>
       </div>
-      <img :src="data.imgSrc">
+      <div class="img-container">
+        <img :src="data.imgSrc">
+      </div>
       <div class="title-container">
         <div class="title">
           {{ data.subject }}
@@ -76,6 +78,9 @@ dummy.push(
 </template>
 
 <style scoped>
+img:hover {
+  transform: scale(1.2);
+}
 .title {
   flex: 1;
   width: 100%;
@@ -128,11 +133,19 @@ dummy.push(
 }
 
 img {
+  transition: transform 0.2s ease;
   width: 100%;
   height: 200px;
   object-fit: cover;
   filter: brightness(0.6);
+
+}
+
+.img-container {
+  width: 100%;
+  height: 200px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .hackathon-banner-list {
@@ -148,12 +161,11 @@ img {
   flex: 1;
   min-width: 315px;
   height: max-content;
-
   overflow: hidden;
 }
 
 .list-title {
-  color: #DEDEDE;
+  color: #F0F0F0;
   font-size: 20px;
   font-style: normal;
   font-weight: 800;
