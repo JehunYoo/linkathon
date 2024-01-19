@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HackathonBannerList from "@/components/Index/HackathonBanner/HackathonBannerList.vue";
+import HackathonBannerList from "@/components/Index/HackathonBanner/HackathonList.vue";
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 </script>
 
