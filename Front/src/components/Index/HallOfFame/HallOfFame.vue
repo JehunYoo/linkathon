@@ -1,0 +1,39 @@
+<script setup lang="ts">
+
+import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
+import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
+
+import {Builder} from "builder-pattern";
+
+const tempDummy: ProjectInfo = Builder<ProjectInfo>()
+    .projectName("프로젝트 주제")
+    .projectContent("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
+    .star(10)
+    .projectId(1)
+    .myStar(true)
+    .imgSrc("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
+    .build();
+const dummy: ProjectInfo[] = [];
+dummy.push(tempDummy);
+dummy.push(tempDummy);
+dummy.push(tempDummy);
+dummy.push(tempDummy);
+
+</script>
+
+<template>
+  <IndexSubMenu title="명예의 전당" style="margin-top: 48px"/>
+  <div class="fame-container">
+    <ProjectCard :data-list="dummy"/>
+  </div>
+</template>
+
+<style scoped>
+.fame-container {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 20px;
+}
+</style>
