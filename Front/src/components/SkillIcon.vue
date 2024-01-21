@@ -6,21 +6,25 @@ const props = defineProps({
   width: String,
   height: String,
   radius: String,
-  fontSize:String,
+  fontSize: String,
 });
 </script>
 
 <template>
-  <div class="hover-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }">
+  <div class="normal-container hover-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
+       v-if="props.skill?.year">
     <div class="year-text" v-if="props.skill?.year">
       {{ props.skill?.year + "Y" }}
     </div>
-    <img :src="props.skill?.imgSrc" :style="{ width: width, height: height,borderRadius: radius }">
+    <img :src="props.skill?.imgSrc" :style="{ width: width, height: height,borderRadius: radius }" alt="">
+  </div>
+  <div class="normal-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }" v-else>
+    <img :src="props.skill?.imgSrc" :style="{ width: width, height: height,borderRadius: radius }" alt="">
   </div>
 </template>
 
 <style scoped>
-.hover-container {
+.normal-container {
   position: relative;
 }
 
@@ -30,7 +34,7 @@ img {
   z-index: 1;
   width: 100%;
   height: 100%;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  border: 0.5px solid #606060;
 }
 
 .hover-container:hover img {
