@@ -84,6 +84,7 @@ public class TeamBuildingSuggestionService {
 		// todo: notification!!!
 	}
 
+	@Transactional(readOnly = true)
 	public CandidatesResponseDto getSuggestionListOfTeam(Long teamId) {
 		Team team = teamRepository.findById(teamId)
 			.orElseThrow(RuntimeException::new); // todo: create exception
@@ -93,6 +94,7 @@ public class TeamBuildingSuggestionService {
 		return new CandidatesResponseDto(candidates);
 	}
 
+	@Transactional(readOnly = true)
 	public MembersResponseDto getSuggestionListOfUser(Long teamId, Long userId) {
 		Team team = teamRepository.findById(teamId)
 			.orElseThrow(RuntimeException::new);// todo: create exception
