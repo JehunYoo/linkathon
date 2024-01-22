@@ -6,11 +6,15 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +31,14 @@ public class Schedule {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	private LocalDate availableTime;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ScheduleTime availableTime;
 
+	@Builder
+	public Schedule(Long scheduleId, User user, ScheduleTime availableTime) {
+		this.scheduleId = scheduleId;
+		this.user = user;
+		this.availableTime = availableTime;
+	}
 }

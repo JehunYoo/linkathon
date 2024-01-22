@@ -14,6 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -69,4 +70,27 @@ public class User {
 	@Column(nullable = false)
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
+
+	@Builder
+	public User(Long userId, String email, String password, String phoneNumber, String name, boolean gender,
+		LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
+		String referenceUrl,
+		String deployUrl, String introduce, Field field, boolean joinState) {
+		this.userId = userId;
+		this.email = email;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+		this.name = name;
+		this.gender = gender;
+		this.birth = birth;
+		this.rating = rating;
+		this.registered = registered;
+		this.registeredDate = registeredDate;
+		this.career = career;
+		this.referenceUrl = referenceUrl;
+		this.deployUrl = deployUrl;
+		this.introduce = introduce;
+		this.field = field;
+		this.joinState = joinState;
+	}
 }
