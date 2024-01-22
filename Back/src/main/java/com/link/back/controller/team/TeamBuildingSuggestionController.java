@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.link.back.annotation.Login;
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MembersResponseDto;
+import com.link.back.dto.response.TeamIdsResponseDto;
 import com.link.back.service.TeamBuildingSuggestionService;
 
 import jakarta.validation.constraints.Positive;
@@ -59,7 +60,14 @@ public class TeamBuildingSuggestionController {
 
 	@GetMapping("/{teamId}/suggested")
 	@ResponseStatus(OK)
-	public MembersResponseDto getSuggestionListOfUser(@PathVariable @Positive Long teamId, @Login @Positive Long userId) { // todo: create dto
+	public MembersResponseDto getSuggestionListOfUser(@PathVariable @Positive Long teamId,
+		@Login @Positive Long userId) { // todo: create dto
 		return teamBuildingSuggestionService.getSuggestionListOfUser(teamId, userId);
+	}
+
+	@GetMapping("/suggested")
+	@ResponseStatus(OK)
+	public TeamIdsResponseDto getSuggestionListOfUser(@Login @Positive Long userId) {
+		return teamBuildingSuggestionService.getSuggestionListOfUser(userId);
 	}
 }

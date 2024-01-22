@@ -26,6 +26,11 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long>, UserT
 		+ "where userTeam.team = :team")
 	List<UserTeam> findMembers(@Param("team") Team team);
 
+	@Query("select userTeam from UserTeam userTeam join fetch userTeam.team "
+		+ "where userTeam.user = :user and userTeam.memberStatus = :memberStatus")
+	List<UserTeam> findTeamsOfCandidate(@Param("user") User user, @Param("memberStatus") MemberStatus memberStatus);
+
+
 	List<UserTeam> findUserTeamsByTeamAndMemberStatus(Team team, MemberStatus memberStatus);
 
 	void deleteUserTeamByTeamAndUser(Team team, User user);

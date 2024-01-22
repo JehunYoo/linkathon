@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MembersResponseDto;
+import com.link.back.dto.response.TeamIdsResponseDto;
 import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
@@ -102,5 +103,15 @@ public class TeamBuildingSuggestionService {
 		List<UserTeam> members = userTeamRepository.findMembers(team);
 
 		return new MembersResponseDto(members);
+	}
+
+	@Transactional(readOnly = true)
+	public TeamIdsResponseDto getSuggestionListOfUser(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(RuntimeException::new); // todo: create exception
+
+		List<UserTeam> suggestedTeams = userTeamRepository.findTeamsOfCandidate(user, SUGGESTED);
+
+		return new TeamIdsResponseDto(suggestedTeams);
 	}
 }
