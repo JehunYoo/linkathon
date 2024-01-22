@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const props = defineProps({
-  rating: Number,
+  rating: {
+    type: Number,
+    default: 0
+  },
   width: String,
   height: String,
   fontSize: String,
