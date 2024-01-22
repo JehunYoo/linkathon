@@ -8,7 +8,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.link.back.dto.response.SuggestedCandidatesResponseDto;
+import com.link.back.dto.response.CandidatesResponseDto;
+import com.link.back.dto.response.MembersResponseDto;
 import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
@@ -83,18 +84,21 @@ public class TeamBuildingSuggestionService {
 		// todo: notification!!!
 	}
 
-	public SuggestedCandidatesResponseDto getSuggestionListOfTeam(Long teamId) {
+	public CandidatesResponseDto getSuggestionListOfTeam(Long teamId) {
 		Team team = teamRepository.findById(teamId)
 			.orElseThrow(RuntimeException::new); // todo: create exception
 
-		List<UserTeam> candidates = userTeamRepository.findSuggestedCandidates(team, SUGGESTED);
+		List<UserTeam> candidates = userTeamRepository.findCandidates(team, SUGGESTED);
 
-		return new SuggestedCandidatesResponseDto(candidates);
+		return new CandidatesResponseDto(candidates);
 	}
 
-	public void getSuggestionListOfUser(Long userId) {
-		User user = userRepository.findById(userId)
-			.orElseThrow(RuntimeException::new); // todo: create exception
-	}
+	public MembersResponseDto getSuggestionListOfUser(Long teamId, Long userId) {
+		Team team = teamRepository.findById(teamId)
+			.orElseThrow(RuntimeException::new);// todo: create exception
 
+		List<UserTeam> members = userTeamRepository.findMembers(team);
+
+		return new MembersResponseDto(members);
+	}
 }

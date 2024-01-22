@@ -19,7 +19,12 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long>, UserT
 	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
 		+ "join fetch UserSkill userSkill join fetch Skill skill "
 		+ "where userTeam.team = :team and userTeam.memberStatus = :memberStatus")
-	List<UserTeam> findSuggestedCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
+	List<UserTeam> findCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
+
+	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
+		+ "join fetch UserSkill userSkill join fetch Skill skill "
+		+ "where userTeam.team = :team")
+	List<UserTeam> findMembers(@Param("team") Team team);
 
 	List<UserTeam> findUserTeamsByTeamAndMemberStatus(Team team, MemberStatus memberStatus);
 

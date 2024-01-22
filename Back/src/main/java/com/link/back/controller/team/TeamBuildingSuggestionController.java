@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.link.back.annotation.Login;
-import com.link.back.dto.response.SuggestedCandidatesResponseDto;
+import com.link.back.dto.response.CandidatesResponseDto;
+import com.link.back.dto.response.MembersResponseDto;
 import com.link.back.service.TeamBuildingSuggestionService;
 
 import jakarta.validation.constraints.Positive;
@@ -50,15 +51,15 @@ public class TeamBuildingSuggestionController {
 		teamBuildingSuggestionService.refuseSuggestion(teamId, userId);
 	}
 
-	@GetMapping("/{teamId}/suggest")
+	@GetMapping("/{teamId}/suggesting")
 	@ResponseStatus(OK)
-	public SuggestedCandidatesResponseDto getSuggestionListOfTeam(@PathVariable @Positive Long teamId) { // todo: create dto
+	public CandidatesResponseDto getSuggestionListOfTeam(@PathVariable @Positive Long teamId) { // todo: create dto
 		return teamBuildingSuggestionService.getSuggestionListOfTeam(teamId);
 	}
 
-	@GetMapping("/suggest")
+	@GetMapping("/{teamId}/suggested")
 	@ResponseStatus(OK)
-	public void getSuggestionListOfUser(@Login @Positive Long userId) { // todo: create dto
-		teamBuildingSuggestionService.getSuggestionListOfUser(userId);
+	public MembersResponseDto getSuggestionListOfUser(@PathVariable @Positive Long teamId, @Login @Positive Long userId) { // todo: create dto
+		return teamBuildingSuggestionService.getSuggestionListOfUser(teamId, userId);
 	}
 }
