@@ -24,7 +24,6 @@ public class UserImage {
 	private Long profileId;
 
 	@OneToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Column(length = USER_IMAGE_NAME_LENGTH, nullable = false)
@@ -34,5 +33,5 @@ public class UserImage {
 	private String userImageUrl;
 
 	@Column(length = USER_ORIGIN_IMAGE_NAME_LENGTH, nullable = false)
-	private String originImageName;
+	private String userOriginImageName;
 }

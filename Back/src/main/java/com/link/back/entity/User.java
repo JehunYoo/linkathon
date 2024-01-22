@@ -2,10 +2,13 @@ package com.link.back.entity;
 
 import static com.link.back.config.AppConstant.*;
 import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -14,6 +17,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,6 +31,10 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long userId;
+
+	@OneToOne(fetch = LAZY)
+	@JoinColumn(name = "user_image_id")
+	private UserImage userImage;
 
 	@Column(nullable = false)
 	private String email;
@@ -69,4 +79,8 @@ public class User {
 	@Column(nullable = false)
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
+
+	@OneToMany(mappedBy = "user")
+	// @BatchSize(size = 100) // todo: AppConstant.USER_USER_SKILLS_BATCH_SIZE
+	List<UserSkill> userSkills = new ArrayList<>();
 }
