@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
 public class ScheduleController {
-	private ScheduleService scheduleService;
+	private final ScheduleService scheduleService;
 
 	@GetMapping
 	public ResponseEntity<ScheduleResponse> getMySchedule() {

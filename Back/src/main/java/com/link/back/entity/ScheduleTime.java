@@ -1,6 +1,5 @@
 package com.link.back.entity;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public enum ScheduleTime {
