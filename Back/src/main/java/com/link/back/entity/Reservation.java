@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,27 @@ public class Reservation {
 	@JoinColumn(name = "member_id", nullable = false)
 	private User member;
 
+	@Builder
+	public Reservation(Long reservationId, LocalDateTime reservationDatetime, User leader, User member) {
+		this.reservationId = reservationId;
+		this.reservationDatetime = reservationDatetime;
+		this.leader = leader;
+		this.member = member;
+	}
+
+	public void update(LocalDateTime reservationDatetime) {
+		this.reservationDatetime = reservationDatetime;
+	}
+
+	public Boolean isLeader(Long userId) {
+		return leader.getUserId().equals(userId);
+	}
+
+	public Boolean isMember(Long userId) {
+		return member.getUserId().equals(userId);
+	}
+
+	public Boolean isMyReservation(Long userId) {
+		return isMember(userId) || isLeader(userId);
+	}
 }
