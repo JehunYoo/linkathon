@@ -1,4 +1,4 @@
-interface ProjectInfo {
+interface ProjectInfoDTO {
     projectId: number,
     projectName: string,
     projectDesc: string,

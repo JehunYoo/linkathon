@@ -2,7 +2,7 @@
 import {PropType} from "vue";
 
 const props = defineProps({
-  skill: Object as PropType<Skill>,
+  skill: Object as PropType<SkillDTO>,
   width: String,
   height: String,
   radius: String,

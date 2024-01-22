@@ -4,7 +4,7 @@ import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import {Builder} from "builder-pattern";
 import Tier from "@/components/Tier.vue";
 
-const dummy = Builder<RankingUser>()
+const dummy = Builder<RankingUserDTO>()
     .userId(1)
     .userImgUrl("https://s3.orbi.kr/data/file/united2/9ae8215065324b138e2706aa3ca712fd.jpeg")
     .rating(290)
@@ -13,7 +13,7 @@ const dummy = Builder<RankingUser>()
     .introduce("안녕하세요")
     .build()
 
-const dummyList: RankingUser[] = [];
+const dummyList: RankingUserDTO[] = [];
 dummyList.push(dummy);
 dummyList.push(dummy);
 dummyList.push(dummy);

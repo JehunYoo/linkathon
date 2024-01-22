@@ -5,7 +5,7 @@ import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 
 import {Builder} from "builder-pattern";
 
-const tempDummy: ProjectInfo = Builder<ProjectInfo>()
+const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
     .projectName("프로젝트 주제")
     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
     .starCount(10)
@@ -13,7 +13,7 @@ const tempDummy: ProjectInfo = Builder<ProjectInfo>()
     .starred(true)
     .projectUrl("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
     .build();
-const dummy: ProjectInfo[] = [];
+const dummy: ProjectInfoDTO[] = [];
 dummy.push(tempDummy);
 dummy.push(tempDummy);
 dummy.push(tempDummy);

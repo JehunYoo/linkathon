@@ -3,7 +3,7 @@ import {PropType} from "vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 
 const props = defineProps({
-  data: Object as PropType<HackathonTeamInfo>
+  data: Object as PropType<HackathonTeamInfoDTO>
 });
 </script>
 

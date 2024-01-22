@@ -1,4 +1,4 @@
-interface RankingUser {
+interface RankingUserDTO {
     userId:number,
     userImgUrl:string,
     userName:string,

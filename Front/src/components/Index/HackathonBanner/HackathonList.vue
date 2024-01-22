@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {Builder} from "builder-pattern";
 
-const dummy: HackathonInfo[] = [];
+const dummy: HackathonInfoDTO[] = [];
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -15,7 +15,7 @@ dummy.push(
         .build(),
 );
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제2회", "게임관련", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -27,7 +27,7 @@ dummy.push(
         .build(),
 );
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -39,7 +39,7 @@ dummy.push(
         .build(),
 );
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))

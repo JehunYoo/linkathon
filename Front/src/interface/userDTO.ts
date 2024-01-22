@@ -1,4 +1,4 @@
-interface User {
+interface UserDTO {
     id: number;
     department: string;
     position: string;

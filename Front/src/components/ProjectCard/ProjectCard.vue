@@ -3,7 +3,7 @@ import {PropType} from "vue";
 import StarButton from "@/components/ProjectCard/StarButton.vue";
 
 const props = defineProps({
-  dataList: Object as PropType<ProjectInfo[]>
+  dataList: Object as PropType<ProjectInfoDTO[]>
 });
 
 </script>

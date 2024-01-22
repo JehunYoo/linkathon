@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SkillCategory from "@/components/Skill/SkillCategory.vue";
+import SkillCategoryDTO from "@/components/Skill/SkillCategory.vue";
 </script>
 
 <template>
