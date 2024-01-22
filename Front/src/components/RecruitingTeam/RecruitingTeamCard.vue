@@ -11,7 +11,7 @@ const props = defineProps({
   <div class="card-container">
     <div class="upper-box">
       <div class="img-container">
-        <img :src="props.data?.imgSrc" class="img-container">
+        <img :src="props.data?.imgUrl" class="img-container">
       </div>
       <div class="right-box-container">
         <div class="hackathon-title">

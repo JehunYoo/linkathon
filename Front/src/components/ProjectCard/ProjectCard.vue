@@ -11,15 +11,15 @@ const props = defineProps({
 <template>
   <div v-for="data in props.dataList" class="project-card">
     <div>
-      <img :src="data?.imgSrc" alt="">
+      <img :src="data?.projectUrl" alt="">
     </div>
     <div class="right-box-container">
       <div class="star-container">
-        <StarButton :check="data.myStar"/>
-        <span class="star-text">{{ data?.star }}</span>
+        <StarButton :check="data.starred"/>
+        <span class="star-text">{{ data?.starCount }}</span>
       </div>
       <div class="project-name">{{ data?.projectName }}</div>
-      <div class="project-content">{{ data?.projectContent }}</div>
+      <div class="project-content">{{ data?.projectDesc }}</div>
     </div>
   </div>
 </template>

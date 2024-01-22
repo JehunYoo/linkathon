@@ -8,6 +8,6 @@ interface HackathonTeamInfo {
     nowPoint: number,
     maxPoint: number,
     registerDate: Date,
-    imgSrc: string,
+    imgUrl: string,
     skillList: Skill[],
 }

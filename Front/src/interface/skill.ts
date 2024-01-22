@@ -1,5 +1,6 @@
 interface Skill {
-    name:string,
-    imgSrc:string,
-    year:number
+    skillId:number,
+    skillName:string,
+    skillImgUrl:string,
+    skillYear:number
 }

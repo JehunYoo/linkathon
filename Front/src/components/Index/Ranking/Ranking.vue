@@ -4,16 +4,16 @@ import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import {Builder} from "builder-pattern";
 import Tier from "@/components/Tier.vue";
 
-const dummy = Builder<RankingMember>()
+const dummy = Builder<RankingUser>()
     .userId(1)
-    .imgSrc("https://s3.orbi.kr/data/file/united2/9ae8215065324b138e2706aa3ca712fd.jpeg")
+    .userImgUrl("https://s3.orbi.kr/data/file/united2/9ae8215065324b138e2706aa3ca712fd.jpeg")
     .rating(290)
-    .gitUrl("https://github.com/jmg9776")
-    .name("해린")
+    .referenceUrl("https://github.com/jmg9776")
+    .userName("해린")
     .introduce("안녕하세요")
     .build()
 
-const dummyList: RankingMember[] = [];
+const dummyList: RankingUser[] = [];
 dummyList.push(dummy);
 dummyList.push(dummy);
 dummyList.push(dummy);
@@ -25,13 +25,13 @@ dummyList.push(dummy);
   <IndexSubMenu title="이달의 랭킹" style="margin-top: 48px; margin-bottom: 22px"/>
   <div class="ranking-container">
     <div v-for="data in dummyList" class="ranking-card">
-      <img :src="data.imgSrc" alt="">
+      <img :src="data.userImgUrl" alt="">
       <div class="member-info-text">
         <div class="info-text">
-          {{ data.name }}
+          {{ data.userName }}
           <Tier style="margin-left: 8px" :rating="data?.rating" width="28px" height="16px" font-size="14px"></Tier>
         </div>
-        <a :href="data.gitUrl" target="_blank">
+        <a :href="data.referenceUrl" target="_blank">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
                xmlns:xlink="http://www.w3.org/1999/xlink">
             <rect width="17.9815" height="17.2138" rx="3" fill="url(#pattern0)"/>

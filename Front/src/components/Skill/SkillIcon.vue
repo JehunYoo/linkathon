@@ -12,14 +12,14 @@ const props = defineProps({
 
 <template>
   <div class="normal-container hover-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
-       v-if="props.skill?.year">
-    <div class="year-text" v-if="props.skill?.year">
-      {{ props.skill?.year + "Y" }}
+       v-if="props.skill?.skillYear">
+    <div class="year-text" v-if="props.skill?.skillYear">
+      {{ props.skill?.skillYear + "Y" }}
     </div>
-    <img :src="props.skill?.imgSrc" :style="{ width: width, height: height,borderRadius: radius }" alt="">
+    <img :src="props.skill?.skillImgUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">
   </div>
   <div class="normal-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }" v-else>
-    <img :src="props.skill?.imgSrc" :style="{ width: width, height: height,borderRadius: radius }" alt="">
+    <img :src="props.skill?.skillImgUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">
   </div>
 </template>
 
