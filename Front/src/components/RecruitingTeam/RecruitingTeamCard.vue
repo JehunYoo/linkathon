@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {PropType} from "vue";
-import SkillIcon from "@/components/SkillIcon.vue";
+import SkillIcon from "@/components/Skill/SkillIcon.vue";
 
 const props = defineProps({
   data: Object as PropType<HackathonTeamInfo>
