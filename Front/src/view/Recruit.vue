@@ -3,8 +3,9 @@ import SkillCategory from "@/components/Skill/SkillCategory.vue";
 
 import {Builder} from "builder-pattern";
 import {provide, ref} from "vue";
-import UserCategory from "@/components/User/UserCategory.vue";
+import UserCategory from "@/components/User/Recruit/UserCategory.vue";
 import SkillCategoryList from "@/components/Skill/SkillCategoryList.vue";
+import UserList from "@/components/User/Recruit/UserList.vue";
 
 const dummySkillList: SkillDTO[] = [];
 dummySkillList.push(Builder<SkillDTO>()
@@ -96,7 +97,8 @@ dummySkillList.push(Builder<SkillDTO>()
     .skillName("TypeScript")
     .skillId(3)
     .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());dummySkillList.push(Builder<SkillDTO>()
+    .build());
+dummySkillList.push(Builder<SkillDTO>()
     .skillName("TypeScript")
     .skillId(3)
     .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
@@ -185,6 +187,7 @@ const updateSelectSkillId = (skillId: number) => {
   else
     refDummy.value.selectSkillId.add(skillId)
 }
+
 const refDummy = ref<MemberRecruit>(dummy);
 provide('skillCategorySelect', refDummy);
 provide('updateSelectedCategory', updateSelectedCategory);
@@ -192,7 +195,6 @@ provide('updateSelectSkillId', updateSelectSkillId);
 </script>
 
 <template>
-
   <div class="recruit-vue-container">
     <div style="flex: 2">
       <div class="page-title">기술 스택</div>
@@ -201,7 +203,8 @@ provide('updateSelectSkillId', updateSelectSkillId);
     <UserCategory/>
   </div>
   <SkillCategoryList/>
-  <div class="hr"></div>
+  <div class="hr"/>
+  <UserList/>
 </template>
 
 <style scoped>
@@ -217,8 +220,14 @@ provide('updateSelectSkillId', updateSelectSkillId);
   padding-top: 48px;
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 25px;
   align-items: flex-start;
+}
+
+@media screen and (max-width: 768px) {
+  .recruit-vue-container {
+    flex-direction: column;
+  }
 }
 
 .hr {

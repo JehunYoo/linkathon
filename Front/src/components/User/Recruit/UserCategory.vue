@@ -29,7 +29,6 @@ import DropDownBox from "@/components/DropDownBox.vue";
 }
 
 .user-info-category-container {
-  padding-left: 15px;
   flex: 1;
   display: flex;
   gap: 14px;

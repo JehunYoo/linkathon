@@ -12,7 +12,10 @@ const updateSelectSkillId: Function = inject<Function>('updateSelectSkillId')!;
          class="skill-button-container"
          @click="updateSelectSkillId(skillDTO.skillId)">
       <SkillIcon :skill="skillDTO" width="40px" height="40px" radius="10px"/>
-      <div class="skill-button-text">{{ skillDTO.skillName }}</div>
+      <div class="skill-button-text"
+           :class="skillCategorySelect.selectSkillId.has(skillDTO.skillId)?'select-skill':'non-select-skill'">
+        {{ skillDTO.skillName }}
+      </div>
     </div>
   </div>
 </template>
@@ -31,10 +34,19 @@ const updateSelectSkillId: Function = inject<Function>('updateSelectSkillId')!;
   display: flex;
   min-width: 148px;
   gap: 16px;
+  border-radius: 8px;
+}
+
+
+.select-skill {
+  color: #7d3bff;
+}
+
+.non-select-skill {
+  color: #303030;
 }
 
 .skill-button-text {
-  color: #303030;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
