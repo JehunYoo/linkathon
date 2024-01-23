@@ -1,71 +1,41 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import {Builder} from "builder-pattern";
-import SkillCategory from "@/components/Skill/SkillCategory.vue";
-
-const dummySkillList: SkillDTO[] = [];
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("JavaScript")
-    .skillId(1)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("MjScript")
-    .skillId(2)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-
-const skillCategoryList: SkillCategoryDTO[] = [];
-const skillCategoryListRef = ref<SkillCategoryDTO[]>(skillCategoryList);
-
-skillCategoryList.push(
-    Builder<SkillCategoryDTO>()
-        .categoryName("언어")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategoryDTO>()
-        .categoryName("프론트엔드")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategoryDTO>()
-        .categoryName("백엔드")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategoryDTO>()
-        .categoryName("테스팅 툴")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategoryDTO>()
-        .categoryName("데이터베이스")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategoryDTO>()
-        .categoryName("데이터")
-        .skillList(dummySkillList)
-        .build());
+import {inject} from "vue";
+const skillCategorySelect: SkillCategorySelect = inject('skillCategorySelect')!;
+const updateCategorySelect: Function = <Function>inject('updateSelectedCategory');
 </script>
 
 <template>
-  <div v-for="skillList in skillCategoryListRef">
-    {{ skillList }}
+  <div>
+    <div class="skill-category-container">
+      <div v-for="(skillList, i) in skillCategorySelect?.skillCategoryList" class="skill-category-box"
+           :class="{'non-select':skillCategorySelect.selectedCategory !== i, 'select':skillCategorySelect.selectedCategory === i}"
+           @click="updateCategorySelect(i)">
+        {{ skillList.categoryName }}
+      </div>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
 
+.skill-category-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skill-category-box {
+  padding: 9px 15px 10px;
+  border-radius: 18px;
+  white-space: nowrap;
+}
+
+.non-select {
+  border: 1px solid #606060;
+}
+
+.select {
+  border: 1px solid #7D3BFF;
+}
 </style>
