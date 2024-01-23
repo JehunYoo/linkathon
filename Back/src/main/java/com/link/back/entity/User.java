@@ -81,6 +81,5 @@ public class User {
 	private boolean joinState; // 프로젝트 참가 여부
 
 	@OneToMany(mappedBy = "user")
-	// @BatchSize(size = 100) // todo: AppConstant.USER_USER_SKILLS_BATCH_SIZE
 	List<UserSkill> userSkills = new ArrayList<>();
 }

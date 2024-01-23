@@ -18,22 +18,17 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long>, UserT
 	List<UserTeam> findUserTeamsByTeam(Team team);
 
 	// todo
-	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
-		+ "join fetch UserSkill userSkill join fetch Skill skill "
-		+ "where userTeam.team = :team and userTeam.memberStatus = :memberStatus")
+	@Query("select ut from UserTeam ut join fetch User u join fetch UserImage ui "
+		+ "where ut.team = :team and ut.memberStatus = :memberStatus")
 	List<UserTeam> findCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
 
-	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
-		+ "join fetch UserSkill userSkill join fetch Skill skill "
-		+ "where userTeam.team = :team")
+	@Query("select ut from UserTeam ut join fetch User u join fetch UserImage ui "
+		+ "where ut.team = :team")
 	List<UserTeam> findMembers(@Param("team") Team team);
 
-	@Query("select userTeam from UserTeam userTeam join fetch userTeam.team "
-		+ "where userTeam.user = :user and userTeam.memberStatus = :memberStatus")
+	@Query("select ut from UserTeam ut join fetch ut.team "
+		+ "where ut.user = :user and ut.memberStatus = :memberStatus")
 	List<UserTeam> findTeamsOfCandidate(@Param("user") User user, @Param("memberStatus") MemberStatus memberStatus);
-
-	// @Query("select userTeam from UserTeam userTeam join fetch User user join fetch Team team "
-	// 	+ "where userTeam.user = :user and userTeam.team = :team")
 
 	void deleteUserTeamByTeamAndUser(Team team, User user);
 }
