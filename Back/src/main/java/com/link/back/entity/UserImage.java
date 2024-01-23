@@ -20,7 +20,7 @@ public class UserImage {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private Long profileId;
+	private Long userImageId;
 
 	@OneToOne(fetch = LAZY)
 	private User user;
