@@ -73,7 +73,7 @@ class ReservationServiceTest {
 		Reservation reservation = Reservation.builder()
 			.leader(user1)
 			.member(user2)
-			.reservationDatetime(LocalDateTime.now())
+			.reservationDateTime(LocalDateTime.now())
 			.build();
 		reservationRepository.save(reservation);
 
@@ -87,7 +87,7 @@ class ReservationServiceTest {
 	}
 
 	@Test
-	@DisplayName("Reservation service createMyReservation")
+	@DisplayName("Reservation service createMyReservation Success")
 	void createMyReservation() {
 		// give
 		ReservationRequest reservationRequest = ReservationRequest.builder()
@@ -106,7 +106,29 @@ class ReservationServiceTest {
 	}
 
 	@Test
-	@DisplayName("Reservation service updateMyReservation")
+	@DisplayName("Reservation service createMyReservation Fail")
+	void createMyReservationFail() {
+		// give
+		ReservationRequest reservationRequest = ReservationRequest.builder()
+			.userId(user2.getUserId())
+			.availableTime(LocalDateTime.now())
+			.build();
+
+		// when
+		reservationService.createMyReservation(user1.getUserId(), reservationRequest);
+
+		// then
+		Reservation reservation1 = reservationRepository.findByLeaderOrMember(user1, user1).get(0);
+		Reservation reservation2 = reservationRepository.findByLeaderOrMember(user2, user2).get(0);
+
+		assertEquals(reservation1, reservation2);
+
+		assertThrowsExactly(
+			RuntimeException.class,() -> reservationService.createMyReservation(user1.getUserId(), reservationRequest));
+	}
+
+	@Test
+	@DisplayName("Reservation service updateMyReservation - failed by overlapped reservation")
 	void updateMyReservation() {
 		// given
 		LocalDateTime tNow = LocalDateTime.now();
@@ -115,7 +137,7 @@ class ReservationServiceTest {
 		Reservation reservation = Reservation.builder()
 			.leader(user1)
 			.member(user2)
-			.reservationDatetime(tNow)
+			.reservationDateTime(tNow)
 			.build();
 		reservationRepository.save(reservation);
 
@@ -129,7 +151,7 @@ class ReservationServiceTest {
 
 		// then
 		Reservation reservationA = reservationRepository.findById(reservation.getReservationId()).orElseThrow();
-		assertEquals(reservationA.getReservationDatetime(), tAfter);
+		assertEquals(reservationA.getReservationDateTime(), tAfter);
 
 	}
 
@@ -140,7 +162,7 @@ class ReservationServiceTest {
 		Reservation reservation = Reservation.builder()
 			.leader(user1)
 			.member(user2)
-			.reservationDatetime(LocalDateTime.now())
+			.reservationDateTime(LocalDateTime.now())
 			.build();
 		reservationRepository.save(reservation);
 

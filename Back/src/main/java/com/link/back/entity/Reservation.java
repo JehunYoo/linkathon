@@ -1,20 +1,15 @@
 package com.link.back.entity;
 
-import static jakarta.persistence.FetchType.*;
-import static jakarta.persistence.GenerationType.*;
-import static lombok.AccessLevel.*;
-
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
@@ -26,7 +21,7 @@ public class Reservation {
 	private Long reservationId;
 
 	@Column(nullable = false)
-	private LocalDateTime reservationDatetime;
+	private LocalDateTime reservationDateTime;
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "leader_id", nullable = false)
@@ -37,15 +32,15 @@ public class Reservation {
 	private User member;
 
 	@Builder
-	public Reservation(Long reservationId, LocalDateTime reservationDatetime, User leader, User member) {
+	public Reservation(Long reservationId, LocalDateTime reservationDateTime, User leader, User member) {
 		this.reservationId = reservationId;
-		this.reservationDatetime = reservationDatetime;
+		this.reservationDateTime = reservationDateTime;
 		this.leader = leader;
 		this.member = member;
 	}
 
-	public void update(LocalDateTime reservationDatetime) {
-		this.reservationDatetime = reservationDatetime;
+	public void update(LocalDateTime reservationDate) {
+		this.reservationDateTime = reservationDate;
 	}
 
 	public Boolean isLeader(Long userId) {

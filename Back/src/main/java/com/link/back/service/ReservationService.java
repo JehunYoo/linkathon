@@ -1,5 +1,6 @@
 package com.link.back.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ public class ReservationService {
 	public List<ReservationResponse> getMyReservations(Long myUserId) {
 
 		User user = userRepository.getReferenceById(myUserId);
-
 		List<Reservation> reservations = reservationRepository.findByLeaderOrMember(user, user);
 
 		return reservations.stream().map(reservation ->
@@ -38,30 +38,46 @@ public class ReservationService {
 	}
 
 	public void createMyReservation(Long myUserId, ReservationRequest reservationRequest) {
+		User user = userRepository.getReferenceById(myUserId);
+		if (isOverlappedReservation(user, reservationRequest.availableTime())) // 겹치는 예약 시간 확인
+			throw new RuntimeException();
 		Reservation reservation = Reservation.builder()
-			.leader(userRepository.getReferenceById(reservationRequest.getUserId()))
-			.member(userRepository.getReferenceById(myUserId))
-			.reservationDatetime(reservationRequest.getAvailableTime())
+			.leader(userRepository.getReferenceById(reservationRequest.userId()))
+			.member(user)
+			.reservationDateTime(reservationRequest.availableTime())
 			.build();
 		reservationRepository.save(reservation);
 	}
 
 	public void updateMyReservation(Long reservationId, Long myUserId, ReservationRequest reservationRequest) {
-		if (!isMyReservation(reservationId, myUserId))
+		User user = userRepository.getReferenceById(myUserId);
+		if (!isMyReservation(reservationId, myUserId)) // 자신의 예약인지 확인
+			throw new RuntimeException();
+		if (isOverlappedReservation(user, reservationRequest.availableTime())) // 겹치는 예약 시간 확인
 			throw new RuntimeException();
 		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
-		reservation.update(reservationRequest.getAvailableTime());
+		reservation.update(reservationRequest.availableTime());
 		reservationRepository.save(reservation);
 	}
 
 	public void deleteMyReservation(Long reservationId, Long myUserId) {
-		if (!isMyReservation(reservationId, myUserId))
+		if (!isMyReservation(reservationId, myUserId)) // 자신의 예약인지 확인
 			throw new RuntimeException();
 		reservationRepository.deleteById(reservationId);
 	}
 
-	public Boolean isMyReservation(Long reservationId, Long userId) {
+	public boolean isMyReservation(Long reservationId, Long userId) {
 		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
 		return reservation.isMyReservation(userId);
 	}
+
+	public boolean isOverlappedReservation(User user, LocalDateTime reservationDateTime) {
+		List<Reservation> reservations = reservationRepository.findByLeaderOrMember(user, user);
+		for (Reservation r : reservations) {
+			if (r.getReservationDateTime().equals(reservationDateTime))
+				return true;
+		}
+		return false;
+	}
+
 }
