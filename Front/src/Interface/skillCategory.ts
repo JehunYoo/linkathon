@@ -1,4 +1,4 @@
-interface SkillCategoryDTO {
+interface SkillCategory {
     categoryName:string,
     skillList:SkillDTO[],
 }
