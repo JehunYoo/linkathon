@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {Builder} from "builder-pattern";
 
-const dummy: HackathonInfo[] = [];
+const dummy: HackathonInfoDTO[] = [];
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -15,7 +15,7 @@ dummy.push(
         .build(),
 );
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제2회", "게임관련", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -27,7 +27,7 @@ dummy.push(
         .build(),
 );
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -39,7 +39,7 @@ dummy.push(
         .build(),
 );
 dummy.push(
-    Builder<HackathonInfo>()
+    Builder<HackathonInfoDTO>()
         .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
         .recruitmentStart(new Date(2024, 0, 1))
         .recruitmentEnd(new Date(2024, 0, 15))
@@ -60,7 +60,9 @@ dummy.push(
           {{ title }}
         </div>
       </div>
-      <img :src="data.imgSrc">
+      <div class="img-container">
+        <img :src="data.imgSrc">
+      </div>
       <div class="title-container">
         <div class="title">
           {{ data.subject }}
@@ -76,6 +78,9 @@ dummy.push(
 </template>
 
 <style scoped>
+img:hover {
+  transform: scale(1.2);
+}
 .title {
   flex: 1;
   width: 100%;
@@ -128,11 +133,19 @@ dummy.push(
 }
 
 img {
+  transition: transform 0.2s ease;
   width: 100%;
   height: 200px;
   object-fit: cover;
   filter: brightness(0.6);
+
+}
+
+.img-container {
+  width: 100%;
+  height: 200px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .hackathon-banner-list {
@@ -148,12 +161,11 @@ img {
   flex: 1;
   min-width: 315px;
   height: max-content;
-
   overflow: hidden;
 }
 
 .list-title {
-  color: #DEDEDE;
+  color: #F0F0F0;
   font-size: 20px;
   font-style: normal;
   font-weight: 800;

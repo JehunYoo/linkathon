@@ -22,6 +22,7 @@ import FooterRightContent from "@/components/Footer/FooterRightContent.vue";
 }
 
 .footer-container {
+  z-index: 9999;
   display: flex;
   justify-content: center;
   width: 100vw;
