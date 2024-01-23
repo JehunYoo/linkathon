@@ -36,7 +36,8 @@ public class ScheduleController {
 
 	@PutMapping
 	public ScheduleResponse updateMySchedule(@NotNull ScheduleRequest scheduleRequest) {
-		return scheduleService.updateMySchedule(scheduleRequest);
+		Long userId = 1234L;
+		return scheduleService.updateMySchedule(userId, scheduleRequest);
 	}
 
 }

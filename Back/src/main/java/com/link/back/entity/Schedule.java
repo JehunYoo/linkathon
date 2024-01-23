@@ -4,6 +4,8 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
+import java.time.LocalTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,11 +32,10 @@ public class Schedule {
 	private User user;
 
 	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private ScheduleTime availableTime;
+	private LocalTime availableTime;
 
 	@Builder
-	public Schedule(Long scheduleId, User user, ScheduleTime availableTime) {
+	public Schedule(Long scheduleId, User user, LocalTime availableTime) {
 		this.scheduleId = scheduleId;
 		this.user = user;
 		this.availableTime = availableTime;

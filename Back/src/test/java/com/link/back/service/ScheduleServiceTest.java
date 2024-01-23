@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.link.back.entity.Schedule;
-import com.link.back.entity.ScheduleTime;
 import com.link.back.entity.User;
 import com.link.back.repository.ScheduleRepository;
 import com.link.back.repository.UserRepository;
@@ -63,11 +62,11 @@ class ScheduleServiceTest {
 		userRepository.save(user);
 
 		Schedule schedule1 = Schedule.builder()
-			.availableTime(ScheduleTime.HOUR_00)
+			.availableTime(LocalTime.of(0, 0))
 			.user(user)
 			.build();
 		Schedule schedule2 = Schedule.builder()
-			.availableTime(ScheduleTime.HOUR_01)
+			.availableTime(LocalTime.of(1, 0))
 			.user(user)
 			.build();
 		scheduleRepository.saveAll(List.of(schedule1, schedule2));
@@ -76,10 +75,10 @@ class ScheduleServiceTest {
 		ScheduleResponse scheduleResponse = scheduleService.getScheduleByUserId(user.getUserId());
 
 		// then
-		List<LocalTime> times = scheduleResponse.getTimes();
-		System.out.println(scheduleResponse.getTimes());
-		assertEquals(schedule1.getAvailableTime().toLocalTime(), times.get(0));
-		assertEquals(schedule2.getAvailableTime().toLocalTime(), times.get(1));
+		List<Integer> times = scheduleResponse.times();
+		System.out.println(scheduleResponse.times());
+		assertEquals(schedule1.getAvailableTime().getHour(), times.get(0));
+		assertEquals(schedule2.getAvailableTime().getHour(), times.get(1));
 
 	}
 
@@ -102,28 +101,27 @@ class ScheduleServiceTest {
 		userRepository.save(user);
 
 		Schedule schedule1 = Schedule.builder()
-			.availableTime(ScheduleTime.HOUR_00)
+			.availableTime(LocalTime.of(0, 0))
 			.user(user)
 			.build();
 		Schedule schedule2 = Schedule.builder()
-			.availableTime(ScheduleTime.HOUR_01)
+			.availableTime(LocalTime.of(0, 0))
 			.user(user)
 			.build();
 		Schedule schedule3 = Schedule.builder()
-			.availableTime(ScheduleTime.HOUR_02)
+			.availableTime(LocalTime.of(0, 0))
 			.user(user)
 			.build();
 		scheduleRepository.saveAll(List.of(schedule1, schedule2)); // HOUR_00, HOUR_01
 
 		ScheduleRequest scheduleRequest = ScheduleRequest.builder() // HOUR_01, HOUR_02
-			.userId(user.getUserId())
 			.times(Stream.of(schedule2, schedule3)
-				.map((schedule) -> schedule.getAvailableTime().toLocalTime())
+				.map((schedule) -> schedule.getAvailableTime().getHour())
 				.toList())
 			.build();
 
 		// when
-		scheduleService.updateMySchedule(scheduleRequest);
+		scheduleService.updateMySchedule(user.getUserId(), scheduleRequest);
 
 		// then
 		List<Schedule> schedules = scheduleRepository.findByUser(user);

@@ -1,6 +1,8 @@
 package com.link.back.service;
 
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.link.back.dto.request.ScheduleRequest;
 import com.link.back.dto.response.ScheduleResponse;
 import com.link.back.entity.Schedule;
-import com.link.back.entity.ScheduleTime;
 import com.link.back.entity.User;
 import com.link.back.repository.ScheduleRepository;
 import com.link.back.repository.UserRepository;
@@ -24,29 +25,38 @@ public class ScheduleService {
 	public ScheduleResponse getScheduleByUserId(Long userId) {
 		User user = userRepository.getReferenceById(userId);
 		List<Schedule> schedules = scheduleRepository.findByUser(user);
-		return ScheduleResponse.toScheduleResponse(userId, schedules);
+		return ScheduleResponse.builder()
+				.userId(userId)
+				.times(schedules.stream().map(
+						schedule -> schedule.getAvailableTime().getHour()
+				).collect(Collectors.toList()))
+				.build();
 	}
 
 	@Transactional
-	public ScheduleResponse updateMySchedule(ScheduleRequest scheduleRequest) {
+	public ScheduleResponse updateMySchedule(Long userId, ScheduleRequest scheduleRequest) {
 
-		User user = userRepository.getReferenceById(scheduleRequest.getUserId());
-
+		User user = userRepository.getReferenceById(userId);
 		scheduleRepository.deleteByUser(user);
 
-		List<Schedule> schedules = scheduleRequest
-			.getTimes()
+		List<Schedule> schedules =
+			scheduleRequest
+			.times()
 			.stream()
 			.map(
 				time -> Schedule.builder()
 					.user(user)
-					.availableTime(ScheduleTime.values()[time.getHour()])
+					.availableTime(LocalTime.of(time, 0))
 					.build()
 			)
 			.toList();
 
 		scheduleRepository.saveAll(schedules);
-		return null;
+
+		return ScheduleResponse.builder()
+			.userId(userId)
+			.times(scheduleRequest.times())
+			.build();
 	}
 
 }
