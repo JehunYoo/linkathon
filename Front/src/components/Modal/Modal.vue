@@ -29,9 +29,12 @@ const props = defineProps({
 <template>
   <div class="blur" @click="props.modalController(0)"/>
   <div class="slot">
-    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" fill="none" @click="props.modalController(0)">
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)" stroke="black" stroke-width="2"/>
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)" stroke="black" stroke-width="2"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" fill="none"
+         @click="props.modalController(0)">
+      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
+            stroke="black" stroke-width="2"/>
+      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
+            stroke="black" stroke-width="2"/>
     </svg>
     <slot>
     </slot>
@@ -39,11 +42,20 @@ const props = defineProps({
 </template>
 
 <style scoped>
+* {
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
 svg {
   position: absolute;
   top: 24px;
   right: 24px;
 }
+
 .blur {
   z-index: 3;
   position: fixed;
@@ -57,19 +69,18 @@ svg {
 }
 
 .slot {
+  height: 80%;
   min-width: 300px;
-  max-width: 698px;
-  width: 90%;
-  height:75%;
+  max-width: 768px;
   position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 99999;
-  padding: 24px;
   border-radius: 30px;
   border: 2px solid #7D3BFF;
   background: #FFF;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 768px) {
