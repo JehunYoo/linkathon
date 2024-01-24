@@ -76,11 +76,11 @@ img {
   border-radius: 10px;
   border: 1px solid #DEDEDE;
   display: flex;
-  transition: transform 1s ease;
+  transition: transform 0.3s ease;
 }
 
 .project-card:hover {
-  scale: 1.02;
+  transform: scale(1.02);
   border: #7d3bff 1px solid;
   box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.25);
 }
