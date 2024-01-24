@@ -30,7 +30,7 @@ const sidebarController = (num: number) => {
         </div>
         <router-link class="tl header-nav-menu-hover" to="/login">로그인</router-link>
         <div class="right-menu-divider">|</div>
-        <div class="tr header-nav-menu-hover">회원가입</div>
+        <router-link class="tr header-nav-menu-hover" to="/register">회원가입</router-link>
       </div>
     </div>
   </div>

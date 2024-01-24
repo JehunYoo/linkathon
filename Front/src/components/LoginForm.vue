@@ -25,8 +25,8 @@ const login = function () {
   <div>
     <input class="submit-button" type="button" value="로그인" @click="login()">
     <div class="submenu">
-      <span>아이디 / 비밀번호 찾기</span>
-      <span style="margin-left: 20px">회원가입</span>
+      <router-link to="/findAccount">아이디 / 비밀번호 찾기</router-link>
+      <router-link style="margin-left: 20px" to="/register">회원가입</router-link>
     </div>
   </div>
   <div class="hr"/>
@@ -58,7 +58,13 @@ const login = function () {
 </template>
 
 <style scoped>
+a {
+  color: #404040;
+}
 
+a:hover {
+  color: #7D3CFF;
+}
 .text-input:focus {
   outline: #7D3CFF 2px solid;
 }

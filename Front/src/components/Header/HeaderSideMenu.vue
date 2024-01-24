@@ -51,7 +51,7 @@ const props = defineProps({
       <div>명예의 전당</div>
       <div>마이페이지</div>
       <router-link to="/login">로그인</router-link>
-      <div>회원가입</div>
+      <router-link to="/register">회원가입</router-link>
     </div>
   </div>
 </template>
