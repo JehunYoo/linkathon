@@ -122,6 +122,9 @@ img {
   width: 100%;
 }
 
+span:hover {
+  color: #7D3CFF;
+}
 .submenu {
   margin-top: 12px;
   color: #303030;

@@ -48,7 +48,7 @@ const props = defineProps({
       <div>해커톤</div>
       <div>명예의 전당</div>
       <div>마이페이지</div>
-      <div>로그인</div>
+      <router-link  to="/login">로그인</router-link>
       <div>회원가입</div>
     </div>
   </div>

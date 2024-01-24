@@ -28,7 +28,7 @@ const sidebarController = (num: number) => {
             menu
           </span>
         </div>
-        <div class="tl header-nav-menu-hover">로그인</div>
+        <router-link class="tl header-nav-menu-hover" to="/login">로그인</router-link>
         <div class="right-menu-divider">|</div>
         <div class="tr header-nav-menu-hover">회원가입</div>
       </div>
@@ -137,7 +137,7 @@ a {
   justify-content: center;
   width: 100vw;
   height: 80px;
-  border-bottom: #7D3BFF solid 0.5px;
+  border-bottom: #7D3BFF solid 1px;
   position: fixed;
   background: white;
   top: 0;
