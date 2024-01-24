@@ -190,7 +190,7 @@ const props = defineProps({
 }
 
 .card-container:hover {
-  transform: scale(1.02);
+  transform: scale(1.005);
   border: #7d3bff 1px solid;
   box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.25);
 }
