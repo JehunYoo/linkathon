@@ -66,11 +66,6 @@ a {
 * {
   box-shadow: none;
 }
-a:hover {
-  color: #7D3CFF;
-  margin-left: 10px;
-  scale: 1.05;
-}
 
 svg {
   position: absolute;
@@ -99,10 +94,14 @@ h1 {
   color: #404040;
 }
 
-.side-bar-menu div:hover {
+.side-bar-menu div,a {
+  transition: color 0.3s ease, margin-left 0.3s ease, transform 0.3s ease;
+}
+
+.side-bar-menu div:hover, a:hover {
   color: #7D3CFF;
   margin-left: 10px;
-  scale: 1.05;
+  transform: scale(1.05);
 }
 
 ::-webkit-scrollbar {
