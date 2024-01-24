@@ -2,10 +2,13 @@ package com.link.back.entity;
 
 import static com.link.back.config.AppConstant.*;
 import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -14,7 +17,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+<<<<<<< Back/src/main/java/com/link/back/entity/User.java
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+=======
 import lombok.Builder;
+>>>>>>> Back/src/main/java/com/link/back/entity/User.java
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +35,10 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long userId;
+
+	@OneToOne(fetch = LAZY)
+	@JoinColumn(name = "user_image_id")
+	private UserImage userImage;
 
 	@Column(nullable = false)
 	private String email;
@@ -71,26 +84,8 @@ public class User {
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
 
-	@Builder
-	public User(Long userId, String email, String password, String phoneNumber, String name, boolean gender,
-		LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
-		String referenceUrl,
-		String deployUrl, String introduce, Field field, boolean joinState) {
-		this.userId = userId;
-		this.email = email;
-		this.password = password;
-		this.phoneNumber = phoneNumber;
-		this.name = name;
-		this.gender = gender;
-		this.birth = birth;
-		this.rating = rating;
-		this.registered = registered;
-		this.registeredDate = registeredDate;
-		this.career = career;
-		this.referenceUrl = referenceUrl;
-		this.deployUrl = deployUrl;
-		this.introduce = introduce;
-		this.field = field;
-		this.joinState = joinState;
-	}
+
+	@OneToMany(mappedBy = "user")
+	List<UserSkill> userSkills = new ArrayList<>();
+
 }

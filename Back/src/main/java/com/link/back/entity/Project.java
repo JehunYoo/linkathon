@@ -8,14 +8,16 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,6 +34,10 @@ public class Project {
 	@JoinColumn(name = "team_id", nullable = false)
 	private Team team;
 
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "hackathon_id", nullable = false)
+	private Hackathon hackathon;
+
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "project_image_id")
 	private ProjectImage projectImage;
@@ -47,7 +53,7 @@ public class Project {
 
 	@Enumerated(STRING)
 	@Column(nullable = false)
-	private ProjectStatus projectStatus = ProjectStatus.OPENED;
+	private ProjectStatus projectStatus;
 
 	@Column(nullable = false)
 	private LocalDateTime registeredDate;
@@ -62,52 +68,12 @@ public class Project {
 	private String projectUrl;
 
 	@Column(nullable = false)
-	private Integer hackathon_score = 0;
+	@ColumnDefault("0")
+	private Integer hackathon_score;
 
 	@Column(nullable = false)
-	private Boolean winState = Boolean.FALSE;
+	private boolean winState;
 
 	@Column(length = PROJECT_DEPLOY_LENGTH)
 	private String deployUrl;
-
-	@Builder
-	public Project(Long projectId, Team team, ProjectImage projectImage, String projectName, String projectTopic,
-		String projectDesc, ProjectStatus projectStatus, LocalDateTime registeredDate, LocalDateTime startDate,
-		LocalDateTime endDate, String projectUrl, Integer hackathon_score, Boolean winState, String deployUrl) {
-		this.projectId = projectId;
-		this.team = team;
-		this.projectImage = projectImage;
-		this.projectName = projectName;
-		this.projectTopic = projectTopic;
-		this.projectDesc = projectDesc;
-		this.projectStatus = projectStatus;
-		this.registeredDate = registeredDate;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.projectUrl = projectUrl;
-		this.hackathon_score = hackathon_score;
-		this.winState = winState;
-		this.deployUrl = deployUrl;
-	}
-
-	public void updateProjectDetail(String projectName, String projectTopic, String projectDesc,
-		LocalDateTime startDate, LocalDateTime endDate,
-		String projectUrl, String deployUrl, ProjectImage projectImage) {
-		this.projectName = projectName;
-		this.projectTopic = projectTopic;
-		if (projectDesc != null)
-			this.projectDesc = projectDesc;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.projectUrl = projectUrl;
-		if (deployUrl != null)
-			this.deployUrl = deployUrl;
-		if (projectImage != null)
-			this.projectImage = projectImage;
-	}
-
-	public void updateProjectStatus() {
-		this.projectStatus.nextStatus();
-	}
-
 }
