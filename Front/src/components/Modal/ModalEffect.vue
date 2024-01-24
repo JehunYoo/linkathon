@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 defineProps({
   text: {
-    type:String,
-    require:true
+    type: String,
+    require: true
   }
 })
 </script>
@@ -12,7 +12,7 @@ defineProps({
           font-size: 20px;
           font-style: normal;
           font-weight: 600;">
-    {{text}}
+    {{ text }}
   </div>
 </template>
 

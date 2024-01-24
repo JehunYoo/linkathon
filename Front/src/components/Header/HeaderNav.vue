@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import HeaderSideMenu from "@/components/Header/HeaderSideMenu.vue";
 import {ref} from "vue";
 
@@ -10,9 +10,9 @@ const sidebarController = (num: number) => {
 </script>
 
 <template>
-  <HeaderSideMenu :sidebar-controller="sidebarController" v-if="sidebarControl===1"/>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"/>
+  <HeaderSideMenu v-if="sidebarControl===1" :sidebar-controller="sidebarController"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"
+        rel="stylesheet"/>
   <div class="header-nav-container">
     <div class="header-nav">
       <router-link class="logo" to="/">LINK.</router-link>

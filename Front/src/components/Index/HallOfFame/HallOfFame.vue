@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
@@ -22,7 +22,7 @@ dummy.push(tempDummy);
 </script>
 
 <template>
-  <IndexSubMenu title="명예의 전당" style="margin-top: 48px"/>
+  <IndexSubMenu style="margin-top: 48px" title="명예의 전당"/>
   <div class="fame-container">
     <ProjectCard :data-list="dummy"/>
   </div>

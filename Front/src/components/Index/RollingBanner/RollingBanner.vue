@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {Builder} from "builder-pattern";
-import {ref, onMounted, onUnmounted} from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 import RollingBannerRadioButton from "@/components/RadioButton.vue";
 
 const dummy: HackathonInfoDTO[] = [];

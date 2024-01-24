@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {onMounted, onUnmounted} from 'vue';
 
@@ -30,12 +30,14 @@ const props = defineProps({
 <template>
   <div class="blur" @click="props.sidebarController(0)"/>
   <div class="side-bar">
-    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 26 24" fill="none"
+    <svg fill="none" height="18" viewBox="0 0 26 24" width="19" xmlns="http://www.w3.org/2000/svg"
          @click="props.sidebarController(0)">
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
-            stroke="black" stroke-width="2"/>
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
-            stroke="black" stroke-width="2"/>
+      <line stroke="black" stroke-width="2" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
+            x2="30.9566"
+            y1="-1" y2="-1"/>
+      <line stroke="black" stroke-width="2" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
+            x2="30.9566"
+            y1="-1" y2="-1"/>
     </svg>
     <h1>
       MENU
@@ -48,7 +50,7 @@ const props = defineProps({
       <div>해커톤</div>
       <div>명예의 전당</div>
       <div>마이페이지</div>
-      <router-link  to="/login">로그인</router-link>
+      <router-link to="/login">로그인</router-link>
       <div>회원가입</div>
     </div>
   </div>
@@ -94,7 +96,7 @@ h1 {
   color: #404040;
 }
 
-.side-bar-menu div,a {
+.side-bar-menu div, a {
   transition: color 0.3s ease, margin-left 0.3s ease, transform 0.3s ease;
 }
 

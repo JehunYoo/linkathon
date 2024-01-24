@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {Builder} from "builder-pattern";
 
 const dummy: HackathonInfoDTO[] = [];
@@ -81,6 +81,7 @@ dummy.push(
 img:hover {
   transform: scale(1.2);
 }
+
 .title {
   flex: 1;
   width: 100%;
@@ -122,6 +123,7 @@ img:hover {
   border-radius: 4px;
   border: 1px solid #7D3CFF;
 }
+
 .list-title-container {
   z-index: 2;
   width: 100%;

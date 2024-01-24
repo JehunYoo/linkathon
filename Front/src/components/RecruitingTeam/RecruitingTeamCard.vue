@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {PropType} from "vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 
@@ -30,7 +30,7 @@ const props = defineProps({
         </div>
         <div class="skill-container">
           <div v-for="skill in (props.data?.skillList || [])" style="margin-right: 9px">
-            <SkillIcon :skill="skill" width="25px" height="26px" radius="5px"/>
+            <SkillIcon :skill="skill" height="26px" radius="5px" width="25px"/>
           </div>
         </div>
       </div>

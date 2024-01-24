@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import RecruitingTeamCard from "@/components/RecruitingTeam/RecruitingTeamCard.vue";
@@ -38,7 +38,7 @@ dummyList.push(dummy);
 </script>
 
 <template>
-  <IndexSubMenu title="모집중인 팀" class="recruiting-container"/>
+  <IndexSubMenu class="recruiting-container" title="모집중인 팀"/>
   <div class="recruiting-content-container">
     <template v-for="dummy in dummyList">
       <RecruitingTeamCard :data="dummy"/>
