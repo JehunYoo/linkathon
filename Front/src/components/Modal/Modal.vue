@@ -69,8 +69,8 @@ svg {
 }
 
 .slot {
-  height: 80%;
-  min-width: 300px;
+  max-height: 80%;
+  min-width: 642px;
   max-width: 768px;
   position: fixed;
   left: 50%;
@@ -80,14 +80,17 @@ svg {
   border-radius: 30px;
   border: 2px solid #7D3BFF;
   background: #FFF;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 @media screen and (max-width: 768px) {
   .slot {
+    min-width: 0;
     width: 100vw;
     height: 100vh;
+    max-height: 100vh;
     border: none;
+    border-radius: 0;
   }
 }
 </style>

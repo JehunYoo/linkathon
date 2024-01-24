@@ -4,6 +4,7 @@ import Pagination from "@/components/Pagination.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import {ref} from "vue";
 import ModalEffect from "@/components/Modal/ModalEffect.vue";
+import ModalMember from "@/components/Modal/ModalMember.vue";
 
 const clickedModal = ref<Number>();
 const modalController = (num: number) => {
@@ -16,23 +17,7 @@ const modalController = (num: number) => {
     <template v-for="i in 12">
       <Modal :modalController="modalController" v-if="clickedModal===i">
         <ModalEffect text="남은점수 4점"/>
-        <div style="padding: 24px">
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-          <div>바보같은 녀석 {{ i }}</div>
-        </div>
+        <ModalMember/>
       </Modal>
       <UserCard @click="modalController(i)"/>
     </template>
