@@ -24,7 +24,7 @@ public class HackathonImage {
 	private Long hackathonImageId;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hackathon_id", nullable = false)
+	// @JoinColumn(name = "hackathon_id", nullable = false)
 	private Hackathon hackathon;
 
 	@Column(nullable = false, length = HACKATHON_IMAGE_NAME_LENGTH)

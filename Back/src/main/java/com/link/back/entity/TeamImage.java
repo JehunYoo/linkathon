@@ -16,21 +16,19 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class UserImage {
+public class TeamImage {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private Long profileId;
-
-	@OneToOne(fetch = LAZY)
-	private User user;
+	private Long teamImageId;
 
 	@Column(length = USER_IMAGE_NAME_LENGTH, nullable = false)
-	private String userImageName;
+	private String teamImageName;
 
 	@Column(length = USER_IMAGE_URL, nullable = false)
-	private String userImageUrl;
+	private String teamImageUrl;
 
 	@Column(length = USER_ORIGIN_IMAGE_NAME_LENGTH, nullable = false)
-	private String userOriginImageName;
+	private String teamOriginImageName;
+
 }

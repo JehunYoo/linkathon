@@ -1,5 +1,7 @@
 package com.link.back.entity;
 
+import static com.link.back.entity.MemberStatus.*;
+import static com.link.back.entity.Role.*;
 import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -11,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,5 +39,28 @@ public class UserTeam {
 
 	@Enumerated(STRING)
 	private MemberStatus memberStatus;
+
+	@Builder
+	public UserTeam(Long userTeamId, User user, Team team, Role role, MemberStatus memberStatus) {
+		this.userTeamId = userTeamId;
+		this.user = user;
+		this.team = team;
+		this.role = role;
+		this.memberStatus = memberStatus;
+	}
+
+	@Builder
+	public UserTeam(User user, Team team, Role role, MemberStatus memberStatus) {
+		this.user = user;
+		this.team = team;
+		this.role = role;
+		this.memberStatus = memberStatus;
+	}
+
+	public void joinTeam() {
+		role = MEMBER;
+		memberStatus = JOINED;
+	}
+
 
 }

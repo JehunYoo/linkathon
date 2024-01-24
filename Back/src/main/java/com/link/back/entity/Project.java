@@ -32,10 +32,6 @@ public class Project {
 	@JoinColumn(name = "team_id", nullable = false)
 	private Team team;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "hackathon_id", nullable = false)
-	private Hackathon hackathon;
-
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "project_image_id")
 	private ProjectImage projectImage;
