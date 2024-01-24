@@ -63,6 +63,10 @@ const login = function () {
 
 <style scoped>
 
+.text-input:focus {
+  outline: #7D3CFF 2px solid;
+}
+
 .google {
   color: #303030;
 }
