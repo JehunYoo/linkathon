@@ -149,7 +149,7 @@ img {
 }
 
 .hackathon-banner-list {
-  min-width: 315px;
+  min-width: 310px;
   margin-top: 21px;
   display: flex;
   flex-direction: row;
@@ -159,7 +159,7 @@ img {
 
 .hackathon-banner-list-container {
   flex: 1;
-  min-width: 315px;
+  min-width: 310px;
   height: max-content;
   overflow: hidden;
 }
