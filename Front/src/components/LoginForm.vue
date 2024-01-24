@@ -99,11 +99,13 @@ img {
   border: 1px solid #262626;
   height: 40px;
   line-height: 39px;
+  transition: transform 0.3s ease;
 }
 
 .social-button:hover {
-  scale: 1.05;
+  transform: scale(1.05);
 }
+
 .social-button-container {
   display: flex;
   gap: 20px;
@@ -125,6 +127,7 @@ img {
 span:hover {
   color: #7D3CFF;
 }
+
 .submenu {
   margin-top: 12px;
   color: #303030;
@@ -178,6 +181,12 @@ h1 {
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+}
+
+.submit-button:hover {
+  background: white;
+  color: #404040;
+  transition: background-color 0.3s ease;
 }
 
 .submit-button, .text-input {
