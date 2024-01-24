@@ -2,8 +2,9 @@
 
 import Tier from "@/components/Tier.vue";
 import ModalButton from "@/components/Modal/ModalButton.vue";
-import ModealGithubButton from "@/components/Modal/ModealGithubButton.vue";
+import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
+
 </script>
 
 <template>
@@ -13,7 +14,7 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
       <div class="member-info">
         <div class="member-name">카리나</div>
         <div class="member-workflow">3년차 백엔드 개발자</div>
-        <Tier width="48px" height="28px" font-size="24px" rating="200" radius="10px"/>
+        <Tier width="48px" height="28px" font-size="24px" :rating="200" radius="10px"/>
       </div>
       <div class="member-introduce">
         안녕하세요. 백엔드 개발자입니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다.
@@ -21,7 +22,7 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
       <div class="button-wrapper">
         <div class="button-container">
           <div class="git-button">
-            <ModealGithubButton/>
+            <ModalGithubButton/>
           </div>
           <div class="button-right-container">
             <ModalButton button-text="합류 요청"/>
@@ -30,8 +31,8 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
       </div>
     </div>
   </div>
+  <h2 style="padding-left: 23px">기술 스택</h2>
   <div class="member-skill-container">
-    <h2>기술 스택</h2>
     <div class="skill-list-container">
       <ModalSkill title="백엔드" font-size="16px" color="#303030" font-weight="400" margin-bottom="12px"/>
       <ModalSkill title="프론트엔드" font-size="16px" color="#303030" font-weight="400" margin-bottom="12px" style="justify-content: end"/>
@@ -46,7 +47,7 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
 <style scoped>
 .skill-list-container {
   display: flex;
-  gap: 12px;
+  gap: 26px;
   margin-bottom: 16px;
 }
 
@@ -59,7 +60,10 @@ h2 {
 }
 
 .member-skill-container {
-  padding: 0 24px 24px;
+  max-height: 185px;
+  overflow: scroll;
+  margin-bottom: 23px;
+  padding: 0 24px 0px;
 }
 
 * {
@@ -76,6 +80,12 @@ h2 {
   }
 }
 
+@media screen and (max-width: 698px) {
+  .member-skill-container{
+    height: max-content;
+    max-height: max-content;
+  }
+}
 @media screen and (max-width: 768px) {
   .member-workflow {
     display: none;
@@ -128,6 +138,7 @@ img {
 }
 
 .member-introduce {
+  max-width: 382px;
   margin-top: 14px;
   color: #303030;
   font-size: 18px;

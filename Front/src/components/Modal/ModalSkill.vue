@@ -2,14 +2,14 @@
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import {Builder} from "builder-pattern";
 
-const dummySkillList: SkillIcon[] = [];
+const dummySkillList: SkillDTO[] = [];
 const dummySkill: SkillDTO = Builder<SkillDTO>()
     .skillId(1)
     .skillName("TypeScript")
     .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .skillYear("10")
+    .skillYear(10)
     .build()
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 5; i++) {
   dummySkillList.push(dummySkill);
 }
 
@@ -34,7 +34,7 @@ defineProps({
     </div>
     <div class="skill-container">
       <template v-for="skill in dummySkillList">
-        <SkillIcon width="47px" height="47px" radius="10px" :skill="skill" font-size="28px"></SkillIcon>
+        <SkillIcon width="48px" height="48px" radius="10px" :skill="skill" font-size="28px"></SkillIcon>
       </template>
     </div>
   </div>
@@ -43,6 +43,7 @@ defineProps({
 
 <style scoped>
 .modal-skill-container {
+  max-width: 290px;
   width: 100%;
 }
 

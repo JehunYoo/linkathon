@@ -70,8 +70,7 @@ svg {
 
 .slot {
   max-height: 80%;
-  min-width: 642px;
-  max-width: 768px;
+  width: max-content;
   position: fixed;
   left: 50%;
   top: 50%;
@@ -83,9 +82,10 @@ svg {
   overflow: scroll;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 698px) {
   .slot {
     min-width: 0;
+    max-width: 100vw;
     width: 100vw;
     height: 100vh;
     max-height: 100vh;
