@@ -4,7 +4,10 @@ import Recruit from '@/view/Recruit.vue'
 
 const routes = [
     {path: '/', component: Index},
-    {path: '/recruit', component: Recruit}
+    {path: '/recruit', component: Recruit},
+    {path: '/register', component: Recruit},
+    {path: '/login', component: Recruit},
+    {path: '/findAccount', component: Recruit},
 ];
 
 const router = createRouter({
