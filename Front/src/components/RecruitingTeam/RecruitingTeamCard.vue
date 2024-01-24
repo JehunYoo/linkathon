@@ -181,7 +181,7 @@ const props = defineProps({
 .card-container {
   flex: 1;
   width: 100%;
-  min-width: 426px;
+  min-width: 424px;
   height: 204px;
   border-radius: 10px;
   border: 1px solid #DEDEDE;

@@ -7,7 +7,21 @@ const props = defineProps({
   width: String,
   height: String,
   fontSize: String,
+  radius: {
+    type:String,
+    default:"4px"
+  },
 });
+
+const tierName: string[] = [
+  "B",
+  "S",
+  "G",
+  "P",
+  "D"
+];
+
+
 </script>
 
 <template>
@@ -22,10 +36,11 @@ const props = defineProps({
           width:width,
           height:height,
           fontSize:fontSize,
-          lineHeight:height
+          lineHeight:height,
+          borderRadius:radius,
        }"
   >
-    {{ props.rating }}
+    {{ tierName[Math.floor((props.rating >= 400 ? 400 : props.rating) / 100)] }}
   </div>
 </template>
 
@@ -34,6 +49,7 @@ const props = defineProps({
   color: white;
   text-align: center;
   border-radius: 4px;
+  font-family: "Jockey One", sans-serif;
 }
 
 .bronze {

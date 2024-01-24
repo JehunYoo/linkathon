@@ -71,7 +71,7 @@ img {
 .project-card {
   padding: 12px;
   flex: 1;
-  min-width: 315px;
+  min-width: 310px;
   height: 124px;
   border-radius: 10px;
   border: 1px solid #DEDEDE;
