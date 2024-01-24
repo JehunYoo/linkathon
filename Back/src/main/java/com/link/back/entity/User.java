@@ -17,9 +17,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+<<<<<<< Back/src/main/java/com/link/back/entity/User.java
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+=======
+import lombok.Builder;
+>>>>>>> Back/src/main/java/com/link/back/entity/User.java
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -80,6 +84,8 @@ public class User {
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
 
+
 	@OneToMany(mappedBy = "user")
 	List<UserSkill> userSkills = new ArrayList<>();
+
 }

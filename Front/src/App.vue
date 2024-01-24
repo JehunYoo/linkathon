@@ -11,7 +11,6 @@ import Footer from "@/components/Footer/Footer.vue";
       <div class="content">
         <router-view/>
       </div>
-
     </div>
     <Footer/>
   </div>
@@ -31,7 +30,7 @@ import Footer from "@/components/Footer/Footer.vue";
 }
 
 .content {
-  max-width: 1375px;
+  max-width: 1355px;
   width: 100%;
   padding: 20px;
 }
