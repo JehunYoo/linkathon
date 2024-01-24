@@ -40,7 +40,7 @@ const tierName: string[] = [
           borderRadius:radius,
        }"
   >
-    {{ tierName[(props.rating >= 400 ? 400 : props.rating) / 100] }}
+    {{ tierName[Math.floor((props.rating >= 400 ? 400 : props.rating) / 100)] }}
   </div>
 </template>
 
