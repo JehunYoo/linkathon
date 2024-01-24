@@ -1,8 +1,18 @@
 <script setup lang="ts">
+import HeaderSideMenu from "@/components/Header/HeaderSideMenu.vue";
+import {ref} from "vue";
 
+const sidebarControl = ref<Number>(0);
+
+const sidebarController = (num:number) => {
+  sidebarControl.value = num;
+}
 </script>
 
 <template>
+  <HeaderSideMenu :sidebar-controller="sidebarController" v-if="sidebarControl===1"/>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"/>
   <div class="header-nav-container">
     <div class="header-nav">
       <div class="logo">LINK.</div>
@@ -13,6 +23,11 @@
         <div class="header-nav-menu-hover">공유 프로젝트</div>
       </div>
       <div class="right-menu-container">
+        <div class="hamburger-button">
+          <span class="material-symbols-outlined" @click="sidebarController(1)">
+            menu
+          </span>
+        </div>
         <div class="tl header-nav-menu-hover">로그인</div>
         <div class="right-menu-divider">|</div>
         <div class="tr header-nav-menu-hover">회원가입</div>
@@ -22,6 +37,32 @@
 </template>
 
 <style scoped>
+
+.hamburger-button {
+  color: #2B2B2B;
+  display: none;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  font-style: normal;
+  padding: 10px;
+}
+
+.hamburger-button:hover {
+  color: #7D3BFF;
+  font-weight: 700;
+}
+
+@media screen and (max-width: 1024px) {
+  .left-menu-container, .right-menu-divider, .header-nav-menu-hover {
+    display: none;
+  }
+
+  .hamburger-button {
+    display: flex;
+  }
+}
+
 .header-nav-menu-hover:hover {
   color: #7D3BFF;
   font-weight: 700;

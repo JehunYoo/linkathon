@@ -75,7 +75,7 @@ svg {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 99999;
+  z-index: 4;
   border-radius: 30px;
   border: 2px solid #7D3BFF;
   background: #FFF;
