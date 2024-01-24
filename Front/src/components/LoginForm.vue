@@ -107,7 +107,7 @@ img {
 }
 
 .social-button:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .social-button-container {

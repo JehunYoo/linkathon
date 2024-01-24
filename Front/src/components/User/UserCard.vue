@@ -69,10 +69,11 @@ img {
   height: 100px;
   border-radius: 10px;
   border: 1px solid #DEDEDE;
+  transition: transform 0.3s ease;
 }
 
 .user-card:hover {
-  scale: 1.02;
+  transform: scale(1.01);
   border: #7d3bff 1px solid;
   box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.25);
 }
