@@ -62,5 +62,4 @@ public class UserTeam {
 		memberStatus = JOINED;
 	}
 
-
 }

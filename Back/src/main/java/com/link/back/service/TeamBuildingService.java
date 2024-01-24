@@ -34,6 +34,7 @@ public class TeamBuildingService {
 	private final UserRepository userRepository;
 	private final UserTeamRepository userTeamRepository;
 
+
 	public void teamParticipate(Long teamId, Long userId, String status) {
 		Team team = teamRepository.findById(teamId).orElseThrow(RuntimeException::new);
 		User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
@@ -90,7 +91,7 @@ public class TeamBuildingService {
 		// 팀 정보(teamName, teamDesc), 해커톤 정보
 		UserTeam userTeam = userTeamRepository.findUserTeamByTeamIdWithTeamAndHackathon(teamId);
 		// 팀 멤버 정보(List<TeamMemberResponseDto>
-		List<UserTeam> members = userTeamRepository.findMembers(teamId);
+		List<UserTeam> members = userTeamRepository.findMembersByTeamId(teamId);
 		return new TeamApplicationResponseDto(teams, userTeam, members);
 	}
 
@@ -105,7 +106,7 @@ public class TeamBuildingService {
 			.teamMember(0)
 			.teamDesc(createTeamRequestDto.getTeamDesc())
 			.build();
-		Long teamId = teamRepository.save(team).getTeamId();
+		teamRepository.save(team);
 		User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 		UserTeam userTeam = UserTeam.builder()
 			.user(user)
@@ -114,5 +115,22 @@ public class TeamBuildingService {
 			.memberStatus(JOINED)
 			.build();
 		userTeamRepository.save(userTeam);
+	}
+
+	public void deleteTeam(Long teamId) {
+		Team team = teamRepository.findById(teamId).orElseThrow(RuntimeException::new);
+		TeamStatus teamStatus = team.getTeamStatus();
+
+		// 팀 삭제 userTeam cascade remove로 자동 삭제
+		teamRepository.delete(team);
+
+		if(teamStatus.equals(TeamStatus.BUILDING)) { // 팀 빌딩 완료 상태일 때
+			// 프로젝트 삭제
+
+			// user 프로젝트 참가 여부 true로 변경
+
+		} else { // 팀 빌딩 미 완료 상태일 때
+
+		}
 	}
 }

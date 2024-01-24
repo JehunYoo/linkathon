@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import com.link.back.entity.MemberStatus;
@@ -13,16 +12,18 @@ import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
 
+
 @Repository
+
 public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
 	UserTeam findUserTeamByTeamAndUser(Team team, User user);
 
-	// todo
+		// todo
 	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
 		+ "join fetch UserSkill userSkill join fetch Skill skill "
 		+ "where userTeam.team = :team and userTeam.memberStatus = :memberStatus")
-	List<UserTeam> findCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
+		List<UserTeam> findCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
 
 	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
 		+ "join fetch UserSkill userSkill join fetch Skill skill "
@@ -40,16 +41,29 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
 	List<UserTeam> findUserTeamsByUserAndMemberStatus(User user, MemberStatus status);
 
-	@Query("select userTeam from UserTeam userTeam join fetch Team team join fetch Hackathon join fetch HackathonImage hackathonImage"
-		+ " join fetch UserTeam where team.teamId = :teamId and userTeam.memberStatus = 'JOINED'")
+	@Query(
+		"select userTeam from UserTeam userTeam join fetch Team team join fetch Hackathon join fetch HackathonImage hackathonImage"
+			+ " join fetch UserTeam where team.teamId = :teamId and userTeam.memberStatus = 'JOINED'")
 	UserTeam findUserTeamByTeamIdWithTeamAndHackathon(@Param("teamId") Long teamId);
 
 	@Query("select userTeam from UserTeam userTeam"
 		+ " join fetch User user join fetch UserImage userImage"
 		+ " join fetch UserSkill userSkill join fetch Skill skill"
 		+ " where userTeam.team.teamId = :teamId and userTeam.memberStatus = 'JOINED'")
-	List<UserTeam> findMembers(@Param("teamId") Long teamId);
+	List<UserTeam> findMembersByTeamId(@Param("teamId") Long teamId);
 
 	@Query("delete from UserTeam u where u.user.userId = :userId and u.team.teamId = :teamId")
 	void deleteUserTeamByTeamIdAndUserId(@Param("teamId") Long teamId, @Param("userId") Long userId);
+
+	List<UserTeam> findUserTeamsByTeam(Team team);
+
+	// todo
+	// @Query("select ut from UserTeam ut join fetch ut.user u join fetch u.userImage ui "
+	// 	+ "where ut.team = :team and ut.memberStatus = :memberStatus")
+	// List<UserTeam> findCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
+	//
+	// @Query("select ut from UserTeam ut join fetch ut.user u join fetch u.userImage ui "
+	// 	+ "where ut.team = :team")
+	// List<UserTeam> findMembers(@Param("team") Team team);
+
 }

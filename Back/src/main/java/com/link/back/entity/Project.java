@@ -8,6 +8,9 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -32,7 +35,7 @@ public class Project {
 	@JoinColumn(name = "team_id", nullable = false)
 	private Team team;
 
-	@OneToOne(fetch = LAZY)
+	@OneToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "project_image_id")
 	private ProjectImage projectImage;
 
@@ -62,10 +65,8 @@ public class Project {
 	private String projectUrl;
 
 	@Column(nullable = false)
+	@ColumnDefault("0")
 	private Integer hackathon_score;
-
-	@Column(nullable = false)
-	private Integer likes;
 
 	@Column(nullable = false)
 	private boolean winState;

@@ -131,7 +131,11 @@ public class TeamBuildingController {
 	}
 
 	// 팀 삭제
-
+	@DeleteMapping("/{teamId}")
+	@ResponseStatus(NO_CONTENT)
+	public void deleteTeam(@PathVariable @Positive Long teamId) {
+		teamBuildingService.deleteTeam(teamId);
+	}
 
 	// 팀 정보 수정
 
