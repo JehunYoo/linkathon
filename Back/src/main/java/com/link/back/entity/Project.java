@@ -47,7 +47,7 @@ public class Project {
 
 	@Enumerated(STRING)
 	@Column(nullable = false)
-	private ProjectStatus projectStatus;
+	private ProjectStatus projectStatus = ProjectStatus.OPENED;
 
 	@Column(nullable = false)
 	private LocalDateTime registeredDate;
@@ -62,13 +62,10 @@ public class Project {
 	private String projectUrl;
 
 	@Column(nullable = false)
-	private Integer hackathon_score;
+	private Integer hackathon_score = 0;
 
 	@Column(nullable = false)
-	private Integer likes;
-
-	@Column(nullable = false)
-	private Boolean winState;
+	private Boolean winState = Boolean.FALSE;
 
 	@Column(length = PROJECT_DEPLOY_LENGTH)
 	private String deployUrl;
@@ -76,8 +73,7 @@ public class Project {
 	@Builder
 	public Project(Long projectId, Team team, ProjectImage projectImage, String projectName, String projectTopic,
 		String projectDesc, ProjectStatus projectStatus, LocalDateTime registeredDate, LocalDateTime startDate,
-		LocalDateTime endDate, String projectUrl, Integer hackathon_score, Integer likes, Boolean winState,
-		String deployUrl) {
+		LocalDateTime endDate, String projectUrl, Integer hackathon_score, Boolean winState, String deployUrl) {
 		this.projectId = projectId;
 		this.team = team;
 		this.projectImage = projectImage;
@@ -90,32 +86,28 @@ public class Project {
 		this.endDate = endDate;
 		this.projectUrl = projectUrl;
 		this.hackathon_score = hackathon_score;
-		this.likes = likes;
 		this.winState = winState;
 		this.deployUrl = deployUrl;
 	}
 
-	public void updateProject(String projectName, String projectTopic, String projectDesc,
-		ProjectStatus projectStatus, LocalDateTime startDate, LocalDateTime endDate,
-		String projectUrl, Integer hackathonScore, Integer likes, Boolean winState,
-		String deployUrl, ProjectImage projectImage) {
-
-		this.projectImage = projectImage;
+	public void updateProjectDetail(String projectName, String projectTopic, String projectDesc,
+		LocalDateTime startDate, LocalDateTime endDate,
+		String projectUrl, String deployUrl, ProjectImage projectImage) {
 		this.projectName = projectName;
 		this.projectTopic = projectTopic;
-		this.projectDesc = projectDesc;
-		this.projectStatus = projectStatus;
+		if (projectDesc != null)
+			this.projectDesc = projectDesc;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.projectUrl = projectUrl;
-		this.hackathon_score = hackathonScore;
-		this.likes = likes;
-		this.winState = winState;
-		this.deployUrl = deployUrl;
+		if (deployUrl != null)
+			this.deployUrl = deployUrl;
+		if (projectImage != null)
+			this.projectImage = projectImage;
 	}
 
-	public void updateProjectStatus(ProjectStatus projectStatus) {
-		this.projectStatus = projectStatus;
+	public void updateProjectStatus() {
+		this.projectStatus.nextStatus();
 	}
 
 }
