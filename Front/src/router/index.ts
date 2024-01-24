@@ -1,13 +1,16 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import Index from '@/view/Index.vue';
 import Recruit from '@/view/Recruit.vue'
+import Login from "@/view/Login.vue";
+import Register from "@/view/Register.vue";
+import FindAccount from "@/view/FindAccount.vue";
 
 const routes = [
     {path: '/', component: Index},
     {path: '/recruit', component: Recruit},
-    {path: '/register', component: Recruit},
-    {path: '/login', component: Recruit},
-    {path: '/findAccount', component: Recruit},
+    {path: '/register', component: Register},
+    {path: '/login', component: Login},
+    {path: '/findAccount', component: FindAccount},
 ];
 
 const router = createRouter({
