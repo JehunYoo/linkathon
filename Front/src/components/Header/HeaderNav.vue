@@ -4,7 +4,7 @@ import {ref} from "vue";
 
 const sidebarControl = ref<Number>(0);
 
-const sidebarController = (num:number) => {
+const sidebarController = (num: number) => {
   sidebarControl.value = num;
 }
 </script>
@@ -15,9 +15,9 @@ const sidebarController = (num:number) => {
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"/>
   <div class="header-nav-container">
     <div class="header-nav">
-      <div class="logo">LINK.</div>
+      <router-link class="logo" to="/">LINK.</router-link>
       <div class="left-menu-container">
-        <div class="header-nav-menu-hover">팀원 구하기</div>
+        <router-link class="header-nav-menu-hover" to="/recruit">팀원 구하기</router-link>
         <div class="header-nav-menu-hover">내 프로젝트</div>
         <div class="header-nav-menu-hover">해커톤</div>
         <div class="header-nav-menu-hover">공유 프로젝트</div>
@@ -37,6 +37,13 @@ const sidebarController = (num:number) => {
 </template>
 
 <style scoped>
+*:visited {
+  color: #2B2B2B;
+}
+
+a {
+  color: #2b2b2b;
+}
 
 .hamburger-button {
   color: #2B2B2B;
@@ -134,6 +141,8 @@ const sidebarController = (num:number) => {
   position: fixed;
   background: white;
   top: 0;
-  z-index: 9999;
+  z-index: 5;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 </style>

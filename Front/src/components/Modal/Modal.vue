@@ -91,6 +91,7 @@ svg {
     max-height: 100vh;
     border: none;
     border-radius: 0;
+    z-index: 9999999;
   }
 }
 </style>

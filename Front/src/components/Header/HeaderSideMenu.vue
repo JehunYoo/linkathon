@@ -42,7 +42,8 @@ const props = defineProps({
     </h1>
     <div class="hr"/>
     <div class="side-bar-menu">
-      <div>팀원구하기</div>
+      <router-link to="/">홈으로</router-link>
+      <router-link to="/recruit">팀원구하기</router-link>
       <div>내 프로젝트</div>
       <div>해커톤</div>
       <div>명예의 전당</div>
@@ -54,6 +55,23 @@ const props = defineProps({
 </template>
 
 <style scoped>
+*:visited {
+  color: #404040;
+}
+
+a {
+  color: #404040;
+}
+
+* {
+  box-shadow: none;
+}
+a:hover {
+  color: #7D3CFF;
+  margin-left: 10px;
+  scale: 1.05;
+}
+
 svg {
   position: absolute;
   right: 33px;
