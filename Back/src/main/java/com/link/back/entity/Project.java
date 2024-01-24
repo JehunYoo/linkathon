@@ -14,8 +14,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,10 +31,6 @@ public class Project {
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "team_id", nullable = false)
 	private Team team;
-
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "hackathon_id", nullable = false)
-	private Hackathon hackathon;
 
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "project_image_id")
@@ -72,8 +68,54 @@ public class Project {
 	private Integer likes;
 
 	@Column(nullable = false)
-	private boolean winState;
+	private Boolean winState;
 
 	@Column(length = PROJECT_DEPLOY_LENGTH)
 	private String deployUrl;
+
+	@Builder
+	public Project(Long projectId, Team team, ProjectImage projectImage, String projectName, String projectTopic,
+		String projectDesc, ProjectStatus projectStatus, LocalDateTime registeredDate, LocalDateTime startDate,
+		LocalDateTime endDate, String projectUrl, Integer hackathon_score, Integer likes, Boolean winState,
+		String deployUrl) {
+		this.projectId = projectId;
+		this.team = team;
+		this.projectImage = projectImage;
+		this.projectName = projectName;
+		this.projectTopic = projectTopic;
+		this.projectDesc = projectDesc;
+		this.projectStatus = projectStatus;
+		this.registeredDate = registeredDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.projectUrl = projectUrl;
+		this.hackathon_score = hackathon_score;
+		this.likes = likes;
+		this.winState = winState;
+		this.deployUrl = deployUrl;
+	}
+
+	public void updateProject(String projectName, String projectTopic, String projectDesc,
+		ProjectStatus projectStatus, LocalDateTime startDate, LocalDateTime endDate,
+		String projectUrl, Integer hackathonScore, Integer likes, Boolean winState,
+		String deployUrl, ProjectImage projectImage) {
+
+		this.projectImage = projectImage;
+		this.projectName = projectName;
+		this.projectTopic = projectTopic;
+		this.projectDesc = projectDesc;
+		this.projectStatus = projectStatus;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.projectUrl = projectUrl;
+		this.hackathon_score = hackathonScore;
+		this.likes = likes;
+		this.winState = winState;
+		this.deployUrl = deployUrl;
+	}
+
+	public void updateProjectStatus(ProjectStatus projectStatus) {
+		this.projectStatus = projectStatus;
+	}
+
 }
