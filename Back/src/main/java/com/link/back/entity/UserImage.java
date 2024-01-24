@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +20,9 @@ public class UserImage {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private Long profileId;
+	private Long userImageId;
 
 	@OneToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id")
 	private User user;
 
 	@Column(length = USER_IMAGE_NAME_LENGTH, nullable = false)
@@ -34,5 +32,5 @@ public class UserImage {
 	private String userImageUrl;
 
 	@Column(length = USER_ORIGIN_IMAGE_NAME_LENGTH, nullable = false)
-	private String originImageName;
+	private String userOriginImageName;
 }
