@@ -1,9 +1,12 @@
 package com.link.back.service;
 
+// import static com.link.back.common.mapper.ProjectMapper.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,16 +35,27 @@ public class ProjectService {
 	private final ProjectImageRepository projectImageRepository;
 
 	public void createProject(ProjectRequestDto projectRequestDto) {
+		System.out.println(projectRequestDto);
 		Team team = teamRepository.getReferenceById(projectRequestDto.teamId());
-		ProjectImage projectImage = createProjectImageEntity(projectRequestDto.projectImage());
+		ProjectImage projectImage = null;
+		if (projectRequestDto.projectImage() != null) {
+			projectImage = createProjectImageEntity(projectRequestDto.projectImage());
+			projectImageRepository.save(projectImage);
+		}
 		Project project = createProjectEntity(team, projectImage, projectRequestDto);
 		projectRepository.save(project);
 	}
 
-	public List<ProjectResponseDto> getAllOpenedProjects(Pageable pageable) {
-		Page<Project> projects = projectRepository.findAllByProjectStatusOrderByRegisteredDateDesc(ProjectStatus.CLOSED,
+	public Page<ProjectResponseDto> getAllClosedProjects(Pageable pageable) {
+		Page<Project> projectPage = projectRepository.findAllByProjectStatusOrderByRegisteredDateDesc(
+			ProjectStatus.CLOSED,
 			pageable);
-		return projects.stream().map(this::toProjectResponseDto).toList();
+		System.out.println(projectPage);
+		List<ProjectResponseDto> projectResponseList = projectPage.stream()
+			.map(this::toProjectResponseDto)
+			.toList();
+		System.out.println(projectResponseList);
+		return new PageImpl<>(projectResponseList, projectPage.getPageable(), projectPage.getTotalElements());
 	}
 
 	public List<ProjectResponseDto> getPopularProjects() {
@@ -51,8 +65,10 @@ public class ProjectService {
 	}
 
 	public List<ProjectResponseDto> getMyProjects(Long userId) {
-		// TODO: 사용자가 갖고 있는 프로젝트 정보 반환
-		return null;
+		return projectRepository.findByUserId(userId)
+			.stream()
+			.map(this::toProjectResponseDto)
+			.toList();
 	}
 
 	public ProjectResponseDto getProjectDetail(Long projectId) {
@@ -62,13 +78,16 @@ public class ProjectService {
 
 	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto) {
 		Project project = projectRepository.findById(projectId).orElseThrow();
-		ProjectImage projectImage = createProjectImageEntity(projectRequestDto.projectImage());
-		this.updateProjectEntity(project, projectImage, projectRequestDto);
+		ProjectImage projectImage = null;
+		if (projectRequestDto.projectImage() != null) {
+			projectImage = createProjectImageEntity(projectRequestDto.projectImage());
+			projectImageRepository.save(projectImage);
+		}
+		updateProjectEntity(project, projectImage, projectRequestDto);
 		projectRepository.save(project);
 	}
 
 	public void deleteProject(Long projectId) {
-		// TODO: 삭제시 검증 요소 추가
 		projectRepository.deleteById(projectId);
 	}
 
@@ -83,20 +102,28 @@ public class ProjectService {
 			.projectId(project.getProjectId())
 			.teamId(project.getTeam().getTeamId())
 			.hackathonId(project.getTeam().getHackathon().getHackathonId())
+			.hackathonName(project.getTeam().getHackathon().getHackathonName())
+			.hackathonScore(project.getHackathonScore())
 			.projectName(project.getProjectName())
 			.projectTopic(project.getProjectTopic())
 			.projectDesc(project.getProjectDesc())
 			.projectStatus(project.getProjectStatus())
 			.registeredDate(project.getRegisteredDate())
-			.startDate(project.getStartDate())
-			.endDate(project.getEndDate())
 			.projectUrl(project.getProjectUrl())
-			.hackathonScore(project.getHackathon_score())
 			.winState(project.getWinState())
 			.deployUrl(project.getDeployUrl())
-			.projectImgName(project.getProjectImage().getProjectImageName())
-			.projectImgUrl(project.getProjectImage().getProjectImageUrl())
-			.projectOriginImgName(project.getProjectImage().getProjectOriginImageName())
+			.projectImage(
+				project.getProjectImage() == null ? null :
+					toProjectImageDto(project.getProjectImage())
+			)
+			.build();
+	}
+
+	private ProjectImageDto toProjectImageDto(ProjectImage projectImage) {
+		return ProjectImageDto.builder()
+			.projectImgName(projectImage.getProjectImageName())
+			.projectImgUrl(projectImage.getProjectImageUrl())
+			.projectOriginImgName(projectImage.getProjectOriginImageName())
 			.build();
 	}
 
@@ -107,10 +134,11 @@ public class ProjectService {
 			.projectName(projectRequestDto.projectName())
 			.projectTopic(projectRequestDto.projectTopic())
 			.projectDesc(projectRequestDto.projectDesc())
-			.registeredDate(LocalDateTime.now())
-			.startDate(projectRequestDto.startDate())
-			.endDate(projectRequestDto.endDate())
 			.projectUrl(projectRequestDto.projectUrl())
+			.registeredDate(LocalDateTime.now())
+			.hackathonScore(0)
+			.winState(Boolean.FALSE)
+			.projectStatus(ProjectStatus.OPENED)
 			// .deployUrl("http://sample-deploy.com")
 			.build();
 	}
@@ -120,16 +148,14 @@ public class ProjectService {
 			projectRequestDto.projectName(),
 			projectRequestDto.projectTopic(),
 			projectRequestDto.projectDesc(),
-			projectRequestDto.startDate(),
-			projectRequestDto.endDate(),
 			projectRequestDto.projectUrl(),
 			projectRequestDto.deployUrl(),
 			projectImage
 		);
 	}
 
-	public ProjectImage createProjectImageEntity(ProjectImageDto projectImageDto) {
-		return projectImageDto == null ? null : ProjectImage.builder()
+	private ProjectImage createProjectImageEntity(ProjectImageDto projectImageDto) {
+		return ProjectImage.builder()
 			.projectImageName(projectImageDto.projectImgName())
 			.projectImageUrl(projectImageDto.projectImgUrl())
 			.projectOriginImageName(projectImageDto.projectOriginImgName())

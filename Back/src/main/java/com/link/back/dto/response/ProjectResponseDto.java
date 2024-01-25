@@ -11,17 +11,18 @@ import lombok.Builder;
 public record ProjectResponseDto(
 	Long projectId,
 	Long teamId, // Team team,
+	Long hackathonId,
+	String hackathonName,
+	Integer hackathonScore,
 	String projectName,
 	String projectTopic,
 	String projectDesc,
 	ProjectStatus projectStatus,
 	LocalDateTime registeredDate,
 	String projectUrl,
-	Integer hackathonScore,
 	Integer likes,
 	Boolean winState,
 	String deployUrl,
-
 	ProjectImageDto projectImage
 ) {
 }

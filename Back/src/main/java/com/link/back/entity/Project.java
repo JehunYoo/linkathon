@@ -56,10 +56,10 @@ public class Project {
 	private String projectUrl;
 
 	@Column(nullable = false)
-	private Integer hackathon_score = 0;
+	private Integer hackathonScore;
 
 	@Column(nullable = false)
-	private Boolean winState = Boolean.FALSE;
+	private Boolean winState;
 
 	@Column(length = PROJECT_DEPLOY_LENGTH)
 	private String deployUrl;
@@ -67,7 +67,7 @@ public class Project {
 	@Builder
 	public Project(Long projectId, Team team, ProjectImage projectImage, String projectName, String projectTopic,
 		String projectDesc, ProjectStatus projectStatus, LocalDateTime registeredDate,
-		String projectUrl, Integer hackathon_score, Boolean winState, String deployUrl) {
+		String projectUrl, Integer hackathonScore, Boolean winState, String deployUrl) {
 		this.projectId = projectId;
 		this.team = team;
 		this.projectImage = projectImage;
@@ -77,7 +77,7 @@ public class Project {
 		this.projectStatus = projectStatus;
 		this.registeredDate = registeredDate;
 		this.projectUrl = projectUrl;
-		this.hackathon_score = hackathon_score;
+		this.hackathonScore = hackathonScore;
 		this.winState = winState;
 		this.deployUrl = deployUrl;
 	}
@@ -96,7 +96,7 @@ public class Project {
 	}
 
 	public void updateProjectStatus() {
-		this.projectStatus.nextStatus();
+		this.projectStatus = this.projectStatus.nextStatus();
 	}
 
 }
