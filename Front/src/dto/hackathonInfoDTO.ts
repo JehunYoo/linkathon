@@ -1,4 +1,4 @@
-interface HackathonInfo {
+interface HackathonInfoDTO {
     title:string[],
     recruitmentStart:Date,
     recruitmentEnd:Date,

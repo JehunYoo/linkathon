@@ -1,4 +1,4 @@
-interface HackathonTeamInfo {
+interface HackathonTeamInfoDTO {
     hackathonName:string,
     projectId: number,
     teamName: string,
@@ -8,6 +8,6 @@ interface HackathonTeamInfo {
     nowPoint: number,
     maxPoint: number,
     registerDate: Date,
-    imgSrc: string,
-    skillList: Skill[],
+    imgUrl: string,
+    skillList: SkillDTO[],
 }

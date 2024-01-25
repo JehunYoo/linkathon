@@ -8,7 +8,7 @@ const apiService = new ApiService();
 const url = "/api/v1"
 
 class UserService {
-    async login(user: User): Promise<void> {
+    async login(user: UserDTO): Promise<void> {
         try {
             const response = await apiService.postData(false, `${url}/auth/login`, user);
             if (response && response.status === httpStatusCode.OK) {
@@ -21,7 +21,7 @@ class UserService {
     }
 
     @CatchError
-    async sign(user: User): Promise<void> {
+    async sign(user: UserDTO): Promise<void> {
         const response = await apiService.postData(false, `${url}/users`, user);
         if (response && response.status === httpStatusCode.OK) {
             alert("가입 성공");

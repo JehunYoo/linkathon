@@ -2,12 +2,7 @@ package com.link.back.entity;
 
 public enum ProjectStatus {
 
-	REGISTERED() {
-		@Override
-		public ProjectStatus nextStatus() {
-			return OPENED;
-		}
-	}, OPENED() {
+	OPENED() {
 		@Override
 		public ProjectStatus nextStatus() {
 			return CLOSED;

@@ -6,15 +6,19 @@ import static lombok.AccessLevel.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = PROTECTED)
 public class ProjectImage {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long projectImageId;
 
 	@Column(length = PROJECT_IMAGE_NAME_LENGTH, nullable = false)
@@ -25,4 +29,13 @@ public class ProjectImage {
 
 	@Column(length = PROJECT_ORIGIN_IMAGE_NAME, nullable = false)
 	private String projectOriginImageName;
+
+	@Builder
+	public ProjectImage(Long projectImageId, String projectImageName, String projectImageUrl,
+		String projectOriginImageName) {
+		this.projectImageId = projectImageId;
+		this.projectImageName = projectImageName;
+		this.projectImageUrl = projectImageUrl;
+		this.projectOriginImageName = projectOriginImageName;
+	}
 }

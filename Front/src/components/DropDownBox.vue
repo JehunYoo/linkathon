@@ -1,0 +1,78 @@
+<script setup lang="ts">
+import {ref} from 'vue';
+
+const dummy = ref(["선택", "브론즈", "실버", "골드", "다이아"]);
+const dropdownOpen = ref(false);
+const select = ref(0)
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
+const clickDropdownMenu = (item: number) => {
+  select.value = item;
+};
+</script>
+
+<template>
+  <div class="dropdown-container" @click="toggleDropdown">
+    <div class="dropdown-box">
+      {{ dummy[select] }}
+      <svg style="margin-left: 11px" xmlns="http://www.w3.org/2000/svg" width="12" height="6" viewBox="0 0 12 6"
+           fill="none">
+        <path d="M1 1L6 5L11 1" stroke="#303030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div v-if="dropdownOpen" class="dropdown-content">
+      <div v-for="(item, index) in dummy" :key="index" @click="clickDropdownMenu(index)">{{ item }}</div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.dropdown-container {
+  display: inline-block;
+  position: relative;
+  width: max-content;
+}
+
+.dropdown-box {
+  color: #606060;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 9px 15px 10px;
+  border-radius: 18px;
+  border: 1px solid #606060;
+  width: max-content;
+}
+
+.dropdown-content {
+  color: #606060;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 9px 15px 10px;
+  border-radius: 18px;
+  border: 1px solid #606060;
+  width: 100%;
+  position: absolute;
+  min-width: max-content;
+  z-index: 2;
+  background: white;
+}
+
+.dropdown-content div {
+  text-align: center;
+  padding: 8px;
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content div:hover {
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+</style>
