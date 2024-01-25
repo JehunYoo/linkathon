@@ -1,13 +1,17 @@
 package com.link.back.entity;
 
 import static com.link.back.config.AppConstant.*;
+import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Builder;
@@ -42,11 +46,19 @@ public class Hackathon {
 	private Integer maxPoint;
 
 	@Builder
-	public Hackathon(Long hackathonId, String hackathonName, LocalDate registerDate, LocalDate teamDeadlineDate,
-		LocalDate startDate, LocalDate endDate, Integer maxPoint) {
-		this.hackathonId = hackathonId;
+	public Hackathon(String hackathonName, LocalDate registerDate, LocalDate teamDeadlineDate, LocalDate startDate,
+		LocalDate endDate,Integer maxPoint) {
 		this.hackathonName = hackathonName;
 		this.registerDate = registerDate;
+		this.teamDeadlineDate = teamDeadlineDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.maxPoint = maxPoint;
+	}
+
+	public void updateHackathonInfo(String hackathonName, LocalDate teamDeadlineDate, LocalDate startDate,
+		LocalDate endDate, Integer maxPoint) {
+		this.hackathonName = hackathonName;
 		this.teamDeadlineDate = teamDeadlineDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
