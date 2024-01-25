@@ -6,6 +6,7 @@ import Register from "@/view/Register.vue";
 import FindAccount from "@/view/FindAccount.vue";
 import PasswordChange from "@/view/PasswordChange.vue";
 import DetailInfo from "@/view/DetailInfo.vue";
+import Video from "@/view/Video.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -15,6 +16,7 @@ const routes = [
     {path: '/findAccount', component: FindAccount},
     {path: '/passwordChange', component: PasswordChange},
     {path: '/detailInfo', component: DetailInfo},
+    {path: '/video', component: Video},
 ];
 
 const router = createRouter({
