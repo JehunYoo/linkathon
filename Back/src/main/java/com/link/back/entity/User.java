@@ -17,13 +17,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-<<<<<<< Back/src/main/java/com/link/back/entity/User.java
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-=======
 import lombok.Builder;
->>>>>>> Back/src/main/java/com/link/back/entity/User.java
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -84,8 +81,31 @@ public class User {
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
 
-
 	@OneToMany(mappedBy = "user")
 	List<UserSkill> userSkills = new ArrayList<>();
 
+	@Builder
+	public User(Long userId, UserImage userImage, String email, String password, String phoneNumber, String name,
+		boolean gender, LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
+		String referenceUrl, String deployUrl, String introduce, Field field, boolean joinState,
+		List<UserSkill> userSkills) {
+		this.userId = userId;
+		this.userImage = userImage;
+		this.email = email;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+		this.name = name;
+		this.gender = gender;
+		this.birth = birth;
+		this.rating = rating;
+		this.registered = registered;
+		this.registeredDate = registeredDate;
+		this.career = career;
+		this.referenceUrl = referenceUrl;
+		this.deployUrl = deployUrl;
+		this.introduce = introduce;
+		this.field = field;
+		this.joinState = joinState;
+		this.userSkills = userSkills;
+	}
 }
