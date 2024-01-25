@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 //    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -51,16 +52,15 @@ tasks.named('test') {
 
 }
 
-def generatedQuerydsl = layout.buildDirectory.dir("generated/querydsl").get().asFile
 
-tasks.withType(JavaCompile) {
-    options.getGeneratedSourceOutputDirectory().set(file(generatedQuerydsl))
+
+
+
+def querydslSrcDir = 'src/main/generated'
+tasks.withType(JavaCompile).configureEach {
+    options.generatedSourceOutputDirectory = file(querydslSrcDir)
 }
-
-sourceSets {
-    main.java.srcDirs += [ generatedQuerydsl ]
-}
-
 clean {
-    delete file(generatedQuerydsl)
+    delete file(querydslSrcDir)
 }
+
