@@ -1,9 +1,8 @@
-<script lang="ts" setup>
-
-import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
-import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
-import {ref, Ref} from "vue";
+<script setup lang="ts">
 import {Builder} from "builder-pattern";
+import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
+import Pagination from "@/components/Pagination.vue";
+import {ref, Ref} from "vue";
 
 const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
     .projectName("프로젝트 주제")
@@ -28,22 +27,36 @@ for (let i = 0; i < dummy?.length; i++) {
 const starClick = (v :Ref<Boolean>) => {
   v.value = !v.value;
 }
-
 </script>
 
 <template>
-  <IndexSubMenu style="margin-top: 48px" title="명예의 전당"/>
-  <div class="fame-container">
+  <h1>인기 프로젝트</h1>
+  <div class="project-container">
     <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
   </div>
+  <h1>공유 프로젝트</h1>
+  <div class="project-container">
+    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+  </div>
+  <Pagination/>
 </template>
 
 <style scoped>
-.fame-container {
+h1 {
+  margin-top: 48px;
+  color: #000;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.project-container {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
-  gap: 20px;
+  gap:20px
 }
 </style>

@@ -48,7 +48,7 @@ const props = defineProps({
       <router-link to="/recruit">팀원구하기</router-link>
       <div>내 프로젝트</div>
       <div>해커톤</div>
-      <div>명예의 전당</div>
+      <router-link to="/sharedProject">공유 프로젝트</router-link>
       <div>마이페이지</div>
       <router-link to="/login">로그인</router-link>
       <router-link to="/register">회원가입</router-link>
