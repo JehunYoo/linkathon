@@ -1,57 +1,52 @@
 package com.link.back.config;
 
+import com.link.back.security.JwtAuthenticationEntryPoint;
+import com.link.back.security.JwtAuthenticationFilter;
+import com.link.back.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-
-    // 인증이 필요없는 요청 URL
-    // 경력인증, 로그인, 회원가입
-    // 추가적으로 인증없이 사용할 수 있는 기능에 대해서 배열관리하기
-    private static final String[] WHITE_LIST_URL = {
-            "/api/users/**",
-    };
-
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+//    private final CustomOAuth2UserService oAuth2UserService;
+//    private final OAuth2SuccessHandler successHandler;
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        return new BCryptPasswordEncoder();
+        return httpSecurity
+                .authorizeHttpRequests((authorize) ->
+                        authorize.requestMatchers(HttpMethod.POST,"api/users/**").permitAll()
+                                .requestMatchers("/oauth2/**").permitAll()
+                                .requestMatchers("/error").permitAll()
+                                .anyRequest().authenticated()
+                ).csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .oauth2Login(oauth2Configurer -> oauth2Configurer
+//                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
+//                        .successHandler(successHandler))
+                // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class).build();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        //csrf 방어기능 해제 6.1 버전부터 Method Reference 연산자(::)로
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                //cors 꼭 써줘야하나?
-                .cors(AbstractHttpConfigurer::disable)
-                //세션 사용 없이 stateless 서버로 만들기
-                .sessionManagement((sessionManagement) ->
-                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                //폼 로그인 사용 X -> 이건 질문할거임
-                .formLogin(AbstractHttpConfigurer::disable)
-                //베이직 접근차단
-                .httpBasic(AbstractHttpConfigurer::disable)
-                //토큰 감지 기능이 필요한데 좀 막힘
-                //.addFilterBefore(new JwtFilter(setting), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                            //추가적으로
-                            .anyRequest().authenticated()
-                );
-
-
-        return http.build();
+    public static PasswordEncoder passwordEncoder() {
+        // BCrypt Encoder 사용
+        return new BCryptPasswordEncoder();
     }
 
 
