@@ -17,8 +17,6 @@ import ModalEffect from "@/components/Modal/ModalEffect.vue";
       </div>
     </div>
   </div>
-
-
 </template>
 
 <style scoped>
@@ -27,7 +25,15 @@ import ModalEffect from "@/components/Modal/ModalEffect.vue";
     flex-direction: column;
   }
   .introduce-container {
+    margin-top: 30px;
     margin-bottom: 20px;
+    min-width: 0;
+  }
+}
+
+@media screen and (max-width: 573px) {
+  .introduce-container {
+    margin-top: 160px;
   }
 }
 

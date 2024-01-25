@@ -124,6 +124,7 @@ h2 {
 }
 
 .member-introduce {
+  line-height: 19px;
   margin-top: 14px;
   color: #303030;
   font-size: 18px;

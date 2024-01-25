@@ -23,9 +23,9 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
           <div class="git-button">
             <ModalGithubButton/>
           </div>
-          <div class="button-right-container">
+          <RouterLink class="button-right-container" to="/video">
             <ModalButton button-text="합류 요청"/>
-          </div>
+          </RouterLink>
         </div>
       </div>
     </div>
