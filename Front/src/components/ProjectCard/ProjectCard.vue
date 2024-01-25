@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {PropType, Ref} from "vue";
+
 const props = defineProps({
   dataList: {
     type: Object as PropType<ProjectInfoDTO[]>,
@@ -24,8 +25,8 @@ const props = defineProps({
       <img :src="data?.projectUrl" alt="">
     </div>
 
-    <div class="right-box-container" @click="props.starClick(starRef[i])">
-      <div class="star-container">
+    <div class="right-box-container">
+      <div class="star-container" @click="props.starClick(starRef[i])">
         <svg v-show="!props.starRef[i].value" fill="none" height="15" viewBox="0 0 16 15" width="16"
              xmlns="http://www.w3.org/2000/svg">
           <path
