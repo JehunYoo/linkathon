@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
 import ContentFit from "@/components/Util/ContentFit.vue";
+import FindAccountForm from "@/components/FitContent/FindAccountForm.vue";
 </script>
 
 <template>
   <ContentFit>
-    아이디 찾기인데요!
+    <FindAccountForm/>
   </ContentFit>
 </template>
 

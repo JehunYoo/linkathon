@@ -13,17 +13,21 @@
 <style scoped>
 .footer-fit {
   text-align: center;
-  display: block;
-  height: calc(100vh - 100px);
+  height: max-content;
+  min-height: calc(100vh - 100px);
+  display: flex;
+  justify-content: center;
 }
 
 .content-fit {
-  gap: 20px;
+  margin: auto;
+  max-width: 476px;
+  width: 80vw;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  padding-bottom: 50px;
+  padding-top: 50px;
 }
+
+
 </style>

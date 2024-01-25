@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
 import ContentFit from "@/components/Util/ContentFit.vue";
+import RegisterForm from "@/components/FitContent/Register/RegisterForm.vue";
 </script>
 
 <template>
   <ContentFit>
-    회원가입인데요!
+    <RegisterForm/>
   </ContentFit>
 </template>
 

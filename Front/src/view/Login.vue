@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import LoginForm from "@/components/LoginForm.vue";
+import LoginForm from "@/components/FitContent/LoginForm.vue";
 import ContentFit from "@/components/Util/ContentFit.vue";
 </script>
 
