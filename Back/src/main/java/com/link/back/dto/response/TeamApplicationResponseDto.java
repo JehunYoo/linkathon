@@ -3,7 +3,6 @@ package com.link.back.dto.response;
 import static java.util.stream.Collectors.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.link.back.entity.Hackathon;
 import com.link.back.entity.Team;
@@ -20,13 +19,13 @@ public class TeamApplicationResponseDto {
 	private final List<TeamMemberResponseDto> members;
 	private final List<TeamListSimpleResponseDto> teams;
 
-	public TeamApplicationResponseDto(List<Team> teams, UserTeam userTeam, List<UserTeam> members) {
+	public TeamApplicationResponseDto(List<Team> teams, Team team, List<UserTeam> members) {
 		this.teams = teams.stream()
 			.map(TeamListSimpleResponseDto::new)
 			.collect(toList());
-		this.teamName = userTeam.getTeam().getTeamName();
-		this.teamDesc = userTeam.getTeam().getTeamDesc();
-		Hackathon hackathon = userTeam.getTeam().getHackathon();
+		this.teamName = team.getTeamName();
+		this.teamDesc = team.getTeamDesc();
+		Hackathon hackathon = team.getHackathon();
 		this.hackathonInfoResponseDto =	new HackathonInfoResponseDto(hackathon);
 		this.members = members.stream().map(TeamMemberResponseDto::new)
 			.collect(toList());

@@ -1,6 +1,5 @@
 package com.link.back.dto.response;
 
-import com.link.back.entity.Skill;
 import com.link.back.entity.UserSkill;
 
 import lombok.Getter;
@@ -9,13 +8,18 @@ import lombok.Getter;
 public class SkillResponseDto {
 
 	private final String skillName;
-
 	private final String skillImageUrl;
+	private final String skillLevel;
+	private final String skillType;
 
 	public SkillResponseDto(UserSkill userSkill) {
-		Skill skill = userSkill.getSkill();
+		this.skillName = userSkill.getSkill().getSkillName();
+		this.skillImageUrl = userSkill.getSkill().getSkillImageUrl();
+		this.skillLevel = String.valueOf(userSkill.getSkillLevel());
+		this.skillType = String.valueOf(userSkill.getSkill().getSkillType());
 
-		this.skillName = skill.getSkillName();
-		this.skillImageUrl = skill.getSkillImageUrl();
+
 	}
+
+
 }

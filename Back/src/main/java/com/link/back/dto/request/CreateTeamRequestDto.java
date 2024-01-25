@@ -9,5 +9,6 @@ public class CreateTeamRequestDto {
 
 	private String teamName;
 	private String teamDesc;
+	private List<Long> teamSkills;
 
 }

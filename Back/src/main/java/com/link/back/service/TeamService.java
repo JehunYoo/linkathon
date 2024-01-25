@@ -35,7 +35,7 @@ public class TeamService {
 
 	private final RedisTemplate<String, String> redisTemplate;
 
-	private final JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender = null;
 
 	public void requestToRemoveMember(Long teamId, Long excludedMemberId, Long leaderId) {
 		Team team = teamRepository.findById(teamId)

@@ -7,6 +7,8 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class UserTeam {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@JsonIgnoreProperties
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "team_id")
 	private Team team;

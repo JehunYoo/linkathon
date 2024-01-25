@@ -20,10 +20,12 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 	UserTeam findUserTeamByTeamAndUser(Team team, User user);
 
 		// todo
-	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
-		+ "join fetch UserSkill userSkill join fetch Skill skill "
-		+ "where userTeam.team = :team and userTeam.memberStatus = :memberStatus")
-		List<UserTeam> findCandidates(@Param("team") Team team, @Param("memberStatus") MemberStatus memberStatus);
+	@Query("select userTeam from UserTeam userTeam "
+		// + " join fetch User user"
+		// + " join fetch UserImage userImage"
+		// + " join fetch UserSkill userSkill join fetch Skill skill"
+		+ " where userTeam.team.teamId = :teamId and userTeam.memberStatus = :memberStatus")
+		List<UserTeam> findCandidates(@Param("teamId") Long teamId, @Param("memberStatus") MemberStatus memberStatus);
 
 	@Query("select userTeam from UserTeam userTeam join fetch User user join fetch UserImage userImage "
 		+ "join fetch UserSkill userSkill join fetch Skill skill "
@@ -42,13 +44,13 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 	List<UserTeam> findUserTeamsByUserAndMemberStatus(User user, MemberStatus status);
 
 	@Query(
-		"select userTeam from UserTeam userTeam join fetch Team team join fetch Hackathon join fetch HackathonImage hackathonImage"
+		"select userTeam from UserTeam userTeam join fetch userTeam.team team join fetch Hackathon join fetch HackathonImage hackathonImage"
 			+ " join fetch UserTeam where team.teamId = :teamId and userTeam.memberStatus = 'JOINED'")
 	UserTeam findUserTeamByTeamIdWithTeamAndHackathon(@Param("teamId") Long teamId);
 
 	@Query("select userTeam from UserTeam userTeam"
-		+ " join fetch User user join fetch UserImage userImage"
-		+ " join fetch UserSkill userSkill join fetch Skill skill"
+		// + " join fetch User user join fetch UserImage userImage"
+		// + " join fetch UserSkill userSkill join fetch Skill skill"
 		+ " where userTeam.team.teamId = :teamId and userTeam.memberStatus = 'JOINED'")
 	List<UserTeam> findMembersByTeamId(@Param("teamId") Long teamId);
 
@@ -56,6 +58,12 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 	void deleteUserTeamByTeamIdAndUserId(@Param("teamId") Long teamId, @Param("userId") Long userId);
 
 	List<UserTeam> findUserTeamsByTeam(Team team);
+
+	UserTeam findUserTeamByTeamAndUserAndMemberStatus(Team team, User user, MemberStatus status);
+
+	void deleteUserTeamByTeamAndUserAndMemberStatus(Team team, User user, MemberStatus status);
+
+	List<UserTeam> findUserTeamByTeamAndMemberStatus(Team team, MemberStatus memberStatus);
 
 	// todo
 	// @Query("select ut from UserTeam ut join fetch ut.user u join fetch u.userImage ui "

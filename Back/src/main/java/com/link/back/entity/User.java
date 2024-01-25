@@ -84,4 +84,9 @@ public class User {
 	// @BatchSize(size = 100) // todo: AppConstant.USER_USER_SKILLS_BATCH_SIZE
 	List<UserSkill> userSkills = new ArrayList<>();
 
+	public void changeJoinState() {
+		this.joinState = false;
+	}
+
+
 }

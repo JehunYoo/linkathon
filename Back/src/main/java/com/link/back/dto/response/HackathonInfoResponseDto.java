@@ -18,7 +18,9 @@ public class HackathonInfoResponseDto {
 	private final String hackathonOriginImageName;
 
 	public HackathonInfoResponseDto(Hackathon hackathon) {
+		System.out.println("hackathon = " + hackathon);
 		this.hackathonName = hackathon.getHackathonName();
+		System.out.println("hackathonName = " + hackathonName);
 		this.registerDate = hackathon.getRegisterDate();
 		this.teamDeadlineDate = hackathon.getTeamDeadlineDate();
 		this.startDate = hackathon.getStartDate();

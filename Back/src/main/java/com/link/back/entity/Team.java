@@ -9,13 +9,9 @@ import static lombok.AccessLevel.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.util.Lazy;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -55,7 +51,7 @@ public class Team {
 	@Column(length = TEAM_DESC_LENGTH)
 	private String teamDesc;
 
-	@OneToMany(mappedBy = "team")
+	@OneToMany(mappedBy = "team", cascade = PERSIST)
 	List<TeamSkill> teamSkills = new ArrayList<>();
 
 	@OneToOne(fetch = LAZY)
@@ -69,4 +65,12 @@ public class Team {
 		this.teamMember = teamMember;
 		this.teamDesc = teamDesc;
 	}
+
+	@Builder(builderMethodName = "updateBuilder")
+	public Team(String teamName, String teamDesc, List<TeamSkill> teamSkills) {
+		this.teamName = teamName;
+		this.teamDesc = teamDesc;
+		this.teamSkills = teamSkills;
+	}
+
 }
