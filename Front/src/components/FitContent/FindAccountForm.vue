@@ -32,11 +32,14 @@ const modeUpdate = (bool: boolean) => {
       <input class="input-text" placeholder="인증번호 입력" type="text">
       <input class="register-button" style="width: 94px" type="button" value="인증">
     </div>
-    <input class="register-button" type="button" value="비밀번호 찾기">
+    <router-link class="register-button" to="/passwordChange">비밀번호 찾기</router-link>
   </div>
 </template>
 
 <style scoped>
+input:focus {
+  outline: #7D3CFF 1px solid;
+}
 .content-detail {
   display: flex;
   gap: 20px;
@@ -72,7 +75,7 @@ const modeUpdate = (bool: boolean) => {
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
-  line-height: normal;
+  line-height: 39px;
   transition: color 0.3s ease;
 }
 

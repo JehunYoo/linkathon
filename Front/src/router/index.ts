@@ -4,6 +4,8 @@ import Recruit from '@/view/Recruit.vue'
 import Login from "@/view/Login.vue";
 import Register from "@/view/Register.vue";
 import FindAccount from "@/view/FindAccount.vue";
+import PasswordChange from "@/view/PasswordChange.vue";
+import DetailInfo from "@/view/DetailInfo.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -11,6 +13,8 @@ const routes = [
     {path: '/register', component: Register},
     {path: '/login', component: Login},
     {path: '/findAccount', component: FindAccount},
+    {path: '/passwordChange', component: PasswordChange},
+    {path: '/detailInfo', component: DetailInfo},
 ];
 
 const router = createRouter({

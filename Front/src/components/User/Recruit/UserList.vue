@@ -14,7 +14,7 @@ const modalController = (num: number) => {
 
 <template>
   <div class="user-card-container">
-    <template v-for="i in 12">
+    <template v-for="i in 16">
       <Modal v-if="clickedModal===i" :modalController="modalController">
         <ModalEffect text="남은점수 4점"/>
         <ModalMember/>

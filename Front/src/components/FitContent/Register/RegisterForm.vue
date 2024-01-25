@@ -50,12 +50,15 @@
       </div>
     </div>
     <div class="register-content-block">
-      <input class="register-button" type="button" value="가입하기">
+      <RouterLink class="register-button" to="/detailInfo">가입하기</RouterLink>
     </div>
   </div>
 </template>
 
 <style scoped>
+input:focus {
+  outline: #7D3CFF 1px solid;
+}
 .register-button {
   height: 40px;
   border-radius: 5px;
@@ -66,8 +69,8 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
-  line-height: normal;
   transition: color 0.3s ease;
+  line-height: 39px;
 }
 
 .register-button:hover {
