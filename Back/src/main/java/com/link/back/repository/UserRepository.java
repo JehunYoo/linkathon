@@ -25,11 +25,3 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //    Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
 }
 
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.link.back.entity.User;
-
-public interface UserRepository extends JpaRepository<User, Long> {
-}
-
