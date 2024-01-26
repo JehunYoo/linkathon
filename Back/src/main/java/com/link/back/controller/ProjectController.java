@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.link.back.dto.request.ProjectRequestDto;
 import com.link.back.dto.response.BackPerformanceResponseDto;
 import com.link.back.dto.response.ProjectResponseDto;
-import com.link.back.infra.rabbitmq.RabbitPublisher;
 import com.link.back.openfeign.dto.Contribution;
 import com.link.back.service.BackPerformanceService;
 import com.link.back.service.ProjectContributionService;

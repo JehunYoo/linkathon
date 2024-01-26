@@ -12,24 +12,24 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-	@Value("${spring.data.redis.host}")
-	private String redisHost;
-
-	@Value("${spring.data.redis.port}")
-	private int redisPort;
-
-	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
-	}
-
-	// @Bean
-	// public RedisTemplate<String, String> redisTemplate() {
-	// 	RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-	// 	redisTemplate.setConnectionFactory(redisConnectionFactory());
-	// 	redisTemplate.setKeySerializer(new StringRedisSerializer());
-	// 	redisTemplate.setValueSerializer(new StringRedisSerializer());
+	// @Value("${spring.data.redis.host}")
+	// private String redisHost;
 	//
-	// 	return redisTemplate;
+	// @Value("${spring.data.redis.port}")
+	// private int redisPort;
+	//
+	// @Bean
+	// public RedisConnectionFactory redisConnectionFactory() {
+	// 	return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
 	// }
+	//
+	// // @Bean
+	// // public RedisTemplate<String, String> redisTemplate() {
+	// // 	RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+	// // 	redisTemplate.setConnectionFactory(redisConnectionFactory());
+	// // 	redisTemplate.setKeySerializer(new StringRedisSerializer());
+	// // 	redisTemplate.setValueSerializer(new StringRedisSerializer());
+	// //
+	// // 	return redisTemplate;
+	// // }
 }

@@ -1,4 +1,5 @@
 package com.link.back.repository;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -9,11 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import com.link.back.entity.Project;
 import com.link.back.entity.ProjectStatus;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
-	public Page<Project> findAllByProjectStatusOrderByRegisteredDateDesc(ProjectStatus projectStatus,
-		org.springframework.data.domain.Pageable pageable);
+import feign.Param;
 
-	public Page<Project> findByProjectStatus(ProjectStatus projectStatus, Pageable pageable);
+public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 	@Query("SELECT p"
 		+ " FROM Project p JOIN p.team t JOIN UserTeam ut ON t = ut.team"
@@ -26,4 +25,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 		+ " GROUP BY p"
 		+ " ORDER BY COUNT(pl.project) DESC")
 	public Page<Project> findByProjectStatusOrderByLikesDesc(ProjectStatus projectStatus, Pageable pageable);
+
+	@Query("delete from Project p where p.team.teamId = :teamId")
+	void deleteByTeamId(@Param Long teamId);
+
 }
