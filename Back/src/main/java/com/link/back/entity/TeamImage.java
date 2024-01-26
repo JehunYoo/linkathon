@@ -9,31 +9,26 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Post {
+public class TeamImage {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private Long postId;
+	private Long teamImageId;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	@Column(length = USER_IMAGE_NAME_LENGTH, nullable = false)
+	private String teamImageName;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "project_id")
-	private Project project;
+	@Column(length = USER_IMAGE_URL, nullable = false)
+	private String teamImageUrl;
 
-	@Column(length = POST_TITLE_LENGTH, nullable = false)
-	private String postTitle;
+	@Column(length = USER_ORIGIN_IMAGE_NAME_LENGTH, nullable = false)
+	private String teamOriginImageName;
 
-	@Column(nullable = false, columnDefinition = "TEXT")
-	private String postContent;
 }

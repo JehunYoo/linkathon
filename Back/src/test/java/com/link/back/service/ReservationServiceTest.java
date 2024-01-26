@@ -36,35 +36,35 @@ class ReservationServiceTest {
 		this.reservationRepository = reservationRepository;
 	}
 
-	@BeforeEach
-	void setup() {
-		user1 = User.builder()
-			.email("asd")
-			.password("asd")
-			.phoneNumber("asd")
-			.name("asd")
-			.gender(true)
-			.birth(LocalDate.now())
-			.rating(2)
-			.registered(true)
-			.introduce("asd")
-			.joinState(false)
-			.build();
-		user2 = User.builder()
-			.email("asd")
-			.password("asd")
-			.phoneNumber("asd")
-			.name("asd")
-			.gender(true)
-			.birth(LocalDate.now())
-			.rating(2)
-			.registered(true)
-			.introduce("asd")
-			.joinState(false)
-			.build();
-		userRepository.save(user1);
-		userRepository.save(user2);
-	}
+	// @BeforeEach
+	// void setup() {
+	// 	user1 = User.builder()
+	// 		.email("asd")
+	// 		.password("asd")
+	// 		.phoneNumber("asd")
+	// 		.name("asd")
+	// 		.gender(true)
+	// 		.birth(LocalDate.now())
+	// 		.rating(2)
+	// 		.registered(true)
+	// 		.introduce("asd")
+	// 		.joinState(false)
+	// 		.build();
+	// 	user2 = User.builder()
+	// 		.email("asd")
+	// 		.password("asd")
+	// 		.phoneNumber("asd")
+	// 		.name("asd")
+	// 		.gender(true)
+	// 		.birth(LocalDate.now())
+	// 		.rating(2)
+	// 		.registered(true)
+	// 		.introduce("asd")
+	// 		.joinState(false)
+	// 		.build();
+	// 	userRepository.save(user1);
+	// 	userRepository.save(user2);
+	// }
 
 	@Test
 	@DisplayName("Reservation service getMyReservations")

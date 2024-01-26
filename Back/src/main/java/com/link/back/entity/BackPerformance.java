@@ -10,12 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@ToString
 public class BackPerformance {
 
 	@Id
@@ -26,16 +29,40 @@ public class BackPerformance {
 	@JoinColumn(name = "project_id", nullable = false)
 	private Project project;
 
-	@Column(length = 300)
-	private String fileName;
+	private Integer bugs;
 
-	@Column(nullable = false, length = 20)
-	private String severity;
+	private Integer codeSmells;
 
-	private Integer line;
+	private Double coverage;
 
-	private String message;
+	private Double duplications;
 
-	@Column(nullable = false)
-	private String type;
+	private Double securityRating;
+
+	private Double vulnerabilities;
+
+	@Builder
+	public BackPerformance(Project project, Integer bugs, Integer codeSmells, Double coverage, Double duplications,
+		Double securityRating,
+		Double vulnerabilities) {
+		this.project = project;
+		this.bugs = bugs;
+		this.codeSmells = codeSmells;
+		this.coverage = coverage;
+		this.duplications = duplications;
+		this.securityRating = securityRating;
+		this.vulnerabilities = vulnerabilities;
+	}
+	// @Column(length = 300)
+	// private String fileName;
+
+	// @Column(nullable = false, length = 20)
+	// private String severity;
+	//
+	// private Integer line;
+	//
+	// private String message;
+	//
+	// @Column(nullable = false)
+	// private String type;
 }

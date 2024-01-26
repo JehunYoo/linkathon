@@ -4,4 +4,5 @@ public enum MemberStatus {
 	JOINED,
 	SUGGESTED,
 	APPLIED
+
 }
