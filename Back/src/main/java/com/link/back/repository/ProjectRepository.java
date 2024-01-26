@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.link.back.entity.Project;
+import com.link.back.entity.ProjectStatus;
 
 import feign.Param;
 
