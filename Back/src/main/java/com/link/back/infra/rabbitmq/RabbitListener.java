@@ -45,10 +45,7 @@ public class RabbitListener {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(message);
 			Long projectId = Long.parseLong(jsonNode.get("project_id").asText());
-			// Map<String, ArrayList<Measure>> backPerformanceMap = objectMapper.readValue(
-			// 	message,
-			// 	new TypeReference<Map<String, ArrayList<Measure>>>() {}
-			// );
+
 			// measures 배열 가져오기
 			JsonNode responseNode = objectMapper.readTree(jsonNode.get("response").asText());
 			JsonNode measuresNode = responseNode.get("measures");
@@ -86,10 +83,10 @@ public class RabbitListener {
 			}
 			//todo : Project Data 추가될 시, backPerformance와 매핑
 
-			// Project project = projectRepository.getReferenceById(projectId);
+			Project project = projectRepository.getReferenceById(projectId);
 			BackPerformance backPerformance = BackPerformance.builder().bugs(bugs).codeSmells(codeSmells).coverage(coverage).duplications(duplications)
-				.securityRating(securityRating).vulnerabilities(vulnerabilities).build();
-			// System.out.println(backPerformance);
+				.securityRating(securityRating).vulnerabilities(vulnerabilities).project(project).build();
+			backPerformanceRepository.save(backPerformance);
 		}catch(Exception e){
 				e.printStackTrace(); // Handle the exception appropriately
 			}
