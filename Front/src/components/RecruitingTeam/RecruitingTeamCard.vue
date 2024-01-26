@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {PropType} from "vue";
-import SkillIcon from "@/components/SkillIcon.vue";
+import SkillIcon from "@/components/Skill/SkillIcon.vue";
 
 const props = defineProps({
-  data: Object as PropType<HackathonTeamInfo>
+  data: Object as PropType<HackathonTeamInfoDTO>
 });
 </script>
 
@@ -11,7 +11,7 @@ const props = defineProps({
   <div class="card-container">
     <div class="upper-box">
       <div class="img-container">
-        <img :src="props.data?.imgSrc" class="img-container">
+        <img :src="props.data?.imgUrl" class="img-container">
       </div>
       <div class="right-box-container">
         <div class="hackathon-title">
@@ -186,6 +186,13 @@ const props = defineProps({
   border-radius: 10px;
   border: 1px solid #DEDEDE;
   padding: 12px;
+  transition: transform 0.2s ease;
+}
+
+.card-container:hover {
+  scale: 1.02;
+  border: #7d3bff 1px solid;
+  box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.25);
 }
 
 .img-container {

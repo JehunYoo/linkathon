@@ -93,6 +93,6 @@
   position: fixed;
   background: white;
   top: 0;
-  z-index: 999;
+  z-index: 9999;
 }
 </style>

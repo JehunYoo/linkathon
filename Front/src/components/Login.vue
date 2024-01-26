@@ -9,7 +9,7 @@ const email = ref<string>('');
 const pw = ref<string>('');
 
 const login = function () {
-  const user = Builder<User>()
+  const user = Builder<UserDTO>()
       .userId(email.value)
       .password(pw.value)
       .build();
