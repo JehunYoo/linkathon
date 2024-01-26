@@ -24,15 +24,21 @@ public class QTeam extends EntityPathBase<Team> {
 
     public final QHackathon hackathon;
 
-    public final NumberPath<Integer> maxTeamMember = createNumber("maxTeamMember", Integer.class);
-
     public final StringPath teamDesc = createString("teamDesc");
 
     public final NumberPath<Long> teamId = createNumber("teamId", Long.class);
 
+    public final QTeamImage teamImage;
+
+    public final NumberPath<Integer> teamMember = createNumber("teamMember", Integer.class);
+
     public final StringPath teamName = createString("teamName");
 
+    public final ListPath<TeamSkill, QTeamSkill> teamSkills = this.<TeamSkill, QTeamSkill>createList("teamSkills", TeamSkill.class, QTeamSkill.class, PathInits.DIRECT2);
+
     public final EnumPath<TeamStatus> teamStatus = createEnum("teamStatus", TeamStatus.class);
+
+    public final ListPath<UserTeam, QUserTeam> userTeamList = this.<UserTeam, QUserTeam>createList("userTeamList", UserTeam.class, QUserTeam.class, PathInits.DIRECT2);
 
     public QTeam(String variable) {
         this(Team.class, forVariable(variable), INITS);
@@ -52,7 +58,8 @@ public class QTeam extends EntityPathBase<Team> {
 
     public QTeam(Class<? extends Team> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.hackathon = inits.isInitialized("hackathon") ? new QHackathon(forProperty("hackathon")) : null;
+        this.hackathon = inits.isInitialized("hackathon") ? new QHackathon(forProperty("hackathon"), inits.get("hackathon")) : null;
+        this.teamImage = inits.isInitialized("teamImage") ? new QTeamImage(forProperty("teamImage")) : null;
     }
 
 }

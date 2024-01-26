@@ -50,7 +50,7 @@ public class QHackathonImage extends EntityPathBase<HackathonImage> {
 
     public QHackathonImage(Class<? extends HackathonImage> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.hackathon = inits.isInitialized("hackathon") ? new QHackathon(forProperty("hackathon")) : null;
+        this.hackathon = inits.isInitialized("hackathon") ? new QHackathon(forProperty("hackathon"), inits.get("hackathon")) : null;
     }
 
 }
