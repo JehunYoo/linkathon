@@ -6,11 +6,16 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,13 +25,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -80,6 +86,85 @@ public class User {
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
 
+	public User(User user) {
+		this.userId = user.userId;
+		this.email = user.email;
+		this.password = user.password;
+		this.phoneNumber = user.phoneNumber;
+		this.name = user.name;
+		this.gender = user.gender;
+		this.birth = user.birth;
+		this.rating = user.rating;
+		this.registered = user.registered;
+		this.registeredDate = user.registeredDate;
+		this.career = user.career;
+		this.referenceUrl = user.referenceUrl;
+		this.deployUrl = user.deployUrl;
+		this.introduce = user.introduce;
+		this.field = user.field;
+		this.joinState = user.joinState;
+	}
+
+	// 비밀번호 변경 메소드
+	public User withEncryptedPassword(String password, String secretKey) {
+		User newUser = new User(this);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom(secretKey.getBytes()));
+		newUser.password = passwordEncoder.encode(password);
+		return newUser;
+	}
+	//	@Builder
+	//	public User(String email, String password) {
+	//		this.email = email;
+	//		this.password = password;
+	//	}
+
+	@Builder
+	public User(String email, String password, String name, boolean gender, LocalDate birth, String phoneNumber,
+		int rating) {
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.gender = gender;
+		this.birth = birth;
+		this.phoneNumber = phoneNumber;
+		this.rating = rating;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	//비밀번호 변경 메소드
+	public void updatePassword(String password) {
+		this.password = password;
+	}
+
 	@OneToMany(mappedBy = "user")
 	// @BatchSize(size = 100) // todo: AppConstant.USER_USER_SKILLS_BATCH_SIZE
 	List<UserSkill> userSkills = new ArrayList<>();
@@ -88,5 +173,31 @@ public class User {
 		this.joinState = false;
 	}
 
-
+	// @Builder
+	// public User(Long userId, UserImage userImage, String email, String password, String phoneNumber, String name,
+	// 	boolean gender, LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
+	// 	String referenceUrl, String deployUrl, String introduce, Field field, boolean joinState,
+	// 	List<UserSkill> userSkills) {
+	// 	this.userId = userId;
+	// 	this.userImage = userImage;
+	// 	this.email = email;
+	// 	this.password = password;
+	// 	this.phoneNumber = phoneNumber;
+	// 	this.name = name;
+	// 	this.gender = gender;
+	// 	this.birth = birth;
+	// 	this.rating = rating;
+	// 	this.registered = registered;
+	// 	this.registeredDate = registeredDate;
+	// 	this.career = career;
+	// 	this.referenceUrl = referenceUrl;
+	// 	this.deployUrl = deployUrl;
+	// 	this.introduce = introduce;
+	// 	this.field = field;
+	// 	this.joinState = joinState;
+	// 	this.userSkills = userSkills;
+	//
+	// }
 }
+
+

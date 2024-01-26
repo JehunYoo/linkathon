@@ -1,26 +1,26 @@
 package com.link.back;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.link.back.service.TeamBuildingService;
-
-import jakarta.persistence.EntityManager;
+import com.link.back.infra.rabbitmq.RabbitPublisher;
 
 @SpringBootTest
-@Transactional
 class BackApplicationTests {
 
 	@Autowired
-	private EntityManager em;
-
+	RabbitPublisher rabbitPublisher;
 	@Autowired
-	private TeamBuildingService teamBuildingService;
-
+	RabbitTemplate rabbitTemplate;
 	@Test
 	void contextLoads() {
 	}
 
+	@Test
+	void testRabbitMQ() {
+		rabbitPublisher.sendMessages(1L);
+
+	}
 }

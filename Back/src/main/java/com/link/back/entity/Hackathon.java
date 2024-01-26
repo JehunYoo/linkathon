@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,4 +50,24 @@ public class Hackathon {
 
 	@Column(nullable = false)
 	private Integer maxTeamMember;
+
+	@Builder
+	public Hackathon(String hackathonName, LocalDate registerDate, LocalDate teamDeadlineDate, LocalDate startDate,
+		LocalDate endDate,Integer maxPoint) {
+		this.hackathonName = hackathonName;
+		this.registerDate = registerDate;
+		this.teamDeadlineDate = teamDeadlineDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.maxPoint = maxPoint;
+	}
+
+	public void updateHackathonInfo(String hackathonName, LocalDate teamDeadlineDate, LocalDate startDate,
+		LocalDate endDate, Integer maxPoint) {
+		this.hackathonName = hackathonName;
+		this.teamDeadlineDate = teamDeadlineDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.maxPoint = maxPoint;
+	}
 }
