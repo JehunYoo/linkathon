@@ -35,58 +35,58 @@ public class TeamService {
 
 	private final RedisTemplate<String, String> redisTemplate;
 
-	private final JavaMailSender javaMailSender;
+	// private final JavaMailSender javaMailSender;
 
 	public void requestToRemoveMember(Long teamId, Long excludedMemberId, Long leaderId) {
-		Team team = teamRepository.findById(teamId)
-			.orElseThrow(RuntimeException::new);// todo: create exception
-
-		User loginUser = userRepository.findById(leaderId)
-			.orElseThrow(RuntimeException::new); // todo: create exception
-
-		UserTeam leader = userTeamRepository.findUserTeamByTeamAndUser(team, loginUser);
-
-		if (leader == null || leader.getRole() != LEADER) {
-			throw new RuntimeException(); // todo: create exception
-		}
-
-		User excludedUser = userRepository.findById(excludedMemberId)
-			.orElseThrow(RuntimeException::new); // todo: create exception
-
-		UserTeam excludedMember = userTeamRepository.findUserTeamByTeamAndUser(team, excludedUser);
-
-		List<UserTeam> members = userTeamRepository.findUserTeamsByTeam(team);
-		members.remove(excludedMember);
-		members.remove(leader);
-
-		String[] uuids = (String[]) members.stream()
-			.map(member -> member.getUserTeamId() + "$" + UUID.randomUUID())
-			.toArray();
-
-		// todo: redis
-		SetOperations<String, String> operations = redisTemplate.opsForSet();
-		operations.add(excludedMemberId + "@" + teamId, uuids);
-
-		// todo: email
-
-		for (int i = 0; i < members.size(); i++) {
-			UserTeam member = members.get(i);
-			String email = member.getUser().getEmail();
-			String uuid = uuids[i];
-
-			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
-			try {
-				MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-				mimeMessageHelper.setTo(email);
-				mimeMessageHelper.setSubject("팀원 " + excludedMemberId + " 삭제 허가 요청");
-				mimeMessageHelper.setText(getEmailContent(teamId, excludedMemberId, uuid));
-				javaMailSender.send(mimeMessage);
-
-			} catch (MessagingException e) {
-				throw new RuntimeException(); // todo: create Exception
-			}
-		}
+		// Team team = teamRepository.findById(teamId)
+		// 	.orElseThrow(RuntimeException::new);// todo: create exception
+		//
+		// User loginUser = userRepository.findById(leaderId)
+		// 	.orElseThrow(RuntimeException::new); // todo: create exception
+		//
+		// UserTeam leader = userTeamRepository.findUserTeamByTeamAndUser(team, loginUser);
+		//
+		// if (leader == null || leader.getRole() != LEADER) {
+		// 	throw new RuntimeException(); // todo: create exception
+		// }
+		//
+		// User excludedUser = userRepository.findById(excludedMemberId)
+		// 	.orElseThrow(RuntimeException::new); // todo: create exception
+		//
+		// UserTeam excludedMember = userTeamRepository.findUserTeamByTeamAndUser(team, excludedUser);
+		//
+		// List<UserTeam> members = userTeamRepository.findUserTeamsByTeam(team);
+		// members.remove(excludedMember);
+		// members.remove(leader);
+		//
+		// String[] uuids = (String[]) members.stream()
+		// 	.map(member -> member.getUserTeamId() + "$" + UUID.randomUUID())
+		// 	.toArray();
+		//
+		// // todo: redis
+		// SetOperations<String, String> operations = redisTemplate.opsForSet();
+		// operations.add(excludedMemberId + "@" + teamId, uuids);
+		//
+		// // todo: email
+		//
+		// for (int i = 0; i < members.size(); i++) {
+		// 	UserTeam member = members.get(i);
+		// 	String email = member.getUser().getEmail();
+		// 	String uuid = uuids[i];
+		//
+		// 	MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		//
+		// 	try {
+		// 		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+		// 		mimeMessageHelper.setTo(email);
+		// 		mimeMessageHelper.setSubject("팀원 " + excludedMemberId + " 삭제 허가 요청");
+		// 		mimeMessageHelper.setText(getEmailContent(teamId, excludedMemberId, uuid));
+		// 		javaMailSender.send(mimeMessage);
+		//
+		// 	} catch (MessagingException e) {
+		// 		throw new RuntimeException(); // todo: create Exception
+		// 	}
+		// }
 	}
 
 	private String getEmailContent(Long teamId, Long excludedMemberId, String uuid) {

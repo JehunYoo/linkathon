@@ -50,8 +50,8 @@ public class QUserTeam extends EntityPathBase<UserTeam> {
 
     public QUserTeam(Class<? extends UserTeam> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.team = inits.isInitialized("team") ? new QTeam(forProperty("team")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.team = inits.isInitialized("team") ? new QTeam(forProperty("team"), inits.get("team")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

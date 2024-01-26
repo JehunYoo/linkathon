@@ -24,13 +24,7 @@ public class QProject extends EntityPathBase<Project> {
 
     public final StringPath deployUrl = createString("deployUrl");
 
-    public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
-
-    public final QHackathon hackathon;
-
-    public final NumberPath<Integer> hackathon_score = createNumber("hackathon_score", Integer.class);
-
-    public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
+    public final NumberPath<Integer> hackathonScore = createNumber("hackathonScore", Integer.class);
 
     public final StringPath projectDesc = createString("projectDesc");
 
@@ -47,8 +41,6 @@ public class QProject extends EntityPathBase<Project> {
     public final StringPath projectUrl = createString("projectUrl");
 
     public final DateTimePath<java.time.LocalDateTime> registeredDate = createDateTime("registeredDate", java.time.LocalDateTime.class);
-
-    public final DateTimePath<java.time.LocalDateTime> startDate = createDateTime("startDate", java.time.LocalDateTime.class);
 
     public final QTeam team;
 
@@ -72,9 +64,8 @@ public class QProject extends EntityPathBase<Project> {
 
     public QProject(Class<? extends Project> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.hackathon = inits.isInitialized("hackathon") ? new QHackathon(forProperty("hackathon")) : null;
         this.projectImage = inits.isInitialized("projectImage") ? new QProjectImage(forProperty("projectImage")) : null;
-        this.team = inits.isInitialized("team") ? new QTeam(forProperty("team")) : null;
+        this.team = inits.isInitialized("team") ? new QTeam(forProperty("team"), inits.get("team")) : null;
     }
 
 }

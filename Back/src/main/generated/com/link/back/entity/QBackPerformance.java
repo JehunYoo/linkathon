@@ -24,17 +24,19 @@ public class QBackPerformance extends EntityPathBase<BackPerformance> {
 
     public final NumberPath<Long> backPerformanceId = createNumber("backPerformanceId", Long.class);
 
-    public final StringPath fileName = createString("fileName");
+    public final NumberPath<Integer> bugs = createNumber("bugs", Integer.class);
 
-    public final NumberPath<Integer> line = createNumber("line", Integer.class);
+    public final NumberPath<Integer> codeSmells = createNumber("codeSmells", Integer.class);
 
-    public final StringPath message = createString("message");
+    public final NumberPath<Double> coverage = createNumber("coverage", Double.class);
+
+    public final NumberPath<Double> duplications = createNumber("duplications", Double.class);
 
     public final QProject project;
 
-    public final StringPath severity = createString("severity");
+    public final NumberPath<Double> securityRating = createNumber("securityRating", Double.class);
 
-    public final StringPath type = createString("type");
+    public final NumberPath<Double> vulnerabilities = createNumber("vulnerabilities", Double.class);
 
     public QBackPerformance(String variable) {
         this(BackPerformance.class, forVariable(variable), INITS);

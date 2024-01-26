@@ -91,8 +91,6 @@ public class User implements UserDetails {
 	@ColumnDefault("false")
 	private boolean joinState; // 프로젝트 참가 여부
 
-
-
 	public User(User user) {
 		this.userId = user.userId;
 		this.email = user.email;
@@ -112,22 +110,22 @@ public class User implements UserDetails {
 		this.joinState = user.joinState;
 	}
 
-
 	// 비밀번호 변경 메소드
 	public User withEncryptedPassword(String password, String secretKey) {
 		User newUser = new User(this);
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom(	secretKey.getBytes()));
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom(secretKey.getBytes()));
 		newUser.password = passwordEncoder.encode(password);
 		return newUser;
 	}
-//	@Builder
-//	public User(String email, String password) {
-//		this.email = email;
-//		this.password = password;
-//	}
+	//	@Builder
+	//	public User(String email, String password) {
+	//		this.email = email;
+	//		this.password = password;
+	//	}
 
 	@Builder
-	public User(String email, String password, String name, boolean gender, LocalDate birth, String phoneNumber, int rating) {
+	public User(String email, String password, String name, boolean gender, LocalDate birth, String phoneNumber,
+		int rating) {
 		this.email = email;
 		this.password = password;
 		this.name = name;
@@ -168,35 +166,36 @@ public class User implements UserDetails {
 	}
 
 	//비밀번호 변경 메소드
-	public void updatePassword(String password){
+	public void updatePassword(String password) {
 		this.password = password;
-
+	}
 	@OneToMany(mappedBy = "user")
 	List<UserSkill> userSkills = new ArrayList<>();
 
-	@Builder
-	public User(Long userId, UserImage userImage, String email, String password, String phoneNumber, String name,
-		boolean gender, LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
-		String referenceUrl, String deployUrl, String introduce, Field field, boolean joinState,
-		List<UserSkill> userSkills) {
-		this.userId = userId;
-		this.userImage = userImage;
-		this.email = email;
-		this.password = password;
-		this.phoneNumber = phoneNumber;
-		this.name = name;
-		this.gender = gender;
-		this.birth = birth;
-		this.rating = rating;
-		this.registered = registered;
-		this.registeredDate = registeredDate;
-		this.career = career;
-		this.referenceUrl = referenceUrl;
-		this.deployUrl = deployUrl;
-		this.introduce = introduce;
-		this.field = field;
-		this.joinState = joinState;
-		this.userSkills = userSkills;
-
+		// @Builder
+		// public User(Long userId, UserImage userImage, String email, String password, String phoneNumber, String name,
+		// 	boolean gender, LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
+		// 	String referenceUrl, String deployUrl, String introduce, Field field, boolean joinState,
+		// 	List<UserSkill> userSkills) {
+		// 	this.userId = userId;
+		// 	this.userImage = userImage;
+		// 	this.email = email;
+		// 	this.password = password;
+		// 	this.phoneNumber = phoneNumber;
+		// 	this.name = name;
+		// 	this.gender = gender;
+		// 	this.birth = birth;
+		// 	this.rating = rating;
+		// 	this.registered = registered;
+		// 	this.registeredDate = registeredDate;
+		// 	this.career = career;
+		// 	this.referenceUrl = referenceUrl;
+		// 	this.deployUrl = deployUrl;
+		// 	this.introduce = introduce;
+		// 	this.field = field;
+		// 	this.joinState = joinState;
+		// 	this.userSkills = userSkills;
+		//
+		// }
 	}
-}
+

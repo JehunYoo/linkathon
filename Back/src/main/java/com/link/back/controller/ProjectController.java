@@ -17,20 +17,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.link.back.dto.request.ProjectRequestDto;
 import com.link.back.dto.response.ProjectResponseDto;
+import com.link.back.infra.rabbitmq.RabbitPublisher;
 import com.link.back.openfeign.dto.Contribution;
 import com.link.back.service.ProjectContributionService;
 import com.link.back.service.ProjectService;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
 public class ProjectController {
+
+		private final RabbitPublisher rabbitPublisher;
 	private final ProjectContributionService projectContributionService;
 	private final ProjectService projectService;
 
+		// todo : Post API 테스트
+
+		@PostMapping("/{project_id}/back-metrics")
+		public ResponseEntity<Void> sendMessage(@PathVariable Long project_id) {
+
+			rabbitPublisher.sendMessages(project_id);
+
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+
+		// todo : BackPerformance Table 데이터 가져오는 API 구현
+		//@GetMapping
 	@GetMapping("/contributions/{owner}/{repo}")
 	public ResponseEntity<List<Contribution>> getContributions(@PathVariable String owner, @PathVariable String repo) {
 		List<Contribution> contributions = projectContributionService.getContributionsList(owner, repo);
