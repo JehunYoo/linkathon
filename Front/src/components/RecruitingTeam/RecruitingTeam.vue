@@ -56,7 +56,6 @@ dummyList.push(dummy);
 
 .recruiting-content-container {
   height: max-content;
-  width: 100%;
   flex-wrap: wrap;
   gap: 21px;
   display: flex;

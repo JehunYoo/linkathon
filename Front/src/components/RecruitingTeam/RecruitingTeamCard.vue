@@ -59,6 +59,12 @@ const props = defineProps({
 </template>
 
 <style scoped>
+@media screen and (max-width: 573px) {
+  .year-container {
+    display: none;
+  }
+}
+
 .recruiting-button {
   text-align: center;
   width: 79px;
@@ -120,8 +126,7 @@ const props = defineProps({
   font-weight: 400;
   line-height: 18px;
   margin-top: 8px;
-  max-height: 255px;
-  overflow: hidden;
+  max-height: 55px;
 }
 
 .right-box-container {
@@ -181,7 +186,7 @@ const props = defineProps({
 .card-container {
   flex: 1;
   width: 100%;
-  min-width: 424px;
+  min-width: 400px;
   height: 204px;
   border-radius: 10px;
   border: 1px solid #DEDEDE;
@@ -189,6 +194,11 @@ const props = defineProps({
   transition: transform 0.3s ease;
 }
 
+@media screen and (max-width: 573px) {
+  .card-container {
+    min-width: 300px;
+  }
+}
 .card-container:hover {
   transform: scale(1.005);
   border: #7d3bff 1px solid;

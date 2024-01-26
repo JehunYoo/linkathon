@@ -120,10 +120,10 @@ h1 {
 .blur {
   z-index: 1000;
   position: fixed;
-  left: 50%;
-  top: 50%;
-  width: 100vw;
-  height: 1000vh;
+  left: 0;
+  top: 0;
+  width: 1000vw;
+  height: 10000vh;
   background: rgba(255, 255, 255, 0.70);
   backdrop-filter: blur(5px);
   transform: translate(-50%, -50%)

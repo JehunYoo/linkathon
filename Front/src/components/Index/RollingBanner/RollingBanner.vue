@@ -175,7 +175,8 @@ onUnmounted(() => {
 
 .rolling-text-container {
   max-width: 1355px;
-  width: 100%;
+  width: 100vw;
+  overflow: hidden;
   padding: 20px;
   margin: auto;
   position: relative;
@@ -206,7 +207,7 @@ onUnmounted(() => {
 
 .img-container > img {
   position: absolute;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   object-fit: cover;
 }

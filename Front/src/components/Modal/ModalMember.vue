@@ -8,7 +8,7 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
 
 <template>
   <div class="member-modal-container">
-    <img alt="" src="https://thumb.mtstarnews.com/06/2023/06/2023060322064338985_2.jpg/dims/optimize">
+    <img class="profile" alt="" src="https://thumb.mtstarnews.com/06/2023/06/2023060322064338985_2.jpg/dims/optimize">
     <div class="member-info-container">
       <div class="member-info">
         <div class="member-name">카리나</div>
@@ -78,6 +78,15 @@ h2 {
 @media screen and (max-width: 458px) {
   .git-button {
     display: none;
+  }
+  .profile {
+    object-fit: cover;
+    width: 150px;
+    height: 150px;
+  }
+
+  .button-container {
+    margin-top: 15px;
   }
 }
 
