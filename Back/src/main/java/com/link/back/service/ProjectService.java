@@ -47,7 +47,7 @@ public class ProjectService {
 	}
 
 	public Page<ProjectResponseDto> getAllClosedProjects(Pageable pageable) {
-		Page<Project> projectPage = projectRepository.findAllByProjectStatusOrderByRegisteredDateDesc(
+		Page<Project> projectPage = projectRepository.findByProjectStatusOrderByLikesDesc(
 			ProjectStatus.CLOSED,
 			pageable);
 		System.out.println(projectPage);

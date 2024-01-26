@@ -1,9 +1,13 @@
 package com.link.back.entity;
 
 import static com.link.back.config.AppConstant.*;
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +16,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +35,9 @@ public class Team {
 	@JoinColumn(name = "hackathon_id", nullable = false)
 	private Hackathon hackathon;
 
+	@OneToMany(mappedBy = "team", cascade = REMOVE)
+	private List<UserTeam> userTeamList = new ArrayList<>();
+
 	@Column(length = TEAM_NAME_LENGTH, nullable = false)
 	private String teamName;
 
@@ -37,19 +46,31 @@ public class Team {
 	private TeamStatus teamStatus;
 
 	@Column(nullable = false)
-	private Integer maxTeamMember;
+	private Integer teamMember;
 
 	@Column(length = TEAM_DESC_LENGTH)
 	private String teamDesc;
 
+	@OneToMany(mappedBy = "team", cascade = PERSIST)
+	List<TeamSkill> teamSkills = new ArrayList<>();
+
+	@OneToOne(fetch = LAZY)
+	@JoinColumn(name = "team_image_id")
+	private TeamImage teamImage;
+
 	@Builder
-	public Team(Long teamId, Hackathon hackathon, String teamName, TeamStatus teamStatus, Integer maxTeamMember,
-		String teamDesc) {
-		this.teamId = teamId;
-		this.hackathon = hackathon;
+	public Team(String teamName, TeamStatus teamStatus, Integer teamMember, String teamDesc) {
 		this.teamName = teamName;
 		this.teamStatus = teamStatus;
-		this.maxTeamMember = maxTeamMember;
+		this.teamMember = teamMember;
 		this.teamDesc = teamDesc;
 	}
+
+	@Builder(builderMethodName = "updateBuilder")
+	public Team(String teamName, String teamDesc, List<TeamSkill> teamSkills) {
+		this.teamName = teamName;
+		this.teamDesc = teamDesc;
+		this.teamSkills = teamSkills;
+	}
+
 }
