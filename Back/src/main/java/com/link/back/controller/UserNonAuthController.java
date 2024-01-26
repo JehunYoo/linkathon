@@ -2,6 +2,8 @@ package com.link.back.controller;
 
 
 import com.link.back.dto.*;
+import com.link.back.dto.request.UserFindEmailRequest;
+import com.link.back.dto.request.UserPasswordResetRequest;
 import com.link.back.repository.RefreshTokenRepository;
 import com.link.back.service.UserService;
 import jakarta.validation.Valid;
@@ -72,7 +74,21 @@ public class UserNonAuthController {
 
 
     //메일인증확인
+
+    //이메일 찾기
+    @PostMapping("/email")
+    public ResponseEntity<String> findEmail (@Valid @RequestBody UserFindEmailRequest userFindEmailRequest) throws Exception {
+
+        //여기서 보냄
+
+        // userService.resetPassword(userFindEmailRequest);
+
+        //로그인 페이지로 보내주기
+        return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
+    }
+
     //비밀번호 찾기
+    //로직 바꾸기
     @PostMapping("/password")
     public ResponseEntity<String> changePassword (@Valid @RequestBody UserPasswordResetRequest userPasswordResetRequest) throws Exception {
 
@@ -82,7 +98,6 @@ public class UserNonAuthController {
         return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
     }
 
-    //아이디 찾기
     //경력인증
 
 }

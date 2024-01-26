@@ -1,27 +1,86 @@
 package com.link.back.service;
 
+import com.link.back.dto.JwtToken;
+import com.link.back.dto.LoginRequest;
+import com.link.back.dto.request.UserPasswordResetRequest;
+import com.link.back.dto.UserSignUpDto;
+import com.link.back.entity.User;
+import com.link.back.repository.UserRepository;
+import com.link.back.security.JwtTokenProvider;
 
-import com.link.back.dto.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-public interface UserService {
-    String signup(UserSignUpDto userSignUpDto) throws Exception;
-//    @Transactional
+@Service
+@RequiredArgsConstructor
+public class UserService {
 
-    //추가정보 받는 메소드
-//    void AdditionalInfo(String Token, AdditionalUserInfoRequest additionalInfoRequest);
+    private final UserRepository userRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
+//    private final TokenRepository tokenRepository;
+//    private final ModelMapper mapper;
 
-    //User 정보 수정
-    //토큰이 맞는지 확인하고 받은거 그대로 배출
-//    void updateUser(String token, UserInfoRequest userInfoRequest) throws Exception;
+    public String signup(UserSignUpDto userSignUpDto) throws Exception {
+
+        if (userRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
+            throw new Exception("이미 존재하는 이메일입니다.");
+        }
+
+        User user = User.builder()
+                .email(userSignUpDto.getEmail())
+                .password(userSignUpDto.getPassword())
+                .name(userSignUpDto.getName())
+                .gender(userSignUpDto.isGender())
+                .birth(userSignUpDto.getBirth())
+                .phoneNumber(userSignUpDto.getPhoneNumber())
+                .rating(userSignUpDto.getRating())
+                .build();
 
 
-//    Long deleteUser(String token);
-    JwtToken login(LoginRequest loginRequest);
+        System.out.println(passwordEncoder.encode(userSignUpDto.getPassword()));
+        userRepository.save(user);
+        return "회원가입 성공";
 
-    void resetPassword(UserPasswordResetRequest userPasswordResetRequest);
+    }
 
-    //id로 User 받아오는 메소드
-//    UserDtoResponse getUser(String token);
-//    Long deleteRefreshToken(String token);
+    public JwtToken login(LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+
+        if (!loginRequest.getPassword().equals(user.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+
+//        if (!passwordEncoder.encode(loginRequest.getPassword()).equals(user.getPassword())) {
+//            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+//        }
+
+        JwtToken jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+
+        //리프레쉬 토큰 부분 ->
+//      tokenRepository.save(new Token(jwtToken.getRefreshToken()));
+        return jwtToken;
+    }
+
+    //어처피 e
+    public void resetPassword(UserPasswordResetRequest userPasswordResetRequest) {
+        String email = userPasswordResetRequest.getEmail();
+        String password = userPasswordResetRequest.getPassword();
+
+        User user = userRepository.findByEmail(email).get();
+        //이전 비밀번호랑 같으면 밴해주기
+        if(user.getPassword().equals(password)) throw new IllegalArgumentException("이전 비밀번호와 다르게 설정해야합니다.");
+
+        user.updatePassword(password);
+
+    }
+
+
+
+
 
 }

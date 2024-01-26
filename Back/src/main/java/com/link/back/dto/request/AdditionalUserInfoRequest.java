@@ -1,4 +1,4 @@
-package com.link.back.dto;
+package com.link.back.dto.request;
 
 public class AdditionalUserInfoRequest {
 
