@@ -33,9 +33,9 @@ public class TeamService {
 	private final UserRepository userRepository;
 	private final UserTeamRepository userTeamRepository;
 
-	private final RedisTemplate<String, String> redisTemplate;
+	private final EmailService emailService; // todo: user Async
 
-	private final JavaMailSender javaMailSender;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	public void requestToRemoveMember(Long teamId, Long excludedMemberId, Long leaderId) {
 		Team team = teamRepository.findById(teamId)
@@ -68,24 +68,13 @@ public class TeamService {
 		operations.add(excludedMemberId + "@" + teamId, uuids);
 
 		// todo: email
-
 		for (int i = 0; i < members.size(); i++) {
 			UserTeam member = members.get(i);
 			String email = member.getUser().getEmail();
 			String uuid = uuids[i];
 
-			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
-			try {
-				MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-				mimeMessageHelper.setTo(email);
-				mimeMessageHelper.setSubject("팀원 " + excludedMemberId + " 삭제 허가 요청");
-				mimeMessageHelper.setText(getEmailContent(teamId, excludedMemberId, uuid));
-				javaMailSender.send(mimeMessage);
-
-			} catch (MessagingException e) {
-				throw new RuntimeException(); // todo: create Exception
-			}
+			emailService.sendEmail(null, email, "팀원 " + excludedMemberId + " 삭제 허가 요청",
+				getEmailContent(teamId, excludedMemberId, uuid)); // todo: set fromEmail
 		}
 	}
 
