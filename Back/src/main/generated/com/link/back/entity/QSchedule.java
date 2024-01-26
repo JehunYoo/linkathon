@@ -22,7 +22,7 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public static final QSchedule schedule = new QSchedule("schedule");
 
-    public final DatePath<java.time.LocalDate> availableTime = createDate("availableTime", java.time.LocalDate.class);
+    public final TimePath<java.time.LocalTime> availableTime = createTime("availableTime", java.time.LocalTime.class);
 
     public final NumberPath<Long> scheduleId = createNumber("scheduleId", Long.class);
 
@@ -46,7 +46,7 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public QSchedule(Class<? extends Schedule> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

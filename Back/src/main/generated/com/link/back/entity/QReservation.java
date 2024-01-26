@@ -26,7 +26,7 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final QUser member;
 
-    public final DateTimePath<java.time.LocalDateTime> reservationDatetime = createDateTime("reservationDatetime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> reservationDateTime = createDateTime("reservationDateTime", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> reservationId = createNumber("reservationId", Long.class);
 
@@ -48,8 +48,8 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public QReservation(Class<? extends Reservation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.leader = inits.isInitialized("leader") ? new QUser(forProperty("leader")) : null;
-        this.member = inits.isInitialized("member") ? new QUser(forProperty("member")) : null;
+        this.leader = inits.isInitialized("leader") ? new QUser(forProperty("leader"), inits.get("leader")) : null;
+        this.member = inits.isInitialized("member") ? new QUser(forProperty("member"), inits.get("member")) : null;
     }
 
 }

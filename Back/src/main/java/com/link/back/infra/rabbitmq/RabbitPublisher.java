@@ -16,8 +16,8 @@ public class RabbitPublisher  {
 	public void sendMessages(Long projectId) {
 		// todo : Project 테이블에서 gitUrl 가져오는 로직 테스트
 
-		// String gitUrl = projectRepository.findByProjectId(projectId).getProjectUrl();
-		String gitUrl = "https://github.com/jooyun-1/Quicklog";
+		String gitUrl = projectRepository.findById(projectId).get().getProjectUrl();
+		// String gitUrl = "https://github.com/jooyun-1/Quicklog";
 		String combinedMessage = projectId + " " + gitUrl;
 		rabbitTemplate.convertAndSend("sonarqube_queue", combinedMessage);
 	}

@@ -49,7 +49,7 @@ public class QUserSkill extends EntityPathBase<UserSkill> {
     public QUserSkill(Class<? extends UserSkill> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.skill = inits.isInitialized("skill") ? new QSkill(forProperty("skill")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

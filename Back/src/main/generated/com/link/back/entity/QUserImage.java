@@ -22,15 +22,15 @@ public class QUserImage extends EntityPathBase<UserImage> {
 
     public static final QUserImage userImage = new QUserImage("userImage");
 
-    public final StringPath originImageName = createString("originImageName");
-
-    public final NumberPath<Long> profileId = createNumber("profileId", Long.class);
-
     public final QUser user;
+
+    public final NumberPath<Long> userImageId = createNumber("userImageId", Long.class);
 
     public final StringPath userImageName = createString("userImageName");
 
     public final StringPath userImageUrl = createString("userImageUrl");
+
+    public final StringPath userOriginImageName = createString("userOriginImageName");
 
     public QUserImage(String variable) {
         this(UserImage.class, forVariable(variable), INITS);
@@ -50,7 +50,7 @@ public class QUserImage extends EntityPathBase<UserImage> {
 
     public QUserImage(Class<? extends UserImage> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

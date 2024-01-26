@@ -47,7 +47,7 @@ public class QTeamSkill extends EntityPathBase<TeamSkill> {
     public QTeamSkill(Class<? extends TeamSkill> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.skill = inits.isInitialized("skill") ? new QSkill(forProperty("skill")) : null;
-        this.team = inits.isInitialized("team") ? new QTeam(forProperty("team")) : null;
+        this.team = inits.isInitialized("team") ? new QTeam(forProperty("team"), inits.get("team")) : null;
     }
 
 }
