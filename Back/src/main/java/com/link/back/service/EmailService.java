@@ -1,5 +1,7 @@
 package com.link.back.service;
 
+import org.eclipse.angus.mail.util.logging.MailHandler;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class EmailService {
 			mimeMessageHelper.setFrom(fromEmail);
 			mimeMessageHelper.setTo(toEmail);
 			mimeMessageHelper.setSubject(subject);
-			mimeMessageHelper.setText(text);
+			mimeMessageHelper.setText(text, true);
 			javaMailSender.send(mimeMessage);
 		} catch (MessagingException e) {
 			throw new RuntimeException(); // todo: create Exception
