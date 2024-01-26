@@ -1,13 +1,22 @@
 <script lang="ts" setup>
-import {ref, watch} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const pageableDTO = ref({pageNumber: 1, totalPages: 5});
+const pageableDTO = ref({ pageNumber: 1, totalPages: 5 });
 const route = useRoute();
 const router = useRouter();
 
+const props = defineProps({
+  pageName: {
+    type:String,
+    default:"page"
+  }
+});
+
 const updatePageFromQuery = () => {
-  const queryPageNum = parseInt(route.query.page as string);
+  const queryParam = props.pageName ? route.query[props.pageName] : route.query.page;
+  const queryPageNum = parseInt(queryParam as string);
+
   if (!isNaN(queryPageNum) && queryPageNum >= 1 && queryPageNum <= pageableDTO.value.totalPages) {
     pageableDTO.value.pageNumber = queryPageNum;
   } else {
@@ -15,14 +24,13 @@ const updatePageFromQuery = () => {
   }
 };
 
-updatePageFromQuery();
+watch([() => route.query, () => props.pageName], updatePageFromQuery, { immediate: true });
 
-watch(() => route.query.page, updatePageFromQuery);
 
 const movePage = (num: number) => {
   const newPageNumber = pageableDTO.value.pageNumber + num;
   if (newPageNumber >= 1 && newPageNumber <= pageableDTO.value.totalPages) {
-    router.push({query: {...route.query, page: newPageNumber.toString()}});
+    router.push({query: {...route.query, [props.pageName as string]: newPageNumber.toString()}});
   }
 }
 
@@ -72,7 +80,6 @@ const moveNumberPage = (num: number) => {
   align-items: center;
   gap: 10px;
   margin-top: 20px;
-  margin-bottom: 80px;
 }
 
 .non-select {

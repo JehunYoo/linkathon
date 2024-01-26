@@ -8,6 +8,7 @@ import PasswordChange from "@/view/PasswordChange.vue";
 import DetailInfo from "@/view/DetailInfo.vue";
 import Video from "@/view/Video.vue";
 import SharedProject from "@/view/SharedProject.vue";
+import ProjectDetail from "@/view/ProjectDetail.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -18,7 +19,8 @@ const routes = [
     {path: '/passwordChange', component: PasswordChange},
     {path: '/detailInfo', component: DetailInfo},
     {path: '/video', component: Video},
-    {path: '/sharedProject', component: SharedProject}
+    {path: '/sharedProject', component: SharedProject},
+    {path: '/projectDetail', component: ProjectDetail}
 ];
 
 const router = createRouter({
