@@ -33,11 +33,12 @@ section {
 }
 
 h1 {
+  margin-top: 10px;
   color: #303030;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
-  line-height: 23px;
+  line-height: 10px;
   flex: 1;
 }
 

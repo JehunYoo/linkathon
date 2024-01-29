@@ -17,7 +17,7 @@ const dummy = Builder<PerformanceChartDTO>().actualValue(80)
       <h1>Frontend</h1>
       <section>
         <div class="chart-container">
-          <template v-for="i in 5">
+          <template v-for="_ in 5">
             <div>
               <div class="chart">
                 <ThinDonutChart :pc="dummy"/>
