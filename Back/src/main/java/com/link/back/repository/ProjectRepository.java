@@ -29,4 +29,12 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	@Query("delete from Project p where p.team.teamId = :teamId")
 	void deleteByTeamId(@Param Long teamId);
 
+	@Query("SELECT p " +
+		"FROM Project p " +
+		"JOIN p.team t ON p.team.teamId = t.teamId " +
+		"JOIN Hackathon h ON h.hackathonId = :hackathonId " +
+		"WHERE p.winState = true " +
+		"ORDER BY p.hackathonScore DESC " +
+	"limit 3")
+	public List<Project> findProjectsByHackathonScoreAndWinState(Long hackathonId);
 }
