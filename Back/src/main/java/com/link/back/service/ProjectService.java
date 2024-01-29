@@ -4,6 +4,7 @@ package com.link.back.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,11 +17,15 @@ import com.link.back.dto.request.ProjectRequestDto;
 import com.link.back.dto.response.ProjectResponseDto;
 import com.link.back.entity.Project;
 import com.link.back.entity.ProjectImage;
+import com.link.back.entity.ProjectLike;
 import com.link.back.entity.ProjectStatus;
 import com.link.back.entity.Team;
+import com.link.back.entity.User;
 import com.link.back.repository.ProjectImageRepository;
+import com.link.back.repository.ProjectLikeRepository;
 import com.link.back.repository.ProjectRepository;
 import com.link.back.repository.TeamRepository;
+import com.link.back.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,9 +38,10 @@ public class ProjectService {
 	private final ProjectRepository projectRepository;
 	private final TeamRepository teamRepository;
 	private final ProjectImageRepository projectImageRepository;
+	private final ProjectLikeRepository projectLikeRepository;
+	private final UserRepository userRepository;
 
 	public void createProject(ProjectRequestDto projectRequestDto) {
-		System.out.println(projectRequestDto);
 		Team team = teamRepository.getReferenceById(projectRequestDto.teamId());
 		ProjectImage projectImage = null;
 		if (projectRequestDto.projectImage() != null) {
@@ -50,11 +56,9 @@ public class ProjectService {
 		Page<Project> projectPage = projectRepository.findByProjectStatusOrderByLikesDesc(
 			ProjectStatus.CLOSED,
 			pageable);
-		System.out.println(projectPage);
 		List<ProjectResponseDto> projectResponseList = projectPage.stream()
 			.map(this::toProjectResponseDto)
 			.toList();
-		System.out.println(projectResponseList);
 		return new PageImpl<>(projectResponseList, projectPage.getPageable(), projectPage.getTotalElements());
 	}
 
@@ -95,6 +99,38 @@ public class ProjectService {
 		Project project = projectRepository.findById(projectId).orElseThrow();
 		project.updateProjectStatus();
 		projectRepository.save(project);
+	}
+
+	public void registerLike(Long userId, Long projectId) {
+		User user = userRepository.getReferenceById(userId);
+		Project project = projectRepository.getReferenceById(projectId);
+		Optional<ProjectLike> projectLikeOptional = projectLikeRepository.findByProjectAndUser(project, user);
+		if (projectLikeOptional.isEmpty()) {
+			ProjectLike newProjectLike = ProjectLike.builder()
+				.user(user)
+				.project(project)
+				.build();
+			projectLikeRepository.save(newProjectLike);
+		} else {
+			throw new RuntimeException(); // FIXME: 예외 처리 필요
+		}
+	}
+
+	public void unregisterLike(Long userId, Long projectId) {
+		User user = userRepository.getReferenceById(userId);
+		Project project = projectRepository.getReferenceById(projectId);
+		Optional<ProjectLike> projectLikeOptional = projectLikeRepository.findByProjectAndUser(project, user);
+		if (projectLikeOptional.isPresent()) {
+			projectLikeRepository.delete(projectLikeOptional.get());
+		} else {
+			throw new RuntimeException(); // FIXME: 예외 처리 필요
+		}
+	}
+
+	public List<ProjectResponseDto> getLikedProjects(Long userId) {
+		User user = userRepository.getReferenceById(userId);
+		List<Project> projects = projectRepository.findLikedProjectsByUser(user);
+		return projects.stream().map(this::toProjectResponseDto).toList();
 	}
 
 	private ProjectResponseDto toProjectResponseDto(Project project) {
