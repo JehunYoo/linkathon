@@ -4,12 +4,15 @@ import {Chart, registerables} from 'chart.js';
 
 const donutChart = ref(null);
 const props = defineProps({
-  pc: Object as PropType<PerformanceChartDTO>
+  pc: {
+    type: Object as PropType<PerformanceChartDTO>,
+    required: true
+  }
 });
-
 
 const centerTextPlugin = {
   id: 'centerText',
+  //@ts-ignore
   afterDraw(chart) {
     const ctx = chart.ctx;
     const {width, height} = chart;
@@ -61,9 +64,9 @@ onMounted(() => {
         }
       }
     },
-    centerText: computedCenterText.value
+    centerText: computedCenterText.value,
   };
-
+  //@ts-ignore
   new Chart(donutChart.value.getContext('2d'), config);
 });
 </script>

@@ -1,18 +1,20 @@
 <script setup lang="ts">
 
 import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
+import GitAnalyse from "@/components/Project/GitAnalyse.vue";
 </script>
 
 <template>
   <div>
     <div class="title-container">
       <h1>프로젝트 명</h1>
-      <div class="remove-button">프로젝트삭제</div>
+      <div class="remove-button">프로젝트 삭제</div>
     </div>
     <section>
       프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.
     </section>
     <ProjectAnalyse/>
+    <GitAnalyse/>
   </div>
 
 </template>
@@ -55,6 +57,12 @@ h1 {
   background: #FF6161;
   border: 1px #FF6161 solid;
   line-height: 27px;
+  transition: color 0.3s ease;
+}
+
+.remove-button:hover {
+  color: #FF6161;
+  background: white;
 }
 
 section {
