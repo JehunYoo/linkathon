@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.link.back.dto.request.ProjectRequestDto;
 import com.link.back.dto.response.BackPerformanceResponseDto;
 import com.link.back.dto.response.ProjectResponseDto;
+import com.link.back.infra.rabbitmq.RabbitPublisher;
 import com.link.back.openfeign.dto.Contribution;
 import com.link.back.service.BackPerformanceService;
 import com.link.back.service.ProjectContributionService;
 import com.link.back.service.ProjectService;
 
-import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,11 +52,14 @@ public class ProjectController {
 	}
 
 	@GetMapping("/{project_id}/back-metrics")
-	public ResponseEntity<Page<BackPerformanceResponseDto>> getBackPerformances(@PathVariable Long project_id, @RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<Page<BackPerformanceResponseDto>> getBackPerformances(@PathVariable Long project_id,
+		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "1") int size) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("backPerformanceId").descending());
-		return new ResponseEntity<>(backPerformanceService.getBackPerformanceResponses(project_id,pageable),HttpStatus.OK);
+		return new ResponseEntity<>(backPerformanceService.getBackPerformanceResponses(project_id, pageable),
+			HttpStatus.OK);
 	}
+
 	@GetMapping("/contributions/{owner}/{repo}")
 	public ResponseEntity<List<Contribution>> getContributions(@PathVariable String owner, @PathVariable String repo) {
 		List<Contribution> contributions = projectContributionService.getContributionsList(owner, repo);
