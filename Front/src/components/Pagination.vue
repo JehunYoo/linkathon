@@ -1,13 +1,22 @@
-<script setup lang="ts">
-import {ref, watch} from "vue";
-import {useRoute, useRouter} from "vue-router";
+<script lang="ts" setup>
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const pageableDTO = ref({pageNumber: 1, totalPages: 5});
+const pageableDTO = ref({ pageNumber: 1, totalPages: 5 });
 const route = useRoute();
 const router = useRouter();
 
+const props = defineProps({
+  pageName: {
+    type:String,
+    default:"page"
+  }
+});
+
 const updatePageFromQuery = () => {
-  const queryPageNum = parseInt(route.query.page as string);
+  const queryParam = props.pageName ? route.query[props.pageName] : route.query.page;
+  const queryPageNum = parseInt(queryParam as string);
+
   if (!isNaN(queryPageNum) && queryPageNum >= 1 && queryPageNum <= pageableDTO.value.totalPages) {
     pageableDTO.value.pageNumber = queryPageNum;
   } else {
@@ -15,14 +24,13 @@ const updatePageFromQuery = () => {
   }
 };
 
-updatePageFromQuery();
+watch([() => route.query, () => props.pageName], updatePageFromQuery, { immediate: true });
 
-watch(() => route.query.page, updatePageFromQuery);
 
 const movePage = (num: number) => {
   const newPageNumber = pageableDTO.value.pageNumber + num;
   if (newPageNumber >= 1 && newPageNumber <= pageableDTO.value.totalPages) {
-    router.push({query: {...route.query, page: newPageNumber.toString()}});
+    router.push({query: {...route.query, [props.pageName as string]: newPageNumber.toString()}});
   }
 }
 
@@ -37,23 +45,23 @@ const moveNumberPage = (num: number) => {
 
 <template>
   <div class="pagination-box">
-    <svg v-if="pageableDTO.pageNumber > 1" @click="movePage(-1)" xmlns="http://www.w3.org/2000/svg" width="12"
-         height="20" viewBox="0 0 12 20" fill="none">
+    <svg v-if="pageableDTO.pageNumber > 1" fill="none" height="20" viewBox="0 0 12 20"
+         width="12" xmlns="http://www.w3.org/2000/svg" @click="movePage(-1)">
       <g transform="scale(-1, 1) translate(-12, 0)">
-        <path d="M2 18L10 10L2 2" stroke="#A9A9A9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 18L10 10L2 2" stroke="#A9A9A9" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
       </g>
     </svg>
-    <div v-for="n in pageableDTO.totalPages" :key="n"
-         v-show="(pageableDTO.pageNumber === 1 && n <= 3) ||
+    <div v-for="n in pageableDTO.totalPages" v-show="(pageableDTO.pageNumber === 1 && n <= 3) ||
              (pageableDTO.pageNumber === pageableDTO.totalPages && n >= pageableDTO.totalPages - 2) ||
              (n === pageableDTO.pageNumber || n === pageableDTO.pageNumber - 1 || n === pageableDTO.pageNumber + 1)"
+         :key="n"
          :class="n !== pageableDTO.pageNumber ? 'non-select' : 'select'" @click="moveNumberPage(n)">
       {{ n }}
     </div>
 
-    <svg v-if="pageableDTO.pageNumber < pageableDTO.totalPages" @click="movePage(1)" xmlns="http://www.w3.org/2000/svg"
-         width="12" height="20" viewBox="0 0 12 20" fill="none">
-      <path d="M2 18L10 10L2 2" stroke="#A9A9A9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg v-if="pageableDTO.pageNumber < pageableDTO.totalPages" fill="none" height="20"
+         viewBox="0 0 12 20" width="12" xmlns="http://www.w3.org/2000/svg" @click="movePage(1)">
+      <path d="M2 18L10 10L2 2" stroke="#A9A9A9" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
     </svg>
   </div>
 </template>
@@ -72,7 +80,6 @@ const moveNumberPage = (num: number) => {
   align-items: center;
   gap: 10px;
   margin-top: 20px;
-  margin-bottom: 80px;
 }
 
 .non-select {

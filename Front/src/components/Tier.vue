@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const props = defineProps({
   rating: {
     type: Number,
@@ -8,8 +8,8 @@ const props = defineProps({
   height: String,
   fontSize: String,
   radius: {
-    type:String,
-    default:"4px"
+    type: String,
+    default: "4px"
   },
 });
 
@@ -25,8 +25,7 @@ const tierName: string[] = [
 </script>
 
 <template>
-  <div class="tier-box"
-       :class="{
+  <div :class="{
          'bronze': rating < 100,
          'silver': rating >= 100 && rating < 200,
          'gold': rating >= 200 && rating < 300,
@@ -39,6 +38,7 @@ const tierName: string[] = [
           lineHeight:height,
           borderRadius:radius,
        }"
+       class="tier-box"
   >
     {{ tierName[Math.floor((props.rating >= 400 ? 400 : props.rating) / 100)] }}
   </div>

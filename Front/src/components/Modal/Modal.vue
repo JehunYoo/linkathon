@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {onMounted, onUnmounted} from 'vue';
 
@@ -29,12 +29,14 @@ const props = defineProps({
 <template>
   <div class="blur" @click="props.modalController(0)"/>
   <div class="slot">
-    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" fill="none"
+    <svg fill="none" height="24" viewBox="0 0 26 24" width="26" xmlns="http://www.w3.org/2000/svg"
          @click="props.modalController(0)">
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
-            stroke="black" stroke-width="2"/>
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
-            stroke="black" stroke-width="2"/>
+      <line stroke="black" stroke-width="2" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
+            x2="30.9566"
+            y1="-1" y2="-1"/>
+      <line stroke="black" stroke-width="2" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
+            x2="30.9566"
+            y1="-1" y2="-1"/>
     </svg>
     <slot>
     </slot>

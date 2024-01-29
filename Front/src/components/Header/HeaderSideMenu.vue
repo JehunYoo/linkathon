@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import {onMounted, onUnmounted} from 'vue';
 
@@ -30,12 +30,14 @@ const props = defineProps({
 <template>
   <div class="blur" @click="props.sidebarController(0)"/>
   <div class="side-bar">
-    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 26 24" fill="none"
+    <svg fill="none" height="18" viewBox="0 0 26 24" width="19" xmlns="http://www.w3.org/2000/svg"
          @click="props.sidebarController(0)">
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
-            stroke="black" stroke-width="2"/>
-      <line y1="-1" x2="30.9566" y2="-1" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
-            stroke="black" stroke-width="2"/>
+      <line stroke="black" stroke-width="2" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
+            x2="30.9566"
+            y1="-1" y2="-1"/>
+      <line stroke="black" stroke-width="2" transform="matrix(-0.703573 0.710623 0.703573 0.710623 24 2.00098)"
+            x2="30.9566"
+            y1="-1" y2="-1"/>
     </svg>
     <h1>
       MENU
@@ -46,10 +48,10 @@ const props = defineProps({
       <router-link to="/recruit">팀원구하기</router-link>
       <div>내 프로젝트</div>
       <div>해커톤</div>
-      <div>명예의 전당</div>
+      <router-link to="/sharedProject">공유 프로젝트</router-link>
       <div>마이페이지</div>
-      <div>로그인</div>
-      <div>회원가입</div>
+      <router-link to="/login">로그인</router-link>
+      <router-link to="/register">회원가입</router-link>
     </div>
   </div>
 </template>
@@ -65,11 +67,6 @@ a {
 
 * {
   box-shadow: none;
-}
-a:hover {
-  color: #7D3CFF;
-  margin-left: 10px;
-  scale: 1.05;
 }
 
 svg {
@@ -99,10 +96,14 @@ h1 {
   color: #404040;
 }
 
-.side-bar-menu div:hover {
+.side-bar-menu div, a {
+  transition: color 0.3s ease, margin-left 0.3s ease, transform 0.3s ease;
+}
+
+.side-bar-menu div:hover, a:hover {
   color: #7D3CFF;
   margin-left: 10px;
-  scale: 1.05;
+  transform: scale(1.05);
 }
 
 ::-webkit-scrollbar {
@@ -119,10 +120,10 @@ h1 {
 .blur {
   z-index: 1000;
   position: fixed;
-  left: 50%;
-  top: 50%;
-  width: 100vw;
-  height: 1000vh;
+  left: 0;
+  top: 0;
+  width: 1000vw;
+  height: 10000vh;
   background: rgba(255, 255, 255, 0.70);
   backdrop-filter: blur(5px);
   transform: translate(-50%, -50%)

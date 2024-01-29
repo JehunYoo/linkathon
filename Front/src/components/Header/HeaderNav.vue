@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import HeaderSideMenu from "@/components/Header/HeaderSideMenu.vue";
 import {ref} from "vue";
 
@@ -10,17 +10,17 @@ const sidebarController = (num: number) => {
 </script>
 
 <template>
-  <HeaderSideMenu :sidebar-controller="sidebarController" v-if="sidebarControl===1"/>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"/>
+  <HeaderSideMenu v-if="sidebarControl===1" :sidebar-controller="sidebarController"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"
+        rel="stylesheet"/>
   <div class="header-nav-container">
     <div class="header-nav">
       <router-link class="logo" to="/">LINK.</router-link>
       <div class="left-menu-container">
         <router-link class="header-nav-menu-hover" to="/recruit">팀원 구하기</router-link>
-        <div class="header-nav-menu-hover">내 프로젝트</div>
-        <div class="header-nav-menu-hover">해커톤</div>
-        <div class="header-nav-menu-hover">공유 프로젝트</div>
+        <router-link to="/projectDetail" class="header-nav-menu-hover">내 프로젝트</router-link>
+        <router-link to="/video" class="header-nav-menu-hover">해커톤</router-link>
+        <router-link class="header-nav-menu-hover" to="/sharedProject">공유 프로젝트</router-link>
       </div>
       <div class="right-menu-container">
         <div class="hamburger-button">
@@ -28,9 +28,9 @@ const sidebarController = (num: number) => {
             menu
           </span>
         </div>
-        <div class="tl header-nav-menu-hover">로그인</div>
+        <router-link class="tl header-nav-menu-hover" to="/login">로그인</router-link>
         <div class="right-menu-divider">|</div>
-        <div class="tr header-nav-menu-hover">회원가입</div>
+        <router-link class="tr header-nav-menu-hover" to="/register">회원가입</router-link>
       </div>
     </div>
   </div>
@@ -137,7 +137,7 @@ a {
   justify-content: center;
   width: 100vw;
   height: 80px;
-  border-bottom: #7D3BFF solid 0.5px;
+  border-bottom: #7D3BFF solid 1px;
   position: fixed;
   background: white;
   top: 0;

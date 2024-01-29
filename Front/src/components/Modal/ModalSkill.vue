@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import {Builder} from "builder-pattern";
 
@@ -34,7 +34,7 @@ defineProps({
     </div>
     <div class="skill-container">
       <template v-for="skill in dummySkillList">
-        <SkillIcon width="48px" height="48px" radius="10px" :skill="skill" font-size="28px"></SkillIcon>
+        <SkillIcon :skill="skill" font-size="28px" height="48px" radius="10px" width="48px"></SkillIcon>
       </template>
     </div>
   </div>

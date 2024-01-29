@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from 'vue';
 
 const dummy = ref(["선택", "브론즈", "실버", "골드", "다이아"]);
@@ -17,9 +17,9 @@ const clickDropdownMenu = (item: number) => {
   <div class="dropdown-container" @click="toggleDropdown">
     <div class="dropdown-box">
       {{ dummy[select] }}
-      <svg style="margin-left: 11px" xmlns="http://www.w3.org/2000/svg" width="12" height="6" viewBox="0 0 12 6"
-           fill="none">
-        <path d="M1 1L6 5L11 1" stroke="#303030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg fill="none" height="6" style="margin-left: 11px" viewBox="0 0 12 6" width="12"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L6 5L11 1" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
       </svg>
     </div>
     <div v-if="dropdownOpen" class="dropdown-content">

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import UserCard from "@/components/User/UserCard.vue";
 import Pagination from "@/components/Pagination.vue";
 import Modal from "@/components/Modal/Modal.vue";
@@ -14,8 +14,8 @@ const modalController = (num: number) => {
 
 <template>
   <div class="user-card-container">
-    <template v-for="i in 12">
-      <Modal :modalController="modalController" v-if="clickedModal===i">
+    <template v-for="i in 16">
+      <Modal v-if="clickedModal===i" :modalController="modalController">
         <ModalEffect text="남은점수 4점"/>
         <ModalMember/>
       </Modal>
