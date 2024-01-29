@@ -1,7 +1,6 @@
 package com.link.back.entity;
 
 import static com.link.back.config.AppConstant.*;
-import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
@@ -9,8 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +18,7 @@ public class UserImage {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private Long profileId;
-
-	@OneToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	private Long userImageId;
 
 	@Column(length = USER_IMAGE_NAME_LENGTH, nullable = false)
 	private String userImageName;
@@ -34,5 +27,5 @@ public class UserImage {
 	private String userImageUrl;
 
 	@Column(length = USER_ORIGIN_IMAGE_NAME_LENGTH, nullable = false)
-	private String originImageName;
+	private String userOriginImageName;
 }
