@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,13 +18,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/schedules")
+@RequestMapping("/api/schedules")
 public class ScheduleController {
 	private final ScheduleService scheduleService;
 
 	@GetMapping
 	public ResponseEntity<ScheduleResponse> getMySchedule() {
-		Long userId = 1234L; // 테스트용, 토큰 헤더에서 자신의 userId 가져올 예정
+		Long userId = 1L; // 테스트용, 토큰 헤더에서 자신의 userId 가져올 예정
 		ScheduleResponse scheduleResponse = scheduleService.getScheduleByUserId(userId);
 		return new ResponseEntity<>(scheduleResponse, HttpStatus.OK);
 	}
@@ -35,8 +36,8 @@ public class ScheduleController {
 	}
 
 	@PutMapping
-	public ScheduleResponse updateMySchedule(@NotNull ScheduleRequest scheduleRequest) {
-		Long userId = 1234L;
+	public ScheduleResponse updateMySchedule(@RequestBody @NotNull ScheduleRequest scheduleRequest) {
+		Long userId = 1L;
 		return scheduleService.updateMySchedule(userId, scheduleRequest);
 	}
 
