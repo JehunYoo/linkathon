@@ -2,6 +2,7 @@ package com.link.back.service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +19,17 @@ import com.link.back.dto.request.HackathonRequest;
 import com.link.back.dto.response.HackathonResponseDto;
 import com.link.back.dto.response.HackathonsResponseDto;
 import com.link.back.dto.response.ReservationResponse;
+import com.link.back.dto.response.TeamResponseDto;
+import com.link.back.dto.response.WinnerProjectInfoDto;
+import com.link.back.dto.response.WinnerProjectResponseDto;
 import com.link.back.entity.Hackathon;
 import com.link.back.entity.HackathonImage;
+import com.link.back.entity.Project;
+import com.link.back.entity.Team;
 import com.link.back.repository.HackathonImageRepository;
 import com.link.back.repository.HackathonRepository;
 import com.link.back.repository.HackathonsRepository;
+import com.link.back.repository.ProjectRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,10 +40,11 @@ public class HackathonService {
 	private final HackathonsRepository hackathonsRepository;
 	private final HackathonImageRepository hackathonImageRepository;
 	private final S3Uploader s3Uploader;
+	private final ProjectRepository projectRepository;
+	private final TeamBuildingService teamBuildingService;
 
 	public void createHackathon(HackathonRequest hackathonRequest, MultipartFile image) throws IOException {
 		Image img = s3Uploader.upload(image,"static");
-		System.out.println("name" + img.getImageName());
 		HackathonImage hackathonImage = HackathonImage.builder().hackathonImageUrl(img.getImageUrl()).hackathonImageName(
 			img.getImageName()).hackathonOriginImageName(img.getOriginName()).build();
 
@@ -75,6 +83,18 @@ public class HackathonService {
 		hackathonRepository.deleteById(hackathonId);
 	}
 
+	public List<WinnerProjectResponseDto> getWinnerProjects(Long hackathonId) {
+		List<Project> projects = projectRepository.findProjectsByHackathonScoreAndWinState(hackathonId);
+
+		List<WinnerProjectResponseDto> winnerProjectResponseDtoList = new ArrayList<>();
+		for (Project project : projects) {
+			WinnerProjectInfoDto winnerProjectInfoDto = mapToWinnerProjectInfoDto(project);
+			TeamResponseDto teamResponseDto = teamBuildingService.findTeam(project.getTeam().getTeamId());
+			winnerProjectResponseDtoList.add(WinnerProjectResponseDto.builder().winnerProjectInfoDto(winnerProjectInfoDto).teamResponseDto(teamResponseDto)
+				.build());
+		}
+		return winnerProjectResponseDtoList;
+	}
 	private HackathonsResponseDto mapToHackathonsResponseDto(Hackathon hackathon) {
 		return HackathonsResponseDto.builder()
 			.hackathonId(hackathon.getHackathonId())
@@ -85,5 +105,11 @@ public class HackathonService {
 			.teamDeadlineDate(hackathon.getTeamDeadlineDate())
 			.maxPoint(hackathon.getMaxPoint())
 			.build();
+	}
+
+	private WinnerProjectInfoDto mapToWinnerProjectInfoDto(Project project) {
+		return WinnerProjectInfoDto.builder().projectId(project.getProjectId())
+			.projectName(project.getProjectName()).teamId(project.getTeam().getTeamId())
+			.projectDesc(project.getProjectDesc()).build();
 	}
 }
