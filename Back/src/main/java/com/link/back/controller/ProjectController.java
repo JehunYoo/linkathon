@@ -69,7 +69,8 @@ public class ProjectController {
 
 	@GetMapping
 	public ResponseEntity<Page<ProjectResponseDto>> getAllProjects(Pageable pageable) {
-		Page<ProjectResponseDto> projects = projectService.getAllClosedProjects(pageable);
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		Page<ProjectResponseDto> projects = projectService.getAllClosedProjects(userId, pageable);
 		return new ResponseEntity<>(projects, HttpStatus.OK);
 	}
 
@@ -82,7 +83,8 @@ public class ProjectController {
 
 	@GetMapping("/{project_id}")
 	public ResponseEntity<ProjectResponseDto> getProjectDetail(@PathVariable("project_id") Long projectId) {
-		ProjectResponseDto projectDetail = projectService.getProjectDetail(projectId);
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		ProjectResponseDto projectDetail = projectService.getProjectDetail(userId, projectId);
 		return new ResponseEntity<>(projectDetail, HttpStatus.OK);
 	}
 
@@ -137,7 +139,8 @@ public class ProjectController {
 	@GetMapping("/popular")
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<List<ProjectResponseDto>> getPopularProjects(@NotNull Pageable pageable) {
-		List<ProjectResponseDto> likedProjects = projectService.getPopularProjects();
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		List<ProjectResponseDto> likedProjects = projectService.getPopularProjects(userId);
 		return new ResponseEntity<>(likedProjects, HttpStatus.OK);
 	}
 

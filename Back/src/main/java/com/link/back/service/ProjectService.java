@@ -52,32 +52,36 @@ public class ProjectService {
 		projectRepository.save(project);
 	}
 
-	public Page<ProjectResponseDto> getAllClosedProjects(Pageable pageable) {
+	public Page<ProjectResponseDto> getAllClosedProjects(Long userId, Pageable pageable) {
+		User user = userId != null ? userRepository.getReferenceById(userId) : null;
 		Page<Project> projectPage = projectRepository.findByProjectStatusOrderByLikesDesc(
 			ProjectStatus.CLOSED,
 			pageable);
 		List<ProjectResponseDto> projectResponseList = projectPage.stream()
-			.map(this::toProjectResponseDto)
+			.map(p -> toProjectResponseDto(p, user))
 			.toList();
 		return new PageImpl<>(projectResponseList, projectPage.getPageable(), projectPage.getTotalElements());
 	}
 
-	public List<ProjectResponseDto> getPopularProjects() {
+	public List<ProjectResponseDto> getPopularProjects(Long userId) {
+		User user = userId != null ? userRepository.getReferenceById(userId) : null;
 		Pageable pageable = PageRequest.of(0, 4); // 상위 4개 프로젝트 조회
 		Page<Project> projects = projectRepository.findByProjectStatusOrderByLikesDesc(ProjectStatus.CLOSED, pageable);
-		return projects.stream().map(this::toProjectResponseDto).toList();
+		return projects.stream().map(p -> toProjectResponseDto(p, user)).toList();
 	}
 
 	public List<ProjectResponseDto> getMyProjects(Long userId) {
+		User user = userId != null ? userRepository.getReferenceById(userId) : null;
 		return projectRepository.findByUserId(userId)
 			.stream()
-			.map(this::toProjectResponseDto)
+			.map(p -> toProjectResponseDto(p, user))
 			.toList();
 	}
 
-	public ProjectResponseDto getProjectDetail(Long projectId) {
+	public ProjectResponseDto getProjectDetail(Long userId, Long projectId) {
+		User user = userId != null ? userRepository.getReferenceById(userId) : null;
 		Project project = projectRepository.findById(projectId).orElseThrow();
-		return toProjectResponseDto(project);
+		return toProjectResponseDto(project, user);
 	}
 
 	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto) {
@@ -130,28 +134,30 @@ public class ProjectService {
 	public List<ProjectResponseDto> getLikedProjects(Long userId) {
 		User user = userRepository.getReferenceById(userId);
 		List<Project> projects = projectRepository.findLikedProjectsByUser(user);
-		return projects.stream().map(this::toProjectResponseDto).toList();
+		return projects.stream().map(p -> toProjectResponseDto(p, user)).toList();
 	}
 
-	private ProjectResponseDto toProjectResponseDto(Project project) {
+	private ProjectResponseDto toProjectResponseDto(Project project, User user) {
 		return ProjectResponseDto.builder()
 			.projectId(project.getProjectId())
 			.teamId(project.getTeam().getTeamId())
 			.hackathonId(project.getTeam().getHackathon().getHackathonId())
 			.hackathonName(project.getTeam().getHackathon().getHackathonName())
+			.hackathonTopic(project.getTeam().getHackathon().getHackathonTopic())
 			.hackathonScore(project.getHackathonScore())
 			.projectName(project.getProjectName())
-			.projectTopic(project.getProjectTopic())
 			.projectDesc(project.getProjectDesc())
 			.projectStatus(project.getProjectStatus())
 			.registeredDate(project.getRegisteredDate())
 			.projectUrl(project.getProjectUrl())
-			.winState(project.getWinState())
 			.deployUrl(project.getDeployUrl())
+			.winState(project.getWinState())
 			.projectImage(
 				project.getProjectImage() == null ? null :
 					toProjectImageDto(project.getProjectImage())
 			)
+			.starCount(projectLikeRepository.countByProject(project))
+			.starred(projectLikeRepository.findByProjectAndUser(project, user).isPresent())
 			.build();
 	}
 
@@ -168,21 +174,19 @@ public class ProjectService {
 			.team(team)
 			.projectImage(projectImage)
 			.projectName(projectRequestDto.projectName())
-			.projectTopic(projectRequestDto.projectTopic())
 			.projectDesc(projectRequestDto.projectDesc())
-			.projectUrl(projectRequestDto.projectUrl())
+			.projectStatus(ProjectStatus.OPENED)
 			.registeredDate(LocalDateTime.now())
+			.projectUrl(projectRequestDto.projectUrl())
 			.hackathonScore(0)
 			.winState(Boolean.FALSE)
-			.projectStatus(ProjectStatus.OPENED)
-			// .deployUrl("http://sample-deploy.com")
+			.deployUrl(null)
 			.build();
 	}
 
 	private void updateProjectEntity(Project project, ProjectImage projectImage, ProjectRequestDto projectRequestDto) {
 		project.updateProjectDetail(
 			projectRequestDto.projectName(),
-			projectRequestDto.projectTopic(),
 			projectRequestDto.projectDesc(),
 			projectRequestDto.projectUrl(),
 			projectRequestDto.deployUrl(),
