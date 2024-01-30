@@ -143,7 +143,7 @@ public class ProjectService {
 			.teamId(project.getTeam().getTeamId())
 			.hackathonId(project.getTeam().getHackathon().getHackathonId())
 			.hackathonName(project.getTeam().getHackathon().getHackathonName())
-			.hackathonTopic(project.getTeam().getHackathon().getHackathonTopic())
+			.hackathonTopic("asd")
 			.hackathonScore(project.getHackathonScore())
 			.projectName(project.getProjectName())
 			.projectDesc(project.getProjectDesc())
