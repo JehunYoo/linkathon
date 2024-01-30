@@ -49,8 +49,11 @@ public class HackathonController {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("registerDate").descending());
 		return new ResponseEntity<>(hackathonService.getAllHackathonInfo(pageable,status),HttpStatus.OK);
 	}
-	// @GetMapping("/api/hackathons/{hackathonId}/winners")
-	// public ResponseEntity<List<WinnerProjectResponseDto>>
+	@GetMapping("/{hackathonId}/winners")
+	public ResponseEntity<List<WinnerProjectResponseDto>> getWinnerProjects(@PathVariable Long hackathonId) {
+		List<WinnerProjectResponseDto> winnerProjectResponseDtoList = hackathonService.getWinnerProjects(hackathonId);
+		return new ResponseEntity<>(winnerProjectResponseDtoList,HttpStatus.OK);
+	}
 	@PutMapping("/{hackathonId}")
 	public ResponseEntity<Void> updateHackathonInfo(@PathVariable Long hackathonId, @RequestBody HackathonRequest hackathonRequest) {
 		hackathonService.updateHackathon(hackathonId,hackathonRequest);
