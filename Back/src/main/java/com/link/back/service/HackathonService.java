@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +12,7 @@ import org.springframework.stereotype.Service;
 import com.link.back.dto.request.HackathonRequest;
 import com.link.back.dto.response.HackathonResponseDto;
 import com.link.back.dto.response.HackathonsResponseDto;
-import com.link.back.dto.response.ReservationResponse;
 import com.link.back.entity.Hackathon;
-import com.link.back.entity.HackathonImage;
 import com.link.back.repository.HackathonImageRepository;
 import com.link.back.repository.HackathonRepository;
 import com.link.back.repository.HackathonsRepository;

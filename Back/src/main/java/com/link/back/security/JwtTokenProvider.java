@@ -48,7 +48,7 @@ public class JwtTokenProvider {
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public JwtToken generateToken(Long userId) {
         long now = System.currentTimeMillis();
-        long thirtyMinutesInMillis =  5 * 1000; // 30 minutes in milliseconds
+        long thirtyMinutesInMillis = 5 * 60 * 60 * 1000; // 30 minutes in milliseconds
         long accessTokenExpiresInMillis = now + thirtyMinutesInMillis;
         Date accessTokenExpiresIn = new Date(accessTokenExpiresInMillis);
 
@@ -130,15 +130,8 @@ public class JwtTokenProvider {
 
     // RefreshToken 존재유무 확인
     public boolean existsRefreshToken(String refreshToken) {
-//        System.out.println("1: " + refreshToken);
 
-//        System.out.println("4: " + refreshTokenRepository.findByRefreshToken(refreshToken));
-//        System.out.println("2: "+ refreshTokenRepository.findByRefreshToken(refreshToken).get());
-//        System.out.println("3: " + refreshTokenRepository.findByRefreshToken(refreshToken).get().getRefreshToken());
-//        if (refreshTokenRepository.findByRefreshToken(refreshToken).isPresent()) return  true;
         Optional<RefreshToken> token = refreshTokenRepository.findById(refreshToken);
-
-//        System.out.println(token.getRefreshToken());
 
         if(token != null) return true;
 

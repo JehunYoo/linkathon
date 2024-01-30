@@ -18,7 +18,6 @@ public class SkillResponseDto {
 		this.skillLevel = String.valueOf(userSkill.getSkillLevel());
 		this.skillType = String.valueOf(userSkill.getSkill().getSkillType());
 
-
 	}
 
 

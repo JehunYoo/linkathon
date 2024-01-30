@@ -63,7 +63,7 @@ public class UserNonAuthController {
         headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
         // refresh 토큰을 redis에 넣어줌
-        RefreshToken refreshToken = new RefreshToken(jwtToken.getAccessToken());
+        RefreshToken refreshToken = new RefreshToken(jwtToken.getRefreshToken());
         refreshTokenRepository.save(refreshToken);
 
         // ResponseEntity를 생성하고, 헤더와 상태 코드를 설정

@@ -23,9 +23,9 @@ public class HackathonImage {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long hackathonImageId;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "hackathon_id", nullable = false)
-	private Hackathon hackathon;
+	// @OneToOne(fetch = FetchType.LAZY)
+	// // @JoinColumn(name = "hackathon_id", nullable = false)
+	// private Hackathon hackathon;
 
 	@Column(nullable = false, length = HACKATHON_IMAGE_NAME_LENGTH)
 	private String hackathonImageName;
