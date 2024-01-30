@@ -29,6 +29,9 @@ public class Hackathon {
 	@Column(nullable = false, length = HACKATHON_NAME_LENGTH)
 	private String hackathonName;
 
+	@Column(nullable = false, length = PROJECT_TOPIC_LENGTH)
+	private String hackathonTopic;
+
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "hackathon_image_id")
 	private HackathonImage hackathonImage;
@@ -52,9 +55,11 @@ public class Hackathon {
 	private Integer maxTeamMember;
 
 	@Builder
-	public Hackathon(String hackathonName, LocalDate registerDate, LocalDate teamDeadlineDate, LocalDate startDate,
-		LocalDate endDate,Integer maxPoint, Integer maxTeamMember, HackathonImage hackathonImage) {
+	public Hackathon(String hackathonName, String hackathonTopic, LocalDate registerDate, LocalDate teamDeadlineDate,
+		LocalDate startDate,
+		LocalDate endDate, Integer maxPoint, Integer maxTeamMember, HackathonImage hackathonImage) {
 		this.hackathonName = hackathonName;
+		this.hackathonTopic = hackathonTopic;
 		this.registerDate = registerDate;
 		this.teamDeadlineDate = teamDeadlineDate;
 		this.startDate = startDate;
@@ -64,9 +69,11 @@ public class Hackathon {
 		this.hackathonImage = hackathonImage;
 	}
 
-	public void updateHackathonInfo(String hackathonName, LocalDate teamDeadlineDate, LocalDate startDate,
+	public void updateHackathonInfo(String hackathonName, String hackathonTopic, LocalDate teamDeadlineDate,
+		LocalDate startDate,
 		LocalDate endDate, Integer maxPoint, Integer maxTeamMember) {
 		this.hackathonName = hackathonName;
+		this.hackathonTopic = hackathonTopic;
 		this.teamDeadlineDate = teamDeadlineDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
