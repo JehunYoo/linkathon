@@ -100,12 +100,6 @@ public class JwtTokenProvider {
         //토큰 에러로 나중에 바꿀 예정
         return null;
     }
-    // Request의 Header에서 RefreshToken 값을 가져옵니다. "authorization" : "token'
-    public String resolveRefreshToken(HttpServletRequest request) {
-        if(request.getHeader("refreshToken") != null )
-            return request.getHeader("refreshToken").substring(7);
-        return null;
-    }
 
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {

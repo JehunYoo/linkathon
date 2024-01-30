@@ -8,14 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class UserFindEmailRequest {
 
 	private String name;
 	private LocalDate birth;
-
 	private String phoneNumber;
 
 }

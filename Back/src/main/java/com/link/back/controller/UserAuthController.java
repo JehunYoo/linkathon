@@ -54,6 +54,7 @@ public class UserAuthController {
 
         return new ResponseEntity<>("갱신되었습니다.", HttpStatus.ACCEPTED);
     }
+
     //회원 추가 정보 입력
     @PostMapping("/users/addtionalinfo")
     public ResponseEntity<String> addInfo(@RequestHeader("Authorization") String token, @Valid @RequestBody AdditionalUserInfoRequest additionalUserInfoRequest){

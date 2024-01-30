@@ -1,15 +1,24 @@
 package com.link.back.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.link.back.dto.JwtToken;
 import com.link.back.dto.LoginRequest;
+import com.link.back.dto.UserSignUpDto;
+import com.link.back.dto.VerificationCode;
 import com.link.back.dto.request.AdditionalUserInfoRequest;
 import com.link.back.dto.request.UserPasswordResetRequest;
-import com.link.back.dto.UserSignUpDto;
 import com.link.back.dto.request.UserUpdateInfoRequest;
 import com.link.back.dto.response.UserInfoResponsse;
 import com.link.back.entity.User;
@@ -20,23 +29,17 @@ import com.link.back.repository.SkillRepository;
 import com.link.back.repository.UserImageRepository;
 import com.link.back.repository.UserRepository;
 import com.link.back.repository.UserSkillRepository;
+import com.link.back.repository.VerificationCodeRepository;
 import com.link.back.security.JwtTokenProvider;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+	private final VerificationCodeRepository verificationCodeRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final UserRepository userRepository;
 	private final UserImageRepository userImageRepository;
@@ -79,15 +82,28 @@ public class UserService {
 
 		return jwtToken;
 	}
+	//이메일 찾기
+
+	//아이디 찾기
+	//이름, 생일, 전화번호 받음
+	public String findEmail(String name, LocalDate birth, String phoneNumber){
+
+		User user = userRepository.findByNameAndBirthAndPhoneNumber(name, birth, phoneNumber);
+
+
+		String email = user.getEmail();
+
+		return email;
+	}
 
 	//이메일 인증
 	@Transactional
-	public String sendVerificationEmail(String email){
+	public void sendVerificationEmail(String email){
 
 		Optional<User> user = userRepository.findByEmail(email);
 
 		//존재하지 않는 이메일이면
-		if(!user.isPresent()) {
+		if(user.isEmpty()) {
 			throw new IllegalArgumentException("이메일이 존재하지 않습니다.");
 		}
 
@@ -103,7 +119,6 @@ public class UserService {
 			verificationCode.append(tmp);
 		}
 
-		System.out.println(email);
 		//2. 인증번호 보내기(messageAPI 사용)
 		javaMailSender.send(new MimeMessagePreparator() {
 
@@ -118,25 +133,43 @@ public class UserService {
 		});
 
 		//3. 인증번호와 이메일을 redis에 저장
+		verificationCodeRepository.save(new VerificationCode(verificationCode.toString(), email));
 
+	}
 
+	//인증번호 확인 메소드
+	//맞으면 그냥 동작 틀리면 에러
+	public void compareVerificationKey(String verificationKey, String email){
 
+		if(!verificationCodeRepository.findById(verificationKey).isPresent()) throw new IllegalArgumentException("올바른 인증번호가 아닙니다.");
 
-		return "이메일로 인증번호를 확인하세요";
+		if(!email.equals(verificationCodeRepository.findById(verificationKey).get().getEmail())) throw new IllegalArgumentException("올바른경로가 아닙니다.");
+
 	}
 
 	//어처피 e
 	public void resetPassword(UserPasswordResetRequest userPasswordResetRequest) {
 		String email = userPasswordResetRequest.getEmail();
 		String password = userPasswordResetRequest.getPassword();
+		String verificationKey = userPasswordResetRequest.getVerificationKey();
 
+		System.out.println(1);
+		if(verificationCodeRepository.findById(verificationKey).isEmpty())
+			throw  new IllegalArgumentException("올바른 접근이 아닙니다.");
+
+		if(!verificationCodeRepository.findById(verificationKey).get().getEmail().equals(userRepository.findByEmail(email).get().getEmail()))
+			throw  new IllegalArgumentException("올바른 접근이 아닙니다.");
+
+		//인증번호랑 이메일이 맞는 경우
 		User user = userRepository.findByEmail(email).get();
+
 		//이전 비밀번호랑 같으면 밴해주기
-		if (user.getPassword().equals(password))
+		if (passwordEncoder.matches(password, user.getPassword()))
 			throw new IllegalArgumentException("이전 비밀번호와 다르게 설정해야합니다.");
 
 		user.updatePassword(password);
 
+		userRepository.save(user);
 	}
 
 	//user 개인정보 조회
@@ -226,7 +259,6 @@ public class UserService {
 
 	}
 
-
 	//회원탈퇴
 	//토큰 기반으로 하는것이기 때문에 굳이 확인절차 필요?
 	@Transactional
@@ -271,5 +303,12 @@ public class UserService {
 	}
 
 
-
+	// public void sendEmail(String to, String subject, String body) {
+	// 	SimpleMailMessage message = new SimpleMailMessage();
+	// 	message.setTo(to);
+	// 	message.setSubject(subject);
+	// 	message.setText(body);
+	//
+	// 	javaMailSender.send(message);
+	// }
 }

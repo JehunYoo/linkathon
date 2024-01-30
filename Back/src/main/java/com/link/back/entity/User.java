@@ -6,7 +6,6 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -134,7 +133,7 @@ public class User implements UserDetails {
 
 	public void updateUser(User user, UserImage userImage, List<UserSkill> userSkills,  UserUpdateInfoRequest userUpdateInfoRequest){
 		this.email = user.getEmail();
-		this.password = userUpdateInfoRequest.getPassword();
+		this.password = new BCryptPasswordEncoder().encode(userUpdateInfoRequest.getPassword());
 		this.phoneNumber = userUpdateInfoRequest.getPhoneNumber();
 		this.rating = user.rating;
 		this.name = userUpdateInfoRequest.getName();
@@ -155,7 +154,7 @@ public class User implements UserDetails {
 
 	public void addUserInfo (User user, UserImage userImage, List<UserSkill> userSkills,  AdditionalUserInfoRequest additionalUserInfoRequest){
 		this.email = user.getEmail();
-		this.password = user.getPassword();
+		this.password = new BCryptPasswordEncoder().encode(user.getPassword());
 		this.phoneNumber = user.getPhoneNumber();
 		this.rating = user.rating;
 		this.name = user.getName();
@@ -206,7 +205,7 @@ public class User implements UserDetails {
 	//비밀번호 변경 메소드
 
 	public void updatePassword(String password) {
-		this.password = password;
+		this.password = new BCryptPasswordEncoder().encode(password);
 	}
 
 	@OneToMany(mappedBy = "user")

@@ -9,15 +9,17 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
 @Getter
-@RedisHash(value = "refreshToken")
+@RedisHash(value = "verificationCode", timeToLive = 3 * 60)
 public class VerificationCode {
 
 	@Id
 	private String verificationCode;
-	@TimeToLive
-	private final long expireTime = TimeUnit.MINUTES.toMillis(3);;
+	private final String email;
 
-	public VerificationCode(String verificationCode) {
+	public VerificationCode(String verificationCode, String email) {
+
 		this.verificationCode = verificationCode;
+		this.email = email;
+
 	}
 }

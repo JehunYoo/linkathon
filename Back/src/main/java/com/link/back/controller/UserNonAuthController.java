@@ -1,9 +1,13 @@
 package com.link.back.controller;
 
 
+import java.time.LocalDate;
+
 import com.link.back.dto.*;
+import com.link.back.dto.request.SendEmailRequest;
 import com.link.back.dto.request.UserFindEmailRequest;
 import com.link.back.dto.request.UserPasswordResetRequest;
+import com.link.back.dto.request.VerificationRequest;
 import com.link.back.repository.RefreshTokenRepository;
 import com.link.back.service.UserService;
 import jakarta.validation.Valid;
@@ -12,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,18 +78,43 @@ public class UserNonAuthController {
     }
 
 
-    //메일인증확인
 
     //이메일 찾기
-    @PostMapping("/email")
+    @GetMapping("/email")
     public ResponseEntity<String> findEmail (@Valid @RequestBody UserFindEmailRequest userFindEmailRequest) throws Exception {
+        String name = userFindEmailRequest.getName();
+        LocalDate birth = userFindEmailRequest.getBirth();
+        String phoneNumber = userFindEmailRequest.getPhoneNumber();
 
-        //여기서 보냄
-
-        // userService.resetPassword(userFindEmailRequest);
+        String email = userService.findEmail(name, birth, phoneNumber);
 
         //로그인 페이지로 보내주기
-        return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
+        return new ResponseEntity<>("아이디는" + email +  "입니다", HttpStatus.CREATED);
+    }
+
+    //메일인증요청
+    @PostMapping("/email/verification")
+    public ResponseEntity<String> requestVerification(@Valid @RequestBody SendEmailRequest sendEmailRequest){
+
+        String email = sendEmailRequest.email();
+
+        userService.sendVerificationEmail(email);
+
+        return new ResponseEntity<>("메일을 확인하세요", HttpStatus.ACCEPTED);
+
+    }
+
+    //메일인증확인
+    @PostMapping("/password/verification")
+    public ResponseEntity<Boolean> comparedVerification(@Valid @RequestBody VerificationRequest verificationRequest){
+
+        String verificationKey = verificationRequest.verificationKey();
+        String email = verificationRequest.email();
+        userService.compareVerificationKey(verificationKey, email);
+
+        //에러 안나면 항상 True
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.ACCEPTED);
+
     }
 
     //비밀번호 찾기
