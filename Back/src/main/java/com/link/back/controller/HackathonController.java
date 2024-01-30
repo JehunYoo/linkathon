@@ -1,5 +1,6 @@
 package com.link.back.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.link.back.dto.request.HackathonRequest;
 import com.link.back.dto.response.HackathonResponseDto;
@@ -34,8 +37,9 @@ import lombok.RequiredArgsConstructor;
 public class HackathonController {
 	private final HackathonService hackathonService;
 	@PostMapping
-	public ResponseEntity<Void> createHackathon(@RequestBody HackathonRequest hackathonRequest) {
-		hackathonService.createHackathon(hackathonRequest);
+	public ResponseEntity<Void> createHackathon(@RequestPart HackathonRequest hackathonRequest,@RequestPart(value="image")
+		MultipartFile image) throws IOException {
+		hackathonService.createHackathon(hackathonRequest,image);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	@GetMapping("/{hackathonId}")
@@ -49,8 +53,11 @@ public class HackathonController {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("registerDate").descending());
 		return new ResponseEntity<>(hackathonService.getAllHackathonInfo(pageable,status),HttpStatus.OK);
 	}
-	// @GetMapping("/api/hackathons/{hackathonId}/winners")
-	// public ResponseEntity<List<WinnerProjectResponseDto>>
+	@GetMapping("/{hackathonId}/winners")
+	public ResponseEntity<List<WinnerProjectResponseDto>> getWinnerProjects(@PathVariable Long hackathonId) {
+		List<WinnerProjectResponseDto> winnerProjectResponseDtoList = hackathonService.getWinnerProjects(hackathonId);
+		return new ResponseEntity<>(winnerProjectResponseDtoList,HttpStatus.OK);
+	}
 	@PutMapping("/{hackathonId}")
 	public ResponseEntity<Void> updateHackathonInfo(@PathVariable Long hackathonId, @RequestBody HackathonRequest hackathonRequest) {
 		hackathonService.updateHackathon(hackathonId,hackathonRequest);

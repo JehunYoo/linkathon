@@ -36,4 +36,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 		+ " ORDER BY p.registeredDate DESC")
 	List<Project> findLikedProjectsByUser(User user);
 
+	@Query("SELECT p " +
+		"FROM Project p " +
+		"JOIN p.team t ON p.team.teamId = t.teamId " +
+		"JOIN Hackathon h ON h.hackathonId = :hackathonId " +
+		"WHERE p.winState = true " +
+		"and p.projectStatus = 'CLOSED' " +
+		"ORDER BY p.hackathonScore DESC " +
+	"limit 3")
+	public List<Project> findProjectsByHackathonScoreAndWinState(Long hackathonId);
+
 }
