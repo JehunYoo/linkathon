@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.link.back.dto.request.ProjectRequestDto;
@@ -68,7 +69,8 @@ public class ProjectController {
 
 	@GetMapping
 	public ResponseEntity<Page<ProjectResponseDto>> getAllProjects(Pageable pageable) {
-		Page<ProjectResponseDto> projects = projectService.getAllClosedProjects(pageable);
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		Page<ProjectResponseDto> projects = projectService.getAllClosedProjects(userId, pageable);
 		return new ResponseEntity<>(projects, HttpStatus.OK);
 	}
 
@@ -81,7 +83,8 @@ public class ProjectController {
 
 	@GetMapping("/{project_id}")
 	public ResponseEntity<ProjectResponseDto> getProjectDetail(@PathVariable("project_id") Long projectId) {
-		ProjectResponseDto projectDetail = projectService.getProjectDetail(projectId);
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		ProjectResponseDto projectDetail = projectService.getProjectDetail(userId, projectId);
 		return new ResponseEntity<>(projectDetail, HttpStatus.OK);
 	}
 
@@ -108,6 +111,37 @@ public class ProjectController {
 	public ResponseEntity<?> putProjectStatus(@PathVariable("project_id") Long projectId) {
 		projectService.submitProject(projectId);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PostMapping("/{project_id}/like")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public ResponseEntity<?> postProjectLike(@PathVariable("project_id") Long projectId) {
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		projectService.registerLike(userId, projectId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{project_id}/like")
+	public ResponseEntity<?> deleteProjectLike(@PathVariable("project_id") Long projectId) {
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		projectService.unregisterLike(userId, projectId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping("/like")
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<List<ProjectResponseDto>> getLikedProjects() {
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		List<ProjectResponseDto> likedProjects = projectService.getLikedProjects(userId);
+		return new ResponseEntity<>(likedProjects, HttpStatus.OK);
+	}
+
+	@GetMapping("/popular")
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<List<ProjectResponseDto>> getPopularProjects(@NotNull Pageable pageable) {
+		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
+		List<ProjectResponseDto> likedProjects = projectService.getPopularProjects(userId);
+		return new ResponseEntity<>(likedProjects, HttpStatus.OK);
 	}
 
 }
