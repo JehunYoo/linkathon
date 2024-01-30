@@ -1,5 +1,6 @@
 package com.link.back.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.link.back.config.S3Uploader;
+import com.link.back.dto.Image;
 import com.link.back.dto.request.HackathonRequest;
 import com.link.back.dto.response.HackathonResponseDto;
 import com.link.back.dto.response.HackathonsResponseDto;
@@ -35,12 +39,18 @@ public class HackathonService {
 	private final HackathonRepository hackathonRepository;
 	private final HackathonsRepository hackathonsRepository;
 	private final HackathonImageRepository hackathonImageRepository;
+	private final S3Uploader s3Uploader;
 	private final ProjectRepository projectRepository;
 	private final TeamBuildingService teamBuildingService;
 
-	public void createHackathon(HackathonRequest hackathonRequest) {
+	public void createHackathon(HackathonRequest hackathonRequest, MultipartFile image) throws IOException {
+		Image img = s3Uploader.upload(image,"static");
+		HackathonImage hackathonImage = HackathonImage.builder().hackathonImageUrl(img.getImageUrl()).hackathonImageName(
+			img.getImageName()).hackathonOriginImageName(img.getOriginName()).build();
+
 		Hackathon hackathon = Hackathon.builder().hackathonName(hackathonRequest.hackathonName()).startDate(hackathonRequest.startDate()).endDate(hackathonRequest.endDate())
-			.teamDeadlineDate(hackathonRequest.teamDeadlineDate()).registerDate(LocalDate.now()).maxPoint(hackathonRequest.maxPoint()).build();
+			.teamDeadlineDate(hackathonRequest.teamDeadlineDate()).registerDate(LocalDate.now()).maxPoint(hackathonRequest.maxPoint()).maxTeamMember(hackathonRequest.max_team_member()).hackathonImage(hackathonImage).build();
+		hackathonImageRepository.save(hackathonImage);
 		hackathonRepository.save(hackathon);
 	}
 
@@ -65,7 +75,7 @@ public class HackathonService {
 	public void updateHackathon(Long hackathonId, HackathonRequest hackathonRequest) {
 		Hackathon hackathon = hackathonRepository.findById(hackathonId).orElseThrow(RuntimeException::new);
 		hackathon.updateHackathonInfo(hackathonRequest.hackathonName(),hackathonRequest.teamDeadlineDate(),
-			hackathonRequest.startDate(),hackathonRequest.endDate(),hackathonRequest.maxPoint());
+			hackathonRequest.startDate(),hackathonRequest.endDate(),hackathonRequest.maxPoint(),hackathonRequest.max_team_member());
 		hackathonRepository.save(hackathon);
 	}
 
