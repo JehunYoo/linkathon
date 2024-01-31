@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import FooterInstaButton from "@/components/Footer/FooterInstaButton.vue";
 import FooterNaverButton from "@/components/Footer/FooterNaverButton.vue";
@@ -15,10 +15,12 @@ import FooterYoutubeButton from "@/components/Footer/FooterYoutubeButton.vue";
       <div>제휴문의</div>
     </div>
     <div class="footer-text">
-      푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당
+      푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는
+      칸입니당
     </div>
     <div class="footer-text">
-      푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당
+      푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는
+      칸입니당
     </div>
     <div class="footer-icon">
       <FooterInstaButton/>
@@ -37,6 +39,7 @@ import FooterYoutubeButton from "@/components/Footer/FooterYoutubeButton.vue";
   .footer-container {
     padding: 20px;
   }
+
   .footer-text {
     width: 100%;
   }
@@ -47,6 +50,7 @@ import FooterYoutubeButton from "@/components/Footer/FooterYoutubeButton.vue";
     max-width: 420px;
   }
 }
+
 .footer-icon {
   display: flex;
   margin-top: 24px;

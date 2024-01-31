@@ -1,54 +1,29 @@
-<script setup lang="ts">
-
+<script lang="ts" setup>
 import UserCard from "@/components/User/UserCard.vue";
 import Pagination from "@/components/Pagination.vue";
+import Modal from "@/components/Modal/Modal.vue";
+import {ref} from "vue";
+import ModalMember from "@/components/Modal/ModalMember.vue";
+
+const clickedModal = ref<Number>();
+const handleModalClose = (num: number) => {
+  clickedModal.value = num;
+}
 </script>
 
 <template>
   <div class="user-card-container">
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
-    <div class="flex-box">
-      <UserCard/>
-      <UserCard/>
-    </div>
+    <template v-for="i in 16">
+      <Modal v-if="clickedModal===i" @closeModal="handleModalClose">
+        <ModalMember/>
+      </Modal>
+      <UserCard @click="handleModalClose(i)"/>
+    </template>
   </div>
-  <Pagination/>
+  <Pagination style="margin-bottom: 60px"/>
 </template>
 
 <style scoped>
-.flex-box {
-  flex: 1;
-  flex-wrap: wrap;
-  display: flex;
-  gap: 20px;
-}
 .user-card-container {
   display: flex;
   gap: 20px;

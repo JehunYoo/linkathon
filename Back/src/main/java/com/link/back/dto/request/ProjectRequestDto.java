@@ -9,9 +9,8 @@ import lombok.Builder;
 public record ProjectRequestDto(
 	@NotNull Long teamId, // Team team,
 	@NotNull String projectName,
-	@NotNull String projectTopic,
 	String projectDesc,
-	@NotNull String projectUrl,
+	String projectUrl,
 	String deployUrl,
 	ProjectImageDto projectImage
 ) {

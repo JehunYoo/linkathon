@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import HackathonBannerList from "@/components/Index/HackathonBanner/HackathonList.vue";
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 </script>

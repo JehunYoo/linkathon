@@ -53,6 +53,7 @@ public class BackPerformance {
 		this.securityRating = securityRating;
 		this.vulnerabilities = vulnerabilities;
 	}
+
 	// @Column(length = 300)
 	// private String fileName;
 

@@ -1,6 +1,5 @@
 package com.link.back.service;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,7 @@ public class ScheduleService {
 		return ScheduleResponse.builder()
 				.userId(userId)
 				.times(schedules.stream().map(
-						schedule -> schedule.getAvailableTime().getHour()
+					Schedule::getAvailableTime
 				).collect(Collectors.toList()))
 				.build();
 	}
@@ -46,7 +45,7 @@ public class ScheduleService {
 			.map(
 				time -> Schedule.builder()
 					.user(user)
-					.availableTime(LocalTime.of(time, 0))
+					.availableTime(time)
 					.build()
 			)
 			.toList();

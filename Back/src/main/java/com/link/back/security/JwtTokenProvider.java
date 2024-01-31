@@ -48,7 +48,7 @@ public class JwtTokenProvider {
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public JwtToken generateToken(Long userId) {
         long now = System.currentTimeMillis();
-        long thirtyMinutesInMillis =  5 * 1000; // 30 minutes in milliseconds
+        long thirtyMinutesInMillis = 5 * 60 * 60 * 1000; // 30 minutes in milliseconds
         long accessTokenExpiresInMillis = now + thirtyMinutesInMillis;
         Date accessTokenExpiresIn = new Date(accessTokenExpiresInMillis);
 
@@ -100,12 +100,6 @@ public class JwtTokenProvider {
         //토큰 에러로 나중에 바꿀 예정
         return null;
     }
-    // Request의 Header에서 RefreshToken 값을 가져옵니다. "authorization" : "token'
-    public String resolveRefreshToken(HttpServletRequest request) {
-        if(request.getHeader("refreshToken") != null )
-            return request.getHeader("refreshToken").substring(7);
-        return null;
-    }
 
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
@@ -130,15 +124,8 @@ public class JwtTokenProvider {
 
     // RefreshToken 존재유무 확인
     public boolean existsRefreshToken(String refreshToken) {
-//        System.out.println("1: " + refreshToken);
 
-//        System.out.println("4: " + refreshTokenRepository.findByRefreshToken(refreshToken));
-//        System.out.println("2: "+ refreshTokenRepository.findByRefreshToken(refreshToken).get());
-//        System.out.println("3: " + refreshTokenRepository.findByRefreshToken(refreshToken).get().getRefreshToken());
-//        if (refreshTokenRepository.findByRefreshToken(refreshToken).isPresent()) return  true;
         Optional<RefreshToken> token = refreshTokenRepository.findById(refreshToken);
-
-//        System.out.println(token.getRefreshToken());
 
         if(token != null) return true;
 

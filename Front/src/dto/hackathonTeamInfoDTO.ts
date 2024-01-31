@@ -11,3 +11,7 @@ interface HackathonTeamInfoDTO {
     imgUrl: string,
     skillList: SkillDTO[],
 }
+
+interface HackathonTeamInfoDetailDTO extends HackathonTeamInfoDTO {
+
+}

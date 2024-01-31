@@ -1,17 +1,27 @@
-<script setup lang="ts">
-import {PropType} from "vue";
+<script lang="ts" setup>
+import {PropType, ref} from "vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
+import Modal from "@/components/Modal/Modal.vue";
+import ModalTeam from "@/components/Modal/ModalTeam.vue";
 
 const props = defineProps({
   data: Object as PropType<HackathonTeamInfoDTO>
 });
+
+const refModal = ref<Boolean>(false);
+const controlModal = () => {
+  refModal.value = !refModal.value;
+}
 </script>
 
 <template>
-  <div class="card-container">
+  <Modal v-if="refModal" @closeModal="controlModal">
+    <ModalTeam/>
+  </Modal>
+  <div class="card-container" @click="controlModal">
     <div class="upper-box">
       <div class="img-container">
-        <img :src="props.data?.imgUrl" class="img-container">
+        <img :src="props.data?.imgUrl" alt="팀" class="img-container">
       </div>
       <div class="right-box-container">
         <div class="hackathon-title">
@@ -30,7 +40,7 @@ const props = defineProps({
         </div>
         <div class="skill-container">
           <div v-for="skill in (props.data?.skillList || [])" style="margin-right: 9px">
-            <SkillIcon :skill="skill" width="25px" height="26px" radius="5px"/>
+            <SkillIcon :skill="skill" height="26px" radius="5px" width="25px"/>
           </div>
         </div>
       </div>
@@ -59,6 +69,12 @@ const props = defineProps({
 </template>
 
 <style scoped>
+@media screen and (max-width: 573px) {
+  .year-container {
+    display: none;
+  }
+}
+
 .recruiting-button {
   text-align: center;
   width: 79px;
@@ -120,8 +136,7 @@ const props = defineProps({
   font-weight: 400;
   line-height: 18px;
   margin-top: 8px;
-  max-height: 255px;
-  overflow: hidden;
+  max-height: 55px;
 }
 
 .right-box-container {
@@ -181,16 +196,21 @@ const props = defineProps({
 .card-container {
   flex: 1;
   width: 100%;
-  min-width: 426px;
+  min-width: 400px;
   height: 204px;
   border-radius: 10px;
   border: 1px solid #DEDEDE;
   padding: 12px;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
+@media screen and (max-width: 573px) {
+  .card-container {
+    min-width: 300px;
+  }
+}
 .card-container:hover {
-  scale: 1.02;
+  transform: scale(1.005);
   border: #7d3bff 1px solid;
   box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.25);
 }

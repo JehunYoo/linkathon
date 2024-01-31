@@ -6,7 +6,6 @@ import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +15,9 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.link.back.dto.request.AdditionalUserInfoRequest;
+import com.link.back.dto.request.UserUpdateInfoRequest;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -105,18 +107,17 @@ public class User implements UserDetails {
 		this.joinState = user.joinState;
 	}
 
-	// 비밀번호 변경 메소드
-	public User withEncryptedPassword(String password, String secretKey) {
-		User newUser = new User(this);
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom(secretKey.getBytes()));
-		newUser.password = passwordEncoder.encode(password);
-		return newUser;
+	//수정필요
+	public void updateAdditionalUserInfo(List<UserSkill> userSkills, String referenceUrl, Field field, int career, UserImage userImage, Boolean registered){
+		this.userSkills = userSkills;
+		this.referenceUrl = referenceUrl;
+		this.field = field;
+		this.career = career;
+		this.userImage = userImage;
+		this.registered = registered;
 	}
-	//	@Builder
-	//	public User(String email, String password) {
-	//		this.email = email;
-	//		this.password = password;
-	//	}
+
+
 
 	@Builder
 	public User(String email, String password, String name, boolean gender, LocalDate birth, String phoneNumber,
@@ -128,6 +129,48 @@ public class User implements UserDetails {
 		this.birth = birth;
 		this.phoneNumber = phoneNumber;
 		this.rating = rating;
+	}
+
+	public void updateUser(User user, UserImage userImage, List<UserSkill> userSkills,  UserUpdateInfoRequest userUpdateInfoRequest){
+		this.email = user.getEmail();
+		this.password = new BCryptPasswordEncoder().encode(userUpdateInfoRequest.getPassword());
+		this.phoneNumber = userUpdateInfoRequest.getPhoneNumber();
+		this.rating = user.rating;
+		this.name = userUpdateInfoRequest.getName();
+		this.birth = userUpdateInfoRequest.getBirth();
+		this.gender = userUpdateInfoRequest.isGender();
+		this.userSkills = userSkills;
+		this.registeredDate = userUpdateInfoRequest.isRegistered()? LocalDate.now():null;
+		this.deployUrl = user.deployUrl;
+		this.introduce = userUpdateInfoRequest.getIntroduce();
+		//dto 만들기
+		this.userImage = userImage;
+		this.referenceUrl = userUpdateInfoRequest.getReferenceUrl();
+		this.field = userUpdateInfoRequest.getField();
+		this.career = userUpdateInfoRequest.getCareer();
+		this.registered = userUpdateInfoRequest.isRegistered();
+		this.joinState = user.joinState;
+	}
+
+	public void addUserInfo (User user, UserImage userImage, List<UserSkill> userSkills,  AdditionalUserInfoRequest additionalUserInfoRequest){
+		this.email = user.getEmail();
+		this.password = new BCryptPasswordEncoder().encode(user.getPassword());
+		this.phoneNumber = user.getPhoneNumber();
+		this.rating = user.rating;
+		this.name = user.getName();
+		this.birth = user.getBirth();
+		this.gender = user.isGender();
+		this.userSkills = userSkills;
+		this.registeredDate = additionalUserInfoRequest.isRegistered()? LocalDate.now():null;
+		this.deployUrl = user.deployUrl;
+		this.introduce = additionalUserInfoRequest.getIntroduce();
+		//dto 만들기
+		this.userImage = userImage;
+		this.referenceUrl = additionalUserInfoRequest.getReferenceUrl();
+		this.field = additionalUserInfoRequest.getField();
+		this.career = additionalUserInfoRequest.getCareer();
+		this.registered = additionalUserInfoRequest.isRegistered();
+		this.joinState = user.joinState;
 	}
 
 	@Override
@@ -159,10 +202,10 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-
 	//비밀번호 변경 메소드
+
 	public void updatePassword(String password) {
-		this.password = password;
+		this.password = new BCryptPasswordEncoder().encode(password);
 	}
 
 	@OneToMany(mappedBy = "user")
@@ -173,31 +216,6 @@ public class User implements UserDetails {
 		this.joinState = false;
 	}
 
-	// @Builder
-	// public User(Long userId, UserImage userImage, String email, String password, String phoneNumber, String name,
-	// 	boolean gender, LocalDate birth, Integer rating, boolean registered, LocalDate registeredDate, Integer career,
-	// 	String referenceUrl, String deployUrl, String introduce, Field field, boolean joinState,
-	// 	List<UserSkill> userSkills) {
-	// 	this.userId = userId;
-	// 	this.userImage = userImage;
-	// 	this.email = email;
-	// 	this.password = password;
-	// 	this.phoneNumber = phoneNumber;
-	// 	this.name = name;
-	// 	this.gender = gender;
-	// 	this.birth = birth;
-	// 	this.rating = rating;
-	// 	this.registered = registered;
-	// 	this.registeredDate = registeredDate;
-	// 	this.career = career;
-	// 	this.referenceUrl = referenceUrl;
-	// 	this.deployUrl = deployUrl;
-	// 	this.introduce = introduce;
-	// 	this.field = field;
-	// 	this.joinState = joinState;
-	// 	this.userSkills = userSkills;
-	//
-	// }
 }
 
 

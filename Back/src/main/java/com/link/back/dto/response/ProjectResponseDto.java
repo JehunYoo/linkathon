@@ -13,16 +13,17 @@ public record ProjectResponseDto(
 	Long teamId, // Team team,
 	Long hackathonId,
 	String hackathonName,
+	String hackathonTopic,
 	Integer hackathonScore,
 	String projectName,
-	String projectTopic,
 	String projectDesc,
 	ProjectStatus projectStatus,
 	LocalDateTime registeredDate,
 	String projectUrl,
-	Integer likes,
-	Boolean winState,
 	String deployUrl,
-	ProjectImageDto projectImage
+	Boolean winState,
+	ProjectImageDto projectImage,
+	Integer starCount,
+	Boolean starred
 ) {
 }

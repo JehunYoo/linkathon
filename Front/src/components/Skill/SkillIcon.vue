@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {PropType} from "vue";
 
 const props = defineProps({
@@ -11,14 +11,16 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="normal-container hover-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
-       v-if="props.skill?.skillYear">
-    <div class="year-text" v-if="props.skill?.skillYear">
+  <div v-if="props.skill?.skillYear"
+       :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
+       class="normal-container hover-container">
+    <div v-if="props.skill?.skillYear" class="year-text">
       {{ props.skill?.skillYear + "Y" }}
     </div>
     <img :src="props.skill?.skillImgUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">
   </div>
-  <div class="normal-container" :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }" v-else>
+  <div v-else :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
+       class="normal-container">
     <img :src="props.skill?.skillImgUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">
   </div>
 </template>
