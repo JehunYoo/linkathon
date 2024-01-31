@@ -20,7 +20,7 @@ public class MailConfig {
 	@Value("${spring.mail.username}")
 	private String mailUsername;
 
-	@Value("${spring.mail.password")
+	@Value("${spring.mail.password}")
 	private String mailPassword;
 
 	@Value("${spring.mail.properties.mail.smtp.auth}")
@@ -52,7 +52,7 @@ public class MailConfig {
 		properties.setProperty("mail.smtp.auth", mailSmtpAuth);
 		properties.setProperty("mail.smtp.starttls.enable", mailStartTlsEnable);
 		// properties.setProperty("mail.debug", "true");
-		// properties.setProperty("mail.smtp.ssl.trust","smtp.naver.com");
+		properties.setProperty("mail.smtp.ssl.trust","smtp.gmail.com");
 		// properties.setProperty("mail.smtp.ssl.enable","true");
 
 		return properties;
