@@ -10,11 +10,11 @@ const email = ref<string>('');
 const pw = ref<string>('');
 
 const login = function () {
-  const user = Builder<UserDTO>()
-      .userId(email.value)
+  const user = Builder<LoginUserDTO>()
+      .email(email.value)
       .password(pw.value)
       .build();
-  userService.login(user);
+  userService.login(user)
 }
 </script>
 

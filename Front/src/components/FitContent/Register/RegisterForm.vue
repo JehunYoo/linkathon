@@ -1,4 +1,27 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import {ref} from "vue";
+import {UserService} from "@/api/UserService.ts";
+import {Builder} from "builder-pattern";
+
+const userService = new UserService();
+
+const email = ref<string>('');
+const pw = ref<string>('');
+const name = ref<string>('');
+const firstNumber = ref<string>('');
+const secondNumber = ref<string>('');
+const lastNumber = ref<string>('');
+const register = function () {
+  const user = Builder<UserSignUpDto>()
+      .email(email.value)
+      .password(pw.value)
+      .name(name.value)
+      .birth(new Date())
+      .phoneNumber(firstNumber.value+secondNumber.value+lastNumber.value)
+      .build();
+  userService.sign(user);
+}
+</script>
 
 <template>
   <h1>회원 정보 입력</h1>
@@ -6,13 +29,13 @@
     <div class="register-content-block">
       <h2>이메일</h2>
       <div class="register-content-detail">
-        <input class="input-text" type="email">
+        <input v-model="email" class="input-text" type="email">
         <input class="register-button" style="width: 94px;" type="button" value="이메일 인증">
       </div>
     </div>
     <div class="register-content-block">
       <h2>비밀번호</h2>
-      <input class="input-text" type="password">
+      <input v-model="pw" class="input-text" type="password">
     </div>
     <div class="register-content-block">
       <h2>비밀번호 확인</h2>
@@ -20,7 +43,7 @@
     </div>
     <div class="register-content-block">
       <h2>이름</h2>
-      <input class="input-text" type="text">
+      <input v-model="name" class="input-text" type="text">
     </div>
     <div class="register-content-block">
       <h2>생년월일</h2>
@@ -33,9 +56,9 @@
     <div class="register-content-block">
       <h2>핸드폰 번호</h2>
       <div class="register-content-detail" style="gap: 6px; line-height: 39px">
-        <input class="input-text" type="text">-
-        <input class="input-text" type="text">-
-        <input class="input-text" type="text">
+        <input v-model="firstNumber" class="input-text" type="text">-
+        <input v-model="secondNumber" class="input-text" type="text">-
+        <input v-model="lastNumber" class="input-text" type="text">
       </div>
     </div>
     <div class="register-content-block">
@@ -50,7 +73,7 @@
       </div>
     </div>
     <div class="register-content-block">
-      <RouterLink class="register-button" to="/detailInfo">가입하기</RouterLink>
+      <div class="register-button" @click="register">가입하기</div>
     </div>
   </div>
 </template>
