@@ -12,12 +12,15 @@ class EmailServiceTest {
 	@Autowired
 	private EmailService emailService;
 
-	@Value("${spring.mail.sender}")
-	String email;
+	@Value("${spring.mail.username}")
+	String fromEmail;
+
+	@Value("${mail.to-email}")
+	String toEmail;
 
 	@Test
 	@DisplayName("이메일 발신 성공")
 	void sendEmail() {
-		emailService.sendEmail(email, email, "test from Link.", "<p>test text<p/>", false);
+		emailService.sendEmail(fromEmail, toEmail, "test from Link.", "<p>test text<p/>", false);
 	}
 }
