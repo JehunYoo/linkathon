@@ -9,6 +9,8 @@ import DetailInfo from "@/view/DetailInfo.vue";
 import Video from "@/view/Video.vue";
 import SharedProject from "@/view/SharedProject.vue";
 import ProjectDetail from "@/view/ProjectDetail.vue";
+import HackathonList from "@/view/HackathonList.vue";
+import HackathonDetail from "@/view/HackathonDetail.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -20,7 +22,9 @@ const routes = [
     {path: '/detailInfo', component: DetailInfo},
     {path: '/video', component: Video},
     {path: '/sharedProject', component: SharedProject},
-    {path: '/projectDetail', component: ProjectDetail}
+    {path: '/projectDetail', component: ProjectDetail},
+    {path: '/hackathonList', component: HackathonList},
+    {path: '/hackathonDetail', component: HackathonDetail}
 ];
 
 const router = createRouter({
