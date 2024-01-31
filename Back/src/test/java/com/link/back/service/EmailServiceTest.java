@@ -18,6 +18,6 @@ class EmailServiceTest {
 	@Test
 	@DisplayName("이메일 발신 성공")
 	void sendEmail() {
-		emailService.sendEmail(email, email, "test from Link.", "<p>test text<p/>");
+		emailService.sendEmail(email, email, "test from Link.", "<p>test text<p/>", false);
 	}
 }

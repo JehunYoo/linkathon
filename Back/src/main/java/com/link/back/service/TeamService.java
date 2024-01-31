@@ -74,7 +74,7 @@ public class TeamService {
 			String uuid = uuids[i];
 
 			emailService.sendEmail(null, email, "팀원 " + excludedMemberId + " 삭제 허가 요청",
-				getEmailContent(teamId, excludedMemberId, uuid)); // todo: set fromEmail
+				getEmailContent(teamId, excludedMemberId, uuid), false); // todo: set fromEmail
 		}
 	}
 
