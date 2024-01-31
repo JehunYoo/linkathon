@@ -19,7 +19,7 @@ const sidebarController = (num: number) => {
       <div class="left-menu-container">
         <router-link class="header-nav-menu-hover" to="/recruit">팀원 구하기</router-link>
         <router-link to="/projectDetail" class="header-nav-menu-hover">내 프로젝트</router-link>
-        <router-link to="/video" class="header-nav-menu-hover">해커톤</router-link>
+        <router-link class="header-nav-menu-hover" to="/hackathonList">해커톤</router-link>
         <router-link class="header-nav-menu-hover" to="/sharedProject">공유 프로젝트</router-link>
       </div>
       <div class="right-menu-container">
