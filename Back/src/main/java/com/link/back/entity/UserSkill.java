@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,7 @@ public class UserSkill {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long userSkillId;
 
-	private Integer skillLevel; //스킬에 대한 경력
+	private int skillLevel; //스킬에 대한 경력
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -30,4 +31,11 @@ public class UserSkill {
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "skill_id", nullable = false)
 	private Skill skill;
+
+	@Builder
+	public UserSkill(int skillLevel, User user, Skill skill){
+		this.skillLevel = skillLevel;
+		this.user = user;
+		this.skill = skill;
+	}
 }

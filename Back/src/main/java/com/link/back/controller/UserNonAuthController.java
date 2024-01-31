@@ -1,7 +1,13 @@
 package com.link.back.controller;
 
 
+import java.time.LocalDate;
+
 import com.link.back.dto.*;
+import com.link.back.dto.request.SendEmailRequest;
+import com.link.back.dto.request.UserFindEmailRequest;
+import com.link.back.dto.request.UserPasswordResetRequest;
+import com.link.back.dto.request.VerificationRequest;
 import com.link.back.repository.RefreshTokenRepository;
 import com.link.back.service.UserService;
 import jakarta.validation.Valid;
@@ -10,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +68,7 @@ public class UserNonAuthController {
         headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
         // refresh 토큰을 redis에 넣어줌
-        RefreshToken refreshToken = new RefreshToken(jwtToken.getAccessToken());
+        RefreshToken refreshToken = new RefreshToken(jwtToken.getRefreshToken());
         refreshTokenRepository.save(refreshToken);
 
         // ResponseEntity를 생성하고, 헤더와 상태 코드를 설정
@@ -71,8 +78,47 @@ public class UserNonAuthController {
     }
 
 
+
+    //이메일 찾기
+    @GetMapping("/email")
+    public ResponseEntity<String> findEmail (@Valid @RequestBody UserFindEmailRequest userFindEmailRequest) throws Exception {
+        String name = userFindEmailRequest.getName();
+        LocalDate birth = userFindEmailRequest.getBirth();
+        String phoneNumber = userFindEmailRequest.getPhoneNumber();
+
+        String email = userService.findEmail(name, birth, phoneNumber);
+
+        //로그인 페이지로 보내주기
+        return new ResponseEntity<>("아이디는" + email +  "입니다", HttpStatus.CREATED);
+    }
+
+    //메일인증요청
+    @PostMapping("/email/verification")
+    public ResponseEntity<String> requestVerification(@Valid @RequestBody SendEmailRequest sendEmailRequest){
+
+        String email = sendEmailRequest.email();
+
+        userService.sendVerificationEmail(email);
+
+        return new ResponseEntity<>("메일을 확인하세요", HttpStatus.ACCEPTED);
+
+    }
+
     //메일인증확인
+    @PostMapping("/password/verification")
+    public ResponseEntity<Boolean> comparedVerification(@Valid @RequestBody VerificationRequest verificationRequest){
+
+        String verificationKey = verificationRequest.verificationKey();
+        String email = verificationRequest.email();
+        userService.compareVerificationKey(verificationKey, email);
+
+        //에러 안나면 항상 True
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.ACCEPTED);
+
+    }
+
     //비밀번호 찾기
+    //로직 바꾸기
     @PostMapping("/password")
     public ResponseEntity<String> changePassword (@Valid @RequestBody UserPasswordResetRequest userPasswordResetRequest) throws Exception {
 
@@ -82,7 +128,6 @@ public class UserNonAuthController {
         return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
     }
 
-    //아이디 찾기
     //경력인증
 
 }

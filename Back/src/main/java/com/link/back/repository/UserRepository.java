@@ -1,5 +1,6 @@
 package com.link.back.repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,11 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	Optional<User> findByEmail(String email);
 	Optional<User> findByUserId(Long userId);
 
-	//    Optional<User> findByNickname(String nickname);
+	User findByNameAndBirthAndPhoneNumber(String name, LocalDate birth, String phoneNumber);
 
-
-	//    @Transactional
-	//    Long deleteByEmail(String email);
 
 	/**
 	 * 소셜 타입과 소셜의 식별값으로 회원 찾는 메소드

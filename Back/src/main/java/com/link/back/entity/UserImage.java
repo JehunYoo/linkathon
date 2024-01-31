@@ -4,10 +4,14 @@ import static com.link.back.config.AppConstant.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
+import com.link.back.dto.request.UserImageRequest;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +32,11 @@ public class UserImage {
 
 	@Column(length = USER_ORIGIN_IMAGE_NAME_LENGTH, nullable = false)
 	private String userOriginImageName;
+
+	@Builder
+	public UserImage(UserImageRequest userImageRequest){
+		this.userImageName = userImageRequest.getUserImageName();
+		this.userImageUrl = userImageRequest.getUserImageUrl();
+		this.userOriginImageName = userImageRequest.getUserOriginImageName();
+	}
 }
