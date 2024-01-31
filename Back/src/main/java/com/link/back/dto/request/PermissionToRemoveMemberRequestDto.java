@@ -14,5 +14,5 @@ public class PermissionToRemoveMemberRequestDto {
 	private Long memberId;
 
 	@NotNull
-	private String uuid;
+	private String code;
 }

@@ -30,6 +30,9 @@ public class TeamService {
 	@Value("${project.url}")
 	private String url;
 
+	@Value("${spring.mail.username}")
+	private String fromEmail;
+
 	private final TeamRepository teamRepository;
 	private final UserRepository userRepository;
 	private final UserTeamRepository userTeamRepository;
@@ -70,9 +73,9 @@ public class TeamService {
 			UserTeam member = entry.getKey();
 			UUID uuid = entry.getValue();
 
-			operations.put(excludedMemberId.toString(), member.getUserTeamId(), uuid.toString());
+			operations.put(excludedMemberId.toString(), member.getUserTeamId().toString(), uuid.toString());
 
-			emailService.sendEmail(null, member.getUser().getEmail(),
+			emailService.sendEmail(fromEmail, member.getUser().getEmail(),
 				"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
 				getRemoveMemberEmailContent(url, teamId, excludedMemberId, member.getUserTeamId(), uuid), false);
 		}
@@ -90,11 +93,8 @@ public class TeamService {
 			+ "    <title>팀원 삭제 허가 요청</title>\n"
 			+ "</head>\n"
 			+ "<body>\n"
-			+ "    <form method=\"post\" action=\"" + url + "/api/teams/" + teamId + "/members/" + excludedMemberId + "/permission/remove\">\n"
-			+ "        <input type=\"hidden\" name=\"memberId\" id=\"memberId\" value=\"" + memberId + "\" />\n"
-			+ "        <input type=\"hidden\" name=\"uuid\" id=\"uuid\" value=\"" + uuid + "\" />\n"
-			+ "        <button type=\"submit\">Permit Request</button>\n"
-			+ "    </form>\n"
+			+ "<a href=\"http://" + url + "/api/teams/" + teamId + "/members/" + excludedMemberId
+			+ "/permission/remove?memberId= " + memberId + "&code=" + uuid + "\">Permit Request</a>"
 			+ "</body>\n"
 			+ "</html>";
 	}
