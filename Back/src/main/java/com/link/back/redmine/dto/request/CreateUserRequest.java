@@ -1,6 +1,7 @@
 package com.link.back.redmine.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.link.back.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,4 +25,13 @@ public class CreateUserRequest implements Request {
 		this.lastName = lastName;
 		this.mail = mail;
 	}
+
+	public CreateUserRequest(User user) {
+		this.password = "password";
+		this.firstName = String.valueOf(user.getField());
+		this.lastName = user.getName();
+		this.login = this.firstName + this.lastName;
+		this.mail = this.login + "@gmail.com";
+	}
+
 }

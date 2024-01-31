@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.link.back.redmine.RedmineProperties;
 import com.link.back.redmine.dto.User;
+import com.link.back.redmine.dto.request.AddProjectMembersRequest;
 import com.link.back.redmine.dto.request.CreateIssueRequest;
 import com.link.back.redmine.dto.request.CreateProjectRequest;
 import com.link.back.redmine.dto.request.AddProjectMemberRequest;
@@ -51,8 +52,15 @@ public class RedmineProjectService {
 		return (ProjectListResponse)getRequest("/projects.json", "projectList");
 	}
 
-	public void addProjectMember(AddProjectMemberRequest apmr, String login, String identifier) {
+	public void addProjectMembers(List<String> logins, String identifier) {
 		Long projectId = findProjectId(identifier);
+		for (String login : logins) {
+			addProjectMember(new AddProjectMemberRequest(), login, projectId);
+		}
+
+	}
+
+	public void addProjectMember(AddProjectMemberRequest apmr, String login, Long projectId) {
 		apmr.setUserId(findUserId(login));
 		String apiUrl = "/projects/" + projectId + "/memberships.json";
 		postRequest(apmr, apiUrl, "membership");
@@ -64,8 +72,7 @@ public class RedmineProjectService {
 		postRequest(cir, "/issues.json", "issue");
 	}
 
-	public void updateIssue(UpdateIssueRequest uir, Long userId, Long issueId) {
-		uir.setAssignedToId(userId);
+	public void updateIssue(UpdateIssueRequest uir, Long issueId) {
 		String apiUrl = "/issues/" + issueId + ".json";
 		putRequest(uir, apiUrl, "issue");
 	}
@@ -74,7 +81,6 @@ public class RedmineProjectService {
 		return (IssueListResponse)getRequest("/issues.json?project_id=" + projectId, "issueList");
 	}
 
-	// 이슈 삭제
 	public void removeIssue(Long issueId) {
 		deleteRequest("/issues/" + issueId + ".json");
 	}

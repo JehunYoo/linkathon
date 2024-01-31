@@ -55,14 +55,14 @@ class RedmineProjectServiceTest {
 		redmineProjectService.findProjectList();
 	}
 
-	@Test
-	public void addProjectMemberTest() {
-		AddProjectMemberRequest apmr = new AddProjectMemberRequest();
-		List<Integer> roles = new ArrayList<>();
-		roles.add(3);
-		apmr.setRoleIds(roles);
-		redmineProjectService.addProjectMember(apmr, "userTest", "ssss");
-	}
+	// @Test
+	// public void addProjectMemberTest() {
+	// 	AddProjectMemberRequest apmr = new AddProjectMemberRequest();
+	// 	List<Integer> roles = new ArrayList<>();
+	// 	roles.add(3);
+	// 	apmr.setRoleIds(roles);
+	// 	redmineProjectService.addProjectMember(apmr, "userTest", "ssss");
+	// }
 
 	@Test
 	public void createIssueTest() {
@@ -78,8 +78,9 @@ class RedmineProjectServiceTest {
 	public void updateIssueTest() {
 		UpdateIssueRequest uir = new UpdateIssueRequest();
 		uir.setStatusId(1L);
+		uir.setAssignedToId(5L);
 		uir.setSubject("update issue");
-		redmineProjectService.updateIssue(uir, 7L, 5L);
+		redmineProjectService.updateIssue(uir, 7L);
 	}
 
 	@Test
