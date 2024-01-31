@@ -30,9 +30,9 @@ public final class AppConstant {
 
 	// Hackathon
 	public static final int HACKATHON_NAME_LENGTH = 100;
-	public static final int HACKATHON_IMAGE_NAME_LENGTH = 30;
+	public static final int HACKATHON_IMAGE_NAME_LENGTH = 200;
 	public static final int HACKATHON_IMAGE_URL_LENGTH = 255;
-	public static final int HACKATHON_ORIGIN_IMAGE_NAME_LENGTH = 30;
+	public static final int HACKATHON_ORIGIN_IMAGE_NAME_LENGTH = 200;
 
 	public static final int POST_FILE_NAME_LENGTH = 50;
 	public static final int POST_FILE_URL_LENGTH = 100;
