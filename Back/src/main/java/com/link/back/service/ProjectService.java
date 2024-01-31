@@ -3,7 +3,9 @@ package com.link.back.service;
 // import static com.link.back.common.mapper.ProjectMapper.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -20,12 +22,17 @@ import com.link.back.entity.ProjectImage;
 import com.link.back.entity.ProjectLike;
 import com.link.back.entity.ProjectStatus;
 import com.link.back.entity.Team;
+import com.link.back.entity.UserTeam;
+import com.link.back.redmine.dto.request.CreateProjectRequest;
+import com.link.back.redmine.dto.request.CreateUserRequest;
+import com.link.back.redmine.service.RedmineProjectService;
 import com.link.back.entity.User;
 import com.link.back.repository.ProjectImageRepository;
 import com.link.back.repository.ProjectLikeRepository;
 import com.link.back.repository.ProjectRepository;
 import com.link.back.repository.TeamRepository;
 import com.link.back.repository.UserRepository;
+import com.link.back.repository.UserTeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +45,8 @@ public class ProjectService {
 	private final ProjectRepository projectRepository;
 	private final TeamRepository teamRepository;
 	private final ProjectImageRepository projectImageRepository;
+	private final RedmineProjectService redmineProjectService;
+	private final UserTeamRepository userTeamRepository;
 	private final ProjectLikeRepository projectLikeRepository;
 	private final UserRepository userRepository;
 
@@ -49,7 +58,26 @@ public class ProjectService {
 			projectImageRepository.save(projectImage);
 		}
 		Project project = createProjectEntity(team, projectImage, projectRequestDto);
-		projectRepository.save(project);
+		Project save = projectRepository.save(project);
+
+		// 레드마인 프로젝트 생성
+		CreateProjectRequest cpr = CreateProjectRequest.builder()
+			.name(projectRequestDto.projectName())
+			.identifier(projectRequestDto.projectName() + save.getProjectId())
+			.build();
+		redmineProjectService.createProject(cpr);
+
+		// 레드마인 유저 생성
+		List<String> logins = userTeamRepository.findMembersByTeamId(projectRequestDto.teamId())
+			.stream()
+			.map(userTeam -> {
+				redmineProjectService.createUser(new CreateUserRequest(userTeam.getUser()));
+				return new CreateUserRequest(userTeam.getUser()).getLogin();
+			})
+			.collect(Collectors.toList());
+
+		// 레드마인 프로젝트 유저 등록
+		redmineProjectService.addProjectMembers(logins, cpr.getIdentifier());
 	}
 
 	public Page<ProjectResponseDto> getAllClosedProjects(Long userId, Pageable pageable) {
