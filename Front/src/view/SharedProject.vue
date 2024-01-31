@@ -41,7 +41,7 @@ const starClick = (v :Ref<Boolean>) => {
     <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
     <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
   </div>
-  <Pagination/>
+  <Pagination style="margin-bottom: 60px"/>
 </template>
 
 <style scoped>

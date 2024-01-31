@@ -96,7 +96,7 @@ const dummy = Builder<PerformanceChartDTO>().actualValue(80)
 section {
   padding: 18px;
   border-radius: 10px;
-  border: 2px solid #7D3BFF;
+  border: 1px solid #7D3BFF;
   background: #FFF;
   justify-content: center;
 }

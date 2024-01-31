@@ -31,6 +31,7 @@ const updateCategorySelect: Function = <Function>inject('updateSelectedCategory'
   padding: 9px 15px 10px;
   border-radius: 18px;
   white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .non-select {
@@ -39,5 +40,7 @@ const updateCategorySelect: Function = <Function>inject('updateSelectedCategory'
 
 .select {
   border: 1px solid #7D3BFF;
+  background: #7D3BFF;
+  color: #DEDEDE;
 }
 </style>

@@ -65,7 +65,7 @@ const editStart = (num: number) => {
       <div class="link-content-container" v-if="editRef[i].value">
         <input :placeholder="edit.text + ' 입력'">
         <div v-if="props.editable" class="save-button" @click="editStart(i)">
-          수정
+          저장
         </div>
       </div>
     </template>

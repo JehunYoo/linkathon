@@ -61,7 +61,7 @@ dummy.push(
         </div>
       </div>
       <div class="img-container">
-        <img :src="data.imgSrc">
+        <img :src="data.imgSrc" alt="">
       </div>
       <div class="title-container">
         <div class="title">

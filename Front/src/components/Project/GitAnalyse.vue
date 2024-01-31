@@ -74,7 +74,7 @@ th {
 .git-container {
   padding: 20px;
   border-radius: 10px;
-  border: solid 2px #7D3BFF;
+  border: solid 1px #7D3BFF;
   display: flex;
   width: 100%;
   height: max-content;

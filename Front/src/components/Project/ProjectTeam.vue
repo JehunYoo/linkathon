@@ -42,7 +42,7 @@ h1 {
 .team-container {
   margin-top: 12px;
   border-radius: 10px;
-  border: 2px solid #7D3CFF;
+  border: 1px solid #7D3CFF;
   width: 100%;
   padding: 13px;
 }
