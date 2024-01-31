@@ -18,19 +18,17 @@ onUnmounted(() => {
   unlockScroll();
 });
 
-const props = defineProps({
-  modalController: {
-    type: Function,
-    required: true
-  }
-})
+const emit = defineEmits(['closeModal']);
+const closeModal = (num: number) => {
+  emit('closeModal', num);
+}
 </script>
 
 <template>
-  <div class="blur" @click="props.modalController(0)"/>
+  <div class="blur" @click="closeModal(0)"/>
   <div class="slot">
     <svg fill="none" height="24" viewBox="0 0 26 24" width="26" xmlns="http://www.w3.org/2000/svg"
-         @click="props.modalController(0)">
+         @click="closeModal(0)">
       <line stroke="black" stroke-width="2" transform="matrix(-0.703573 -0.710623 -0.703573 0.710623 23.7803 23.998)"
             x2="30.9566"
             y1="-1" y2="-1"/>
@@ -77,7 +75,7 @@ svg {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 4;
+  z-index: 9999;
   border-radius: 30px;
   border: 2px solid #7D3BFF;
   background: #FFF;

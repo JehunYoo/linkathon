@@ -3,11 +3,10 @@ import UserCard from "@/components/User/UserCard.vue";
 import Pagination from "@/components/Pagination.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import {ref} from "vue";
-import ModalEffect from "@/components/Modal/ModalEffect.vue";
 import ModalMember from "@/components/Modal/ModalMember.vue";
 
 const clickedModal = ref<Number>();
-const modalController = (num: number) => {
+const handleModalClose = (num: number) => {
   clickedModal.value = num;
 }
 </script>
@@ -15,14 +14,13 @@ const modalController = (num: number) => {
 <template>
   <div class="user-card-container">
     <template v-for="i in 16">
-      <Modal v-if="clickedModal===i" :modalController="modalController">
-        <ModalEffect text="남은점수 4점"/>
+      <Modal v-if="clickedModal===i" @closeModal="handleModalClose">
         <ModalMember/>
       </Modal>
-      <UserCard @click="modalController(i)"/>
+      <UserCard @click="handleModalClose(i)"/>
     </template>
   </div>
-  <Pagination/>
+  <Pagination style="margin-bottom: 60px"/>
 </template>
 
 <style scoped>
