@@ -43,14 +43,6 @@ const dummy: HackathonTeamInfoDetailDTO = Builder<HackathonTeamInfoDetailDTO>()
 </template>
 
 <style scoped>
-* {
-  -ms-overflow-style: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
-}
-
 .button-clickable {
   width: 86px;
   height: 34px;
@@ -65,17 +57,36 @@ const dummy: HackathonTeamInfoDetailDTO = Builder<HackathonTeamInfoDetailDTO>()
 
 .button-clickable:hover {
   color: #7D3CFF;
-
   background: white;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background:#A679FF;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7D3CFF;
 }
 
 .user-card-container {
   max-width: 658px;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 14px;
   max-height: 225px;
   overflow: scroll;
+  overflow-x: hidden;
+  padding-right: 13px;
 }
 
 h2 {
@@ -85,7 +96,6 @@ h2 {
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22.4px;
 }
 
 .button {

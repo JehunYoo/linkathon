@@ -17,8 +17,8 @@ const sidebarController = (num: number) => {
     <div class="header-nav">
       <router-link class="logo" to="/">LINK.</router-link>
       <div class="left-menu-container">
-        <router-link class="header-nav-menu-hover" to="/recruit">팀원 구하기</router-link>
-        <router-link to="/projectDetail" class="header-nav-menu-hover">내 프로젝트</router-link>
+        <router-link class="header-nav-menu-hover" to="/recruit">팀원</router-link>
+        <router-link to="/projectDetail" class="header-nav-menu-hover">프로젝트</router-link>
         <router-link class="header-nav-menu-hover" to="/hackathonList">해커톤</router-link>
         <router-link class="header-nav-menu-hover" to="/sharedProject">공유 프로젝트</router-link>
       </div>
@@ -30,7 +30,9 @@ const sidebarController = (num: number) => {
         </div>
         <router-link class="tl header-nav-menu-hover" to="/login">로그인</router-link>
         <div class="right-menu-divider">|</div>
-        <router-link class="tr header-nav-menu-hover" to="/register">회원가입</router-link>
+        <router-link class="tr header-nav-menu-hover" to="/register">가입</router-link>
+        <div class="right-menu-divider">|</div>
+        <router-link class="tr header-nav-menu-hover" to="/myPage">MY</router-link>
       </div>
     </div>
   </div>
