@@ -2,6 +2,9 @@ package com.link.back.entity;
 
 import static jakarta.persistence.GenerationType.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,11 +24,13 @@ public class ProjectLike {
 	private Long likeId;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "project_id")
+	@JoinColumn(name = "project_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Project project;
 
 	@Builder

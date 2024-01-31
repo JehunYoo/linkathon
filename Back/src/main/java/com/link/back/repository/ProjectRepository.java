@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.link.back.entity.Project;
 import com.link.back.entity.ProjectStatus;
+import com.link.back.entity.User;
 
 import feign.Param;
 
@@ -28,5 +29,21 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 	@Query("delete from Project p where p.team.teamId = :teamId")
 	void deleteByTeamId(@Param Long teamId);
+
+	@Query("SELECT p"
+		+ " FROM Project p JOIN ProjectLike pl ON p = pl.project"
+		+ " WHERE pl.user = :user"
+		+ " ORDER BY p.registeredDate DESC")
+	List<Project> findLikedProjectsByUser(User user);
+
+	@Query("SELECT p " +
+		"FROM Project p " +
+		"JOIN p.team t ON p.team.teamId = t.teamId " +
+		"JOIN Hackathon h ON h.hackathonId = :hackathonId " +
+		"WHERE p.winState = true " +
+		"and p.projectStatus = 'CLOSED' " +
+		"ORDER BY p.hackathonScore DESC " +
+	"limit 3")
+	public List<Project> findProjectsByHackathonScoreAndWinState(Long hackathonId);
 
 }

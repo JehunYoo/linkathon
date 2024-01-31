@@ -2,10 +2,8 @@ package com.link.back.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +90,7 @@ class ReservationServiceTest {
 		// give
 		ReservationRequest reservationRequest = ReservationRequest.builder()
 			.userId(user2.getUserId())
-			.availableTime(LocalDateTime.now())
+			.reservationDateTime(LocalDateTime.now())
 			.build();
 
 		// when
@@ -111,7 +109,7 @@ class ReservationServiceTest {
 		// give
 		ReservationRequest reservationRequest = ReservationRequest.builder()
 			.userId(user2.getUserId())
-			.availableTime(LocalDateTime.now())
+			.reservationDateTime(LocalDateTime.now())
 			.build();
 
 		// when
@@ -143,7 +141,7 @@ class ReservationServiceTest {
 
 		ReservationRequest reservationRequest = ReservationRequest.builder()
 			.userId(user2.getUserId())
-			.availableTime(tAfter)
+			.reservationDateTime(tAfter)
 			.build();
 
 		// when

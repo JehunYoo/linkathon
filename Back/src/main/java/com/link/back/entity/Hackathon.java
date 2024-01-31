@@ -53,21 +53,25 @@ public class Hackathon {
 
 	@Builder
 	public Hackathon(String hackathonName, LocalDate registerDate, LocalDate teamDeadlineDate, LocalDate startDate,
-		LocalDate endDate,Integer maxPoint) {
+		LocalDate endDate,Integer maxPoint, Integer maxTeamMember, HackathonImage hackathonImage) {
 		this.hackathonName = hackathonName;
 		this.registerDate = registerDate;
 		this.teamDeadlineDate = teamDeadlineDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.maxPoint = maxPoint;
+		this.maxTeamMember = maxTeamMember;
+		this.hackathonImage = hackathonImage;
 	}
 
 	public void updateHackathonInfo(String hackathonName, LocalDate teamDeadlineDate, LocalDate startDate,
-		LocalDate endDate, Integer maxPoint) {
+		LocalDate endDate, Integer maxPoint, Integer maxTeamMember) {
 		this.hackathonName = hackathonName;
 		this.teamDeadlineDate = teamDeadlineDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.maxPoint = maxPoint;
+		this.maxTeamMember = maxTeamMember;
+
 	}
 }

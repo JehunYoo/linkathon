@@ -40,9 +40,6 @@ public class Project {
 	@Column(length = PROJECT_NAME_LENGTH, nullable = false)
 	private String projectName;
 
-	@Column(length = PROJECT_TOPIC_LENGTH, nullable = false)
-	private String projectTopic;
-
 	@Column(length = PROJECT_DESC_LENGTH)
 	private String projectDesc;
 
@@ -66,14 +63,13 @@ public class Project {
 	private String deployUrl;
 
 	@Builder
-	public Project(Long projectId, Team team, ProjectImage projectImage, String projectName, String projectTopic,
+	public Project(Long projectId, Team team, ProjectImage projectImage, String projectName,
 		String projectDesc, ProjectStatus projectStatus, LocalDateTime registeredDate,
 		String projectUrl, Integer hackathonScore, Boolean winState, String deployUrl) {
 		this.projectId = projectId;
 		this.team = team;
 		this.projectImage = projectImage;
 		this.projectName = projectName;
-		this.projectTopic = projectTopic;
 		this.projectDesc = projectDesc;
 		this.projectStatus = projectStatus;
 		this.registeredDate = registeredDate;
@@ -83,17 +79,13 @@ public class Project {
 		this.deployUrl = deployUrl;
 	}
 
-	public void updateProjectDetail(String projectName, String projectTopic, String projectDesc,
+	public void updateProjectDetail(String projectName, String projectDesc,
 		String projectUrl, String deployUrl, ProjectImage projectImage) {
 		this.projectName = projectName;
-		this.projectTopic = projectTopic;
-		if (projectDesc != null)
-			this.projectDesc = projectDesc;
+		this.projectDesc = projectDesc;
 		this.projectUrl = projectUrl;
-		if (deployUrl != null)
-			this.deployUrl = deployUrl;
-		if (projectImage != null)
-			this.projectImage = projectImage;
+		this.deployUrl = deployUrl;
+		this.projectImage = projectImage;
 	}
 
 	public void updateProjectStatus() {

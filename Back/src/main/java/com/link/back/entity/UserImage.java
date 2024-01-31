@@ -1,7 +1,6 @@
 package com.link.back.entity;
 
 import static com.link.back.config.AppConstant.*;
-import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 
