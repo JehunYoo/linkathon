@@ -2,12 +2,9 @@
 import {Builder} from "builder-pattern";
 import HackathonRecruiting from "@/components/Hackathon/HackathonRecruiting.vue";
 import {ref, watch} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import HackathonLeaderBoard from "@/components/Hackathon/HackathonLeaderBoard.vue";
 import HackathonReward from "@/components/Hackathon/HackathonReward.vue";
-
-const route = useRoute();
-const router = useRouter();
 
 const test: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
     .flowStart(new Date())
@@ -33,6 +30,7 @@ function formatDate(date: Date): string {
   return `${year}. ${month}. ${day} (${weekday})`;
 }
 
+const route = useRoute();
 const mode = ref<Number>(0);
 const updatePageFromQuery = () => {
   const queryParam = route.query.mode;
