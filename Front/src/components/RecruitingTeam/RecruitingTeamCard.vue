@@ -1,17 +1,27 @@
 <script lang="ts" setup>
-import {PropType} from "vue";
+import {PropType, ref} from "vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
+import Modal from "@/components/Modal/Modal.vue";
+import ModalTeam from "@/components/Modal/ModalTeam.vue";
 
 const props = defineProps({
   data: Object as PropType<HackathonTeamInfoDTO>
 });
+
+const refModal = ref<Boolean>(false);
+const controlModal = () => {
+  refModal.value = !refModal.value;
+}
 </script>
 
 <template>
-  <div class="card-container">
+  <Modal v-if="refModal" @closeModal="controlModal">
+    <ModalTeam/>
+  </Modal>
+  <div class="card-container" @click="controlModal">
     <div class="upper-box">
       <div class="img-container">
-        <img :src="props.data?.imgUrl" class="img-container">
+        <img :src="props.data?.imgUrl" alt="팀" class="img-container">
       </div>
       <div class="right-box-container">
         <div class="hackathon-title">
