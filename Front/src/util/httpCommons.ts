@@ -17,7 +17,8 @@ function createLocalAxios(requireAuth: boolean): AxiosInstance {
 }
 
 function authorization(axiosInstance: any) {
-    const token = localStorage.getItem("accessToken");
+    // const token = localStorage.getItem("accessToken");
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzA2NTE0NjIyfQ.RqrwRJ8AuxTnR84MpvOD6Ix9dFU9iH_YD77vdFv5zsE';
     if (token) {
         axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
     } else {
