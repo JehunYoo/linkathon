@@ -2,13 +2,16 @@ package com.link.back.service;
 
 import static com.link.back.entity.Role.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +23,15 @@ import com.link.back.repository.TeamRepository;
 import com.link.back.repository.UserRepository;
 import com.link.back.repository.UserTeamRepository;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TeamService {
+
+	@Value("${project.url}")
+	private String url;
 
 	private final TeamRepository teamRepository;
 	private final UserRepository userRepository;
@@ -59,59 +63,54 @@ public class TeamService {
 		members.remove(excludedMember);
 		members.remove(leader);
 
-		String[] uuids = (String[]) members.stream()
-			.map(member -> member.getUserTeamId() + "$" + UUID.randomUUID())
-			.toArray();
+		Map<UserTeam, UUID> uuids = new HashMap<>();
+		members.forEach(member -> uuids.put(member, UUID.randomUUID()));
 
-		// todo: redis
-		SetOperations<String, String> operations = redisTemplate.opsForSet();
-		operations.add(excludedMemberId + "@" + teamId, uuids);
+		// save uuid at redis and send email
+		HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
 
-		// todo: email
-		for (int i = 0; i < members.size(); i++) {
-			UserTeam member = members.get(i);
-			String email = member.getUser().getEmail();
-			String uuid = uuids[i];
+		for (Map.Entry<UserTeam, UUID> entry : uuids.entrySet()) {
+			UserTeam member = entry.getKey();
+			UUID uuid = entry.getValue();
 
-			emailService.sendEmail(null, email, "팀원 " + excludedMemberId + " 삭제 허가 요청",
-				getEmailContent(teamId, excludedMemberId, uuid), false); // todo: set fromEmail
+			operations.put(excludedMemberId.toString(), member.getUserTeamId(), uuid.toString());
+
+			emailService.sendEmail(null, member.getUser().getEmail(),
+				"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
+				getRemoveMemberEmailContent(url, teamId, excludedMemberId, member.getUserTeamId(), uuid), false);
 		}
 	}
 
-	private String getEmailContent(Long teamId, Long excludedMemberId, String uuid) {
+	// todo: change target url localhost:8080
+	private String getRemoveMemberEmailContent(String url, Long teamId, Long excludedMemberId, Long memberId, UUID uuid) {
 		return "<!doctype html>\n"
-			+ "<html lang=\"en\">\n"
+			+ "<html lang=\"ko\">\n"
 			+ "<head>\n"
 			+ "    <meta charset=\"UTF-8\">\n"
 			+ "    <meta name=\"viewport\"\n"
 			+ "          content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">\n"
 			+ "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n"
-			+ "    <title>Email</title>\n"
+			+ "    <title>팀원 삭제 허가 요청</title>\n"
 			+ "</head>\n"
 			+ "<body>\n"
-			+ "    <form action=\"post\""
-			+ " target=\"localhost:8080/api/teams/" + teamId + "/members/" + excludedMemberId + "/permission/remove"
-			+ "?uuid=" + uuid + "\">\n"
+			+ "    <form method=\"post\" action=\"" + url + "/api/teams/" + teamId + "/members/" + excludedMemberId + "/permission/remove\">\n"
+			+ "        <input type=\"hidden\" name=\"memberId\" id=\"memberId\" value=\"" + memberId + "\" />\n"
+			+ "        <input type=\"hidden\" name=\"uuid\" id=\"uuid\" value=\"" + uuid + "\" />\n"
 			+ "        <button type=\"submit\">Permit Request</button>\n"
 			+ "    </form>\n"
 			+ "</body>\n"
 			+ "</html>";
 	}
 
-	public void permitToRemoveMember(Long teamId, Long excludedMemberId, Long memberId,
-		PermissionToRemoveMemberRequestDto requestDto) {
+	public void permitToRemoveMember(Long teamId, Long excludedMemberId, Long memberId, String uuid) {
+		HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+		String savedUuid = (String)operations.get(excludedMemberId.toString(), memberId.toString());
 
-		// todo: !!! no memberId
-
-		SetOperations<String, String> operations = redisTemplate.opsForSet();
-		String key = excludedMemberId + "@" + teamId;
-		String value = memberId + "$" + requestDto.getUuid();
-
-		if (Boolean.TRUE.equals(operations.isMember(key, value))) {
-			operations.remove(key, value);
+		if (savedUuid != null && savedUuid.equals(uuid)) {
+			operations.delete(excludedMemberId.toString(), memberId.toString());
 		}
 
-		if (Boolean.TRUE.equals(operations.getOperations().hasKey(key)) && operations.size(key) == 0) {
+		if (operations.size(excludedMemberId.toString()) == 0) {
 			Team team = teamRepository.findById(teamId)
 				.orElseThrow(RuntimeException::new);// todo: create exception
 			User excludedUser = userRepository.findById(excludedMemberId)
