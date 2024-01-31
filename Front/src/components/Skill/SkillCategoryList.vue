@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {inject} from "vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 
@@ -11,9 +11,9 @@ const updateSelectSkillId: Function = inject<Function>('updateSelectSkillId')!;
     <div v-for="skillDTO in skillCategorySelect.skillCategoryList[skillCategorySelect.selectedCategory].skillList"
          class="skill-button-container"
          @click="updateSelectSkillId(skillDTO.skillId)">
-      <SkillIcon :skill="skillDTO" width="40px" height="40px" radius="10px"/>
-      <div class="skill-button-text"
-           :class="skillCategorySelect.selectSkillId.has(skillDTO.skillId)?'select-skill':'non-select-skill'">
+      <SkillIcon :skill="skillDTO" height="40px" radius="10px" width="40px"/>
+      <div :class="skillCategorySelect.selectSkillId.has(skillDTO.skillId)?'select-skill':'non-select-skill'"
+           class="skill-button-text">
         {{ skillDTO.skillName }}
       </div>
     </div>

@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
-  <div>
-  zzz
-  </div>
+<div>
+zzz
+</div>
 <template>
 
 </template>
