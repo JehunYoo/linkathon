@@ -17,6 +17,6 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.info("로그인에 실패했습니다.");
         //로그인 페이지로 다시 이동
-        response.sendRedirect("http://localhost:8080/loginform");
+        response.sendRedirect("https://www.naver.com/");
     }
 }
