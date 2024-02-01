@@ -8,7 +8,7 @@ import MyPageMyProject from "@/components/MyPage/MyPageMyProject.vue";
 import MyPageSchedule from "@/components/MyPage/MyPageSchedule.vue";
 
 const route = useRoute();
-const mode = ref<Number>(0);
+const mode = ref<number>(0);
 const updatePageFromQuery = () => {
   const queryParam = route.query.mode;
   mode.value = parseInt(queryParam as string);
