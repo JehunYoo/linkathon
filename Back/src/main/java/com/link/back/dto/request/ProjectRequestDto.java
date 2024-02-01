@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record ProjectRequestDto(
 	@NotNull Long teamId, // Team team,
-	@NotNull String projectName,
+	String projectName,
 	String projectDesc,
 	String projectUrl,
 	String deployUrl,

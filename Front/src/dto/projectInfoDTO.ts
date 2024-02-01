@@ -4,5 +4,5 @@ interface ProjectInfoDTO {
     projectDesc: string,
     starCount: number,
     starred: boolean,
-    projectUrl: string,
+    imgSrc: string,
 }
