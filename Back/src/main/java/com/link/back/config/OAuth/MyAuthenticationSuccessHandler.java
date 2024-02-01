@@ -41,8 +41,10 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
        String email = oAuth2User.getAttribute("email");
+
        //어디 플랫폼인지 가져오는건데 필요한지 의문임
-       String provider = oAuth2User.getAttribute("provider");
+       // String provider = oAuth2User.getAttribute("provider");
+
        //존재하는 User인 경우
        boolean isExist = oAuth2User.getAttribute("exist");
 
@@ -61,6 +63,10 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
            // 로그인 확인 페이지로 리다이렉트 시킨다.
            getRedirectStrategy().sendRedirect(request, response, targetUrl);
        }
+        //존재하지 않으면
+       //회원가입 페이지로 넘김
+       //회원가입 페이지 모름;;;
+       getRedirectStrategy().sendRedirect(request, response, "https://www.op.gg/");
 
    }
 

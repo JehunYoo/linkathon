@@ -26,19 +26,21 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
    @Override
    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-       //기본 OAuth2UserService 객체 생성
+       //기본 OAuth2UserService 객체 생성 후
+       //OAuth2UserService를 사용하여 OAuth2User 정보를 가져온다.
        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
-
-       // OAuth2UserService를 사용하여 OAuth2User 정보를 가져온다.
        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
        // 클라이언트 등록 ID(google, github)와 사용자 이름 속성을 가져온다.
        String registrationId = userRequest.getClientRegistration().getRegistrationId();
        String userNameAttributeName = userRequest.getClientRegistration()
-               .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+           .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-       OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+       // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
+       OAuth2Attribute oAuth2Attribute =
+           OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
+       //oauth2의 attribute
        Map<String, Object> userAttribute = oAuth2Attribute.convertToMap();
 
        String email = (String) userAttribute.get("email");
