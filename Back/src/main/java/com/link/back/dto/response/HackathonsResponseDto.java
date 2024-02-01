@@ -2,8 +2,6 @@ package com.link.back.dto.response;
 
 import java.time.LocalDate;
 
-import com.link.back.entity.Hackathon;
-
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,6 +9,7 @@ import lombok.Getter;
 public class HackathonsResponseDto {
 	private final Long hackathonId;
 	private final String hackathonName;
+	private final String hackathonTopic;
 	private final LocalDate registerDate;
 	private final LocalDate teamDeadlineDate;
 	private final LocalDate startDate;
@@ -21,12 +20,13 @@ public class HackathonsResponseDto {
 	private final String hackathonOriginImageName;
 
 	@Builder
-	public HackathonsResponseDto(Long hackathonId, String hackathonName, LocalDate registerDate,
+	public HackathonsResponseDto(Long hackathonId, String hackathonName, String hackathonTopic, LocalDate registerDate,
 		LocalDate teamDeadlineDate,
 		LocalDate startDate, LocalDate endDate, Integer maxPoint, String hackathonImageName, String hackathonImageUrl,
 		String hackathonOriginImageName) {
 		this.hackathonId = hackathonId;
 		this.hackathonName = hackathonName;
+		this.hackathonTopic = hackathonTopic;
 		this.registerDate = registerDate;
 		this.teamDeadlineDate = teamDeadlineDate;
 		this.startDate = startDate;
