@@ -13,16 +13,15 @@ function createLocalAxios(requireAuth: boolean): AxiosInstance {
     });
     if (requireAuth) {
         authorization(local);
+        tokenInterceptor(local);
     }
-    tokenInterceptor(local);
     return local;
 }
 
 function authorization(axiosInstance: any) {
-    // const token = localStorage.getItem("accessToken");
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzA2NTE0NjIyfQ.RqrwRJ8AuxTnR84MpvOD6Ix9dFU9iH_YD77vdFv5zsE';
+    const token = store.getters.getToken;
     if (token) {
-        axiosInstance.defaults.headers['Authorization'] = `${token}`;
+        axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
     } else {
         throw new Error('Authorization token is missing');
     }
