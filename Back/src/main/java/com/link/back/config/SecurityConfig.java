@@ -30,6 +30,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final MyAuthenticationSuccessHandler successHandler;
     private final MyAuthenticationFailureHandler failureHandler;
+    private final CorsFilter corsFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
