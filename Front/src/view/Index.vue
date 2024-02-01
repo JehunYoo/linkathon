@@ -4,6 +4,7 @@ import HackathonBanner from "@/components/Index/HackathonBanner/HackathonBanner.
 import RecruitingTeam from "@/components/RecruitingTeam/RecruitingTeam.vue";
 import HallOfFame from "@/components/Index/HallOfFame/HallOfFame.vue";
 import Ranking from "@/components/Index/Ranking/Ranking.vue";
+
 </script>
 
 <template>

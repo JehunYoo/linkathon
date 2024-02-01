@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
-
+import {ref, Ref} from "vue";
 import {Builder} from "builder-pattern";
 
 const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
@@ -19,12 +19,22 @@ dummy.push(tempDummy);
 dummy.push(tempDummy);
 dummy.push(tempDummy);
 
+const starRef: Ref<Boolean>[] = []
+
+for (let i = 0; i < dummy?.length; i++) {
+  starRef.push(ref(dummy[i].starred))
+}
+
+const starClick = (v :Ref<Boolean>) => {
+  v.value = !v.value;
+}
+
 </script>
 
 <template>
-  <IndexSubMenu title="명예의 전당" style="margin-top: 48px"/>
+  <IndexSubMenu style="margin-top: 48px" title="명예의 전당"/>
   <div class="fame-container">
-    <ProjectCard :data-list="dummy"/>
+    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
   </div>
 </template>
 

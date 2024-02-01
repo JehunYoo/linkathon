@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {Builder} from "builder-pattern";
-import {ref, onMounted, onUnmounted} from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 import RollingBannerRadioButton from "@/components/RadioButton.vue";
 
 const dummy: HackathonInfoDTO[] = [];
@@ -175,7 +175,8 @@ onUnmounted(() => {
 
 .rolling-text-container {
   max-width: 1355px;
-  width: 100%;
+  width: 100vw;
+  overflow: hidden;
   padding: 20px;
   margin: auto;
   position: relative;
@@ -206,7 +207,7 @@ onUnmounted(() => {
 
 .img-container > img {
   position: absolute;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   object-fit: cover;
 }

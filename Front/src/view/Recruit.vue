@@ -2,7 +2,7 @@
 import SkillCategory from "@/components/Skill/SkillCategory.vue";
 
 import {Builder} from "builder-pattern";
-import {provide, ref} from "vue";
+import {provide, ref,} from "vue";
 import UserCategory from "@/components/User/Recruit/UserCategory.vue";
 import SkillCategoryList from "@/components/Skill/SkillCategoryList.vue";
 import UserList from "@/components/User/Recruit/UserList.vue";
@@ -23,98 +23,13 @@ dummySkillList.push(Builder<SkillDTO>()
     .skillId(3)
     .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
     .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
 
 const skillCategoryList: SkillCategory[] = [];
 
 const dm2: SkillDTO[] = [];
 dm2.push(Builder<SkillDTO>()
     .skillName("삐뽀스크립트")
-    .skillId(3)
+    .skillId(4)
     .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
     .build())
 skillCategoryList.push(
@@ -192,6 +107,7 @@ const refDummy = ref<MemberRecruit>(dummy);
 provide('skillCategorySelect', refDummy);
 provide('updateSelectedCategory', updateSelectedCategory);
 provide('updateSelectSkillId', updateSelectSkillId);
+
 </script>
 
 <template>
