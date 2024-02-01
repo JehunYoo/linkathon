@@ -19,8 +19,8 @@ public class MemberDetailResponseDto {
 	private final Integer career;
 	private final String referenceUrl;
 	private final Field field;
-	private final String profileOriginImageName;
-	private final String profileImageURL;
+	private String profileOriginImageName = "";
+	private String profileImageURL = "";
 	private final List<SkillDto> skillSets;
 
 	public MemberDetailResponseDto(User user) {
@@ -31,8 +31,10 @@ public class MemberDetailResponseDto {
 		this.career = user.getCareer();
 		this.referenceUrl = user.getReferenceUrl();
 		this.field = user.getField();
-		this.profileOriginImageName = user.getUserImage().getUserOriginImageName();
-		this.profileImageURL = user.getUserImage().getUserImageUrl();
+		if(user.getUserImage() != null) {
+			this.profileOriginImageName = user.getUserImage().getUserOriginImageName();
+			this.profileImageURL = user.getUserImage().getUserImageUrl();
+		}
 		this.skillSets = user.getUserSkills().stream()
 			.map(SkillDto::new).collect(toList());
 	}

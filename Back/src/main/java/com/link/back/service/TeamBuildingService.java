@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.*;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,8 +171,10 @@ public class TeamBuildingService {
 		return new MemberDetailResponseDto(user);
 	}
 
-	public List<MemberDetailResponseDto> findMemberByCond(Pageable pageable, UserSearchConditionDto userSearchConditionDto) {
+	public Page<MemberDetailResponseDto> findMemberByCond(Pageable pageable, UserSearchConditionDto userSearchConditionDto) {
 		Page<User> userPage = userRepository.findBySearchCondition(pageable, userSearchConditionDto);
-		return userPage.stream().map(MemberDetailResponseDto::new).collect(toList());
+		List<MemberDetailResponseDto> memberDetailResponseDtos = userPage.stream().map(MemberDetailResponseDto::new).toList();
+
+		return new PageImpl<>(memberDetailResponseDtos, pageable, userPage.getTotalElements());
 	}
 }
