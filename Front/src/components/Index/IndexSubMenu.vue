@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const props = defineProps({
   title: String
 });
@@ -6,9 +6,9 @@ const props = defineProps({
 
 <template>
   <div class="hackathon-banner-title">
-    {{props.title}}
-    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 14L8 8L2 2" stroke="#303030" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    {{ props.title }}
+    <svg fill="none" height="16" viewBox="0 0 10 16" width="10" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 14L8 8L2 2" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
     </svg>
   </div>
 
@@ -21,6 +21,7 @@ const props = defineProps({
   font-style: normal;
   font-weight: 600;
 }
+
 svg {
   margin-left: 6px;
 }

@@ -18,6 +18,7 @@ import Footer from "@/components/Footer/Footer.vue";
 
 <style scoped>
 .content-margin {
+  max-width: 100vw;
   margin-top: 80px;
   display: flex;
   flex-direction: column;
@@ -31,7 +32,7 @@ import Footer from "@/components/Footer/Footer.vue";
 
 .content {
   max-width: 1355px;
-  width: 100%;
+  width: 100vw;
   padding: 20px;
 }
 

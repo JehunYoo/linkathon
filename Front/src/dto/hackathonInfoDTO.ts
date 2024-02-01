@@ -1,4 +1,5 @@
 interface HackathonInfoDTO {
+    hackathonId: number,
     title:string[],
     recruitmentStart:Date,
     recruitmentEnd:Date,
@@ -7,4 +8,9 @@ interface HackathonInfoDTO {
     announce:Date,
     subject:string,
     imgSrc:string,
+}
+
+interface HackathonInfoDetailDTO extends HackathonInfoDTO {
+    status: string,
+    count: number
 }
