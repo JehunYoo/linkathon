@@ -1,11 +1,18 @@
 package com.link.back.service;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -13,13 +20,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.link.back.dto.JwtToken;
 import com.link.back.dto.LoginRequest;
 import com.link.back.dto.UserSignUpDto;
 import com.link.back.dto.VerificationCode;
 import com.link.back.dto.request.AdditionalUserInfoRequest;
+import com.link.back.dto.request.UseApiRequest;
 import com.link.back.dto.request.UserPasswordResetRequest;
 import com.link.back.dto.request.UserUpdateInfoRequest;
+import com.link.back.dto.response.ApiDetailResponse;
+import com.link.back.dto.response.CareerApiResponse;
 import com.link.back.dto.response.UserInfoResponsse;
 import com.link.back.entity.User;
 import com.link.back.entity.UserImage;
@@ -32,6 +44,8 @@ import com.link.back.repository.UserSkillRepository;
 import com.link.back.repository.VerificationCodeRepository;
 import com.link.back.security.JwtTokenProvider;
 
+import io.codef.api.EasyCodef;
+import io.codef.api.EasyCodefServiceType;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +62,14 @@ public class UserService {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender javaMailSender;
+
+	@Value("${codef.key}")
+	private String codefKey;
+	@Value("${codef.demo.Client.id}")
+	private String codefId;
+	@Value("${codef.demo.Client.Secret}")
+	private String codefSecret;
+
 
 	public String signup(UserSignUpDto userSignUpDto) throws Exception {
 
@@ -183,6 +205,98 @@ public class UserService {
 		return new UserInfoResponsse(user);
 	}
 
+	//경력인증 메소드
+	public int careerValidation(UseApiRequest useApiRequest) throws
+		UnsupportedEncodingException,
+		JsonProcessingException,
+		InterruptedException {
+		EasyCodef codef = new EasyCodef();
+		codef.setPublicKey(codefKey);
+		codef.setClientInfoForDemo(codefId, codefSecret);
+
+		HashMap<String, Object> parameterMap = new HashMap<String, Object>();
+
+		parameterMap.put("organization", "0002"); //기관코드 002 고정
+		parameterMap.put("isIdentityViewYN", "1"); //	주민번호 뒷자리 공개여부 1 고정
+		parameterMap.put("loginType", "5"); //로그인 구분 5(간편로그인) 고정
+		parameterMap.put("loginTypeLevel", useApiRequest.getLoginTypeLevel()); //	간편인증 로그인 구분 (1:카카오톡, 2:페이코, 3:삼성패스, 4:KB모바일, 5:통신사(PASS), 6:네이버, 7:신한인증서, 8: toss)
+		parameterMap.put("useType", "0");//가입자구분(용도구분), "0" : 전체, "1" : 직장가입자, "2" : 지역가입자, "3" : 가입자 전체 0 고정
+		parameterMap.put("userName", useApiRequest.getUserName());
+		parameterMap.put("identity", useApiRequest.getIdentity()); //생년월일(8자리)
+		parameterMap.put("telecom", useApiRequest.getTelecom()); // 	통신사 “0":SKT(SKT알뜰폰), “1”:KT(KT알뜰폰), “2":LG U+(LG U+알뜰폰)
+		parameterMap.put("phoneNo", useApiRequest.getPhoneNo()); // 핸드폰번호
+
+		//1차 정보 요청
+		String productUrl = "/v1/kr/public/pp/nhis-join/identify-confirmation";
+		String firstData = codef.requestProduct(productUrl, EasyCodefServiceType.DEMO, parameterMap);
+		System.out.println(parameterMap);
+		System.out.println(firstData);
+		// System.out.println("D " + data);
+
+		//1차 결과물
+		ObjectMapper objectMapper = new ObjectMapper();
+		CareerApiResponse response = objectMapper.readValue(firstData, CareerApiResponse.class);
+
+		try {
+			// 5초 동안 대기
+			TimeUnit.MINUTES.sleep(1);
+		} catch (InterruptedException e) {
+			// InterruptedException 처리
+			e.printStackTrace();
+		}
+
+		parameterMap.put("simpleAuth", "1");
+		parameterMap.put("is2Way", true);
+
+		HashMap<String, Object> twoWayInfo = new HashMap<String, Object>();
+		twoWayInfo.put("jobIndex", response.getData().getJobIndex());
+		twoWayInfo.put("threadIndex", response.getData().getThreadIndex());
+		twoWayInfo.put("jti", response.getData().getJti());
+		twoWayInfo.put("twoWayTimestamp", System.currentTimeMillis() + (3 * 60 * 1000));
+		parameterMap.put("twoWayInfo", twoWayInfo);
+
+		//2차 정보 요청
+		String secondData = codef.requestCertification(productUrl, EasyCodefServiceType.DEMO, parameterMap);
+
+		objectMapper = new ObjectMapper();
+		ApiDetailResponse apiDetailResponse = null;
+
+		try {
+			apiDetailResponse = objectMapper.readValue(secondData, ApiDetailResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace(); // 역직렬화에 실패한 경우 예외처리 필요
+		}
+
+		if (apiDetailResponse == null) throw new IllegalArgumentException("정보를 조회할 수 없습니다.");
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		long totalCareer = 0;
+
+		for(ApiDetailResponse.Data d : apiDetailResponse.getData()){
+			if(d.getResJoinUserType().equals("직장피부양자")) continue;
+
+			try {
+
+				Date day1 = sdf.parse(d.getCommStartDate());
+				Date day2 = sdf.parse(d.getCommEndDate());
+
+				totalCareer += Math.abs(day1.getTime() - day2.getTime())/ (24 * 60 * 60 * 1000);
+
+			} catch (ParseException e) {
+				throw new IllegalArgumentException("정보를 처리할 수 없습니다.");
+			}
+
+		}
+
+		int career = (int)totalCareer/365;
+
+		System.out.println(career);
+
+		return career;
+	}
+
+
 	//user추가정보 입력
 	public void updateAdditionalInfo(String token, AdditionalUserInfoRequest additionalUserInfoRequest) {
 		Long userId = jwtTokenProvider.getUserId(token);
@@ -302,13 +416,4 @@ public class UserService {
 		return true;
 	}
 
-
-	// public void sendEmail(String to, String subject, String body) {
-	// 	SimpleMailMessage message = new SimpleMailMessage();
-	// 	message.setTo(to);
-	// 	message.setSubject(subject);
-	// 	message.setText(body);
-	//
-	// 	javaMailSender.send(message);
-	// }
 }

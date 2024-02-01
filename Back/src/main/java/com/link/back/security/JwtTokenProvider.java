@@ -48,7 +48,7 @@ public class JwtTokenProvider {
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public JwtToken generateToken(Long userId) {
         long now = System.currentTimeMillis();
-        long thirtyMinutesInMillis = 5 * 60 * 60 * 1000; // 30 minutes in milliseconds
+        long thirtyMinutesInMillis = 30 * 60 * 1000; // 30 minutes in milliseconds
         long accessTokenExpiresInMillis = now + thirtyMinutesInMillis;
         Date accessTokenExpiresIn = new Date(accessTokenExpiresInMillis);
 

@@ -54,10 +54,6 @@ public class Team {
 	@OneToMany(mappedBy = "team", cascade = PERSIST)
 	List<TeamSkill> teamSkills = new ArrayList<>();
 
-	@OneToOne(fetch = LAZY)
-	@JoinColumn(name = "team_image_id")
-	private TeamImage teamImage;
-
 	@Builder
 	public Team(String teamName, TeamStatus teamStatus, Integer teamMember, String teamDesc) {
 		this.teamName = teamName;

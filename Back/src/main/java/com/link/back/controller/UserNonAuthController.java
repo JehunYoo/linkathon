@@ -1,10 +1,13 @@
 package com.link.back.controller;
 
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.link.back.dto.*;
 import com.link.back.dto.request.SendEmailRequest;
+import com.link.back.dto.request.UseApiRequest;
 import com.link.back.dto.request.UserFindEmailRequest;
 import com.link.back.dto.request.UserPasswordResetRequest;
 import com.link.back.dto.request.VerificationRequest;
@@ -129,7 +132,7 @@ public class UserNonAuthController {
         return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
     }
 
-    //경력인증
+    
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token){
         userService.logout(token);
@@ -143,5 +146,15 @@ public class UserNonAuthController {
         return ResponseEntity.ok()
             .headers(headers)
             .build();
+    //경력인증
+    @PostMapping("career")
+    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
+        UnsupportedEncodingException,
+        JsonProcessingException,
+        InterruptedException {
+
+        int result = userService.careerValidation(useApiRequest);
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }

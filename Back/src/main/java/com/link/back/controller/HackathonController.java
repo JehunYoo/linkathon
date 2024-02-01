@@ -25,7 +25,6 @@ import com.link.back.dto.request.HackathonRequest;
 import com.link.back.dto.response.HackathonResponseDto;
 import com.link.back.dto.response.HackathonsResponseDto;
 import com.link.back.dto.response.WinnerProjectResponseDto;
-import com.link.back.entity.Hackathon;
 import com.link.back.service.HackathonService;
 
 import io.lettuce.core.dynamic.annotation.Param;
