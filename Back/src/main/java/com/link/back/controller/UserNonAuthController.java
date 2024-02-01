@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserNonAuthController {
 
-    private UserService userService;
-    private RefreshTokenRepository refreshTokenRepository;
+    private final UserService userService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public UserNonAuthController(UserService userService, RefreshTokenRepository refreshTokenRepository ) {
         this.userService = userService;
@@ -129,5 +130,18 @@ public class UserNonAuthController {
     }
 
     //경력인증
-
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token){
+        userService.logout(token);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", token)
+            .maxAge(0)  // 7 days expiration
+            .httpOnly(true)
+            .path("/")
+            .build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        return ResponseEntity.ok()
+            .headers(headers)
+            .build();
+    }
 }
