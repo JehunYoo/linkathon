@@ -132,9 +132,9 @@ public class UserNonAuthController {
         return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
     }
 
-    
+
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token){
+    public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token) {
         userService.logout(token);
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", token)
             .maxAge(0)  // 7 days expiration
@@ -146,6 +146,7 @@ public class UserNonAuthController {
         return ResponseEntity.ok()
             .headers(headers)
             .build();
+    }
     //경력인증
     @PostMapping("career")
     public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
