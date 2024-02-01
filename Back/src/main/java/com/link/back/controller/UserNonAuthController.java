@@ -1,10 +1,13 @@
 package com.link.back.controller;
 
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.link.back.dto.*;
 import com.link.back.dto.request.SendEmailRequest;
+import com.link.back.dto.request.UseApiRequest;
 import com.link.back.dto.request.UserFindEmailRequest;
 import com.link.back.dto.request.UserPasswordResetRequest;
 import com.link.back.dto.request.VerificationRequest;
@@ -129,5 +132,14 @@ public class UserNonAuthController {
     }
 
     //경력인증
+    @PostMapping("career")
+    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
+        UnsupportedEncodingException,
+        JsonProcessingException,
+        InterruptedException {
 
+        int result = userService.careerValidation(useApiRequest);
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 }
