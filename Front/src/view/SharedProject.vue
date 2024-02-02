@@ -6,24 +6,25 @@ import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
 
 const projectService: ProjectService = new ProjectService();
-let dummy: Ref<ProjectInfoDTO[]> = ref([]); // 반응형 배열 ref 객체로 선언
+
+const projectsRef: Ref<ProjectInfoDTO[]> = ref([]); // 반응형 배열 ref 객체로 선언
 const starRef: Ref<Boolean>[] = [];
 
-projectService.getALlProjects().then(projects => {
-  bind(projects, dummy);
-});
+const popularProjectsRef: Ref<ProjectInfoDTO[]> = ref([]);
+const popularStarRef: Ref<Boolean>[] = [];
 
-projectService.getPopularProjects().then(projects => {
-  bind(projects, dummy);
-})
-
-const bind = (p: ProjectInfoDTO[], pref: Ref) => {
-  pref.value = p;
-
-  for (let i = 0; i < dummy.value?.length; i++) {
-    starRef.push(ref(dummy.value[i].starred))
+const bind = async () => {
+  projectsRef.value = await projectService.getALlProjects();
+  for (let i = 0; i < projectsRef.value?.length; i++) {
+    starRef.push(ref(projectsRef.value[i].starred));
   }
-}
+
+  popularProjectsRef.value = await projectService.getPopularProjects();
+  for (let i = 0; i < projectsRef.value?.length; i++) {
+    popularStarRef.push(ref(projectsRef.value[i].starred));
+  }
+};
+
 
 const starClick = (v: Ref<Boolean>, projectId: number) => {
   if (v.value) {
@@ -37,32 +38,20 @@ const starClick = (v: Ref<Boolean>, projectId: number) => {
   }
 }
 
-// const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
-//     .projectName("프로젝트 주제")
-//     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-//     .starCount(10)
-//     .projectId(1)
-//     .starred(true)
-//     .imgSrc("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
-//     .build();
-// const dummy: ProjectInfoDTO[] = [];
-// dummy.push(tempDummy);
-// dummy.push(tempDummy);
-// dummy.push(tempDummy);
-// dummy.push(tempDummy);
-
+bind();
 
 </script>
 
 <template>
   <h1>인기 프로젝트</h1>
   <div class="project-container">
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="popularProjectsRef" :star-click="starClick" :star-ref="popularStarRef"/>
   </div>
   <h1>공유 프로젝트</h1>
   <div class="project-container">
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="projectsRef" :star-click="starClick" :star-ref="starRef"/>
   </div>
+  <!-- TODO: 페이지네이션 적용하기 -->
   <Pagination style="margin-bottom: 60px"/>
 </template>
 

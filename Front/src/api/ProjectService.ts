@@ -47,15 +47,14 @@ class ProjectService {
     }
 
     async getMyProjects(): Promise<ProjectInfoDTO[]> {
-        // try {
-        //     const response = await apiService.getData(true, `${url}/projects`, null);
-        //     if (response && response.status === httpStatusCode.OK) {
-        //         alert("조회 성공");
-        //         return response.data as ProjectInfoDTO[];
-        //     }
-        // } catch (error) {
-        //     alert("조회 실패");
-        // }
+        try {
+            const response = await apiService.getData(true, `${url}/my-project`, null);
+            if (response && response.status === httpStatusCode.OK) {
+                return response.data as ProjectInfoDTO[];
+            }
+        } catch (error) {
+            console.error(error);
+        }
         return [];
     }
 
@@ -91,6 +90,7 @@ class ProjectService {
             }
         } catch (error) {
             console.error(error);
+            return Promise.reject();
         }
     }
 

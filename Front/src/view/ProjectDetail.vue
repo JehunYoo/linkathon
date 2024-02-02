@@ -5,6 +5,9 @@ import {Builder} from "builder-pattern";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import ProjectTeam from "@/components/Project/ProjectTeam.vue";
 import ProjectLink from "@/components/Project/ProjectLink.vue";
+import {ProjectService} from "@/api/ProjectService.ts";
+import {Ref, ref} from "vue";
+import {ProjectDetailDto, ProjectRequestDto} from "@/dto/projectDTO.ts";
 
 const dummySkillList: SkillDTO[] = [];
 const dummySkill: SkillDTO = Builder<SkillDTO>()
@@ -21,7 +24,6 @@ const dummy: SkillCategory = Builder<SkillCategory>()
     .skillList(dummySkillList)
     .build();
 
-
 const dummyList: SkillCategory[] = [];
 for (let i = 0; i < 3; i++) {
   dummyList.push(dummy);
@@ -31,6 +33,35 @@ dummyList.push(Builder<SkillCategory>()
     .skillList(dummySkillList)
     .build())
 
+const projectService = new ProjectService();
+const projectDetail: Ref<ProjectDetailDto> = ref(Builder<ProjectDetailDto>().build()) // 임시 데이터
+
+const projectRequestDto: ProjectRequestDto = Builder<ProjectRequestDto>()
+    .build();
+
+const updateProject = (key: string, url: string) => {
+  console.log(key, url);
+  if (key === 'projectUrl')
+    projectRequestDto.projectUrl = projectDetail.value.projectUrl = url;
+  else if (key === 'deployUrl'){
+    projectRequestDto.deployUrl = projectDetail.value.deployUrl = url;
+  }
+  projectService.updateProject(projectDetail.value.projectId, projectRequestDto);
+}
+
+const bind = async () => {
+  // TODO: 프로젝트 번호를 상위에서 받아오기
+  const dummyProjectId = 2;
+  projectDetail.value = await projectService.getProjectDetail(dummyProjectId);
+  projectRequestDto.projectName = projectDetail.value.projectName;
+  projectRequestDto.teamId = projectDetail.value.teamId;
+  projectRequestDto.projectDesc = projectDetail.value.projectDesc;
+  projectRequestDto.projectUrl = projectDetail.value.projectUrl;
+  projectRequestDto.deployUrl = projectDetail.value.deployUrl;
+};
+
+bind();
+
 </script>
 
 
@@ -38,11 +69,11 @@ dummyList.push(Builder<SkillCategory>()
   <div class="detail-container">
     <div class="side-container">
       <img class="project-image"
-          src="https://d34u8crftukxnk.cloudfront.net/slackpress/prod/sites/6/Project-management-steps2.ko-KR.png"
-          alt="">
-      <ProjectLink/>
+           src="https://d34u8crftukxnk.cloudfront.net/slackpress/prod/sites/6/Project-management-steps2.ko-KR.png"
+           alt="">
+      <ProjectLink :project-detail="projectDetail" :update-project="updateProject"/>
     </div>
-    <project-center/>
+    <project-center :project-detail="projectDetail"/>
     <div class="side-container">
       <div>
         <h1>기술스택</h1>
@@ -116,6 +147,7 @@ img {
   .detail-container {
     flex-direction: column;
   }
+
   .project-image {
     width: 100%;
   }
