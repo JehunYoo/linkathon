@@ -29,13 +29,13 @@ public class JwtTokenProvider {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final CustomUserDetailsService userDetailsService;
+
     // application.properties에서 secret 값 가져와서 key에 저장
+    @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
+    private long accessTokenExpireTime;
 
-    @Value("${ACCESS_HEADER}")
-    private String accessHeader;
-
-    @Value("${REFRESH_HEADER}")
-    private String refreshHeader;
+    @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
+    private long refreshTokenExpireTime;
 
     public JwtTokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey, RefreshTokenRepository refreshTokenRepository, UserRepository userRepository, CustomUserDetailsService userDetailsService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -48,8 +48,7 @@ public class JwtTokenProvider {
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public JwtToken generateToken(Long userId) {
         long now = System.currentTimeMillis();
-        long thirtyMinutesInMillis = 30 * 60 * 1000; // 30 minutes in milliseconds
-        long accessTokenExpiresInMillis = now + thirtyMinutesInMillis;
+        long accessTokenExpiresInMillis = now + accessTokenExpireTime;// 30 minutes in milliseconds
         Date accessTokenExpiresIn = new Date(accessTokenExpiresInMillis);
 
         // Access Token 생성
@@ -65,7 +64,7 @@ public class JwtTokenProvider {
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(now + refreshTokenExpireTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -114,14 +113,8 @@ public class JwtTokenProvider {
 
     // 어세스 토큰 헤더 설정
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("authorization", "bearer "+ accessToken);
+        response.setHeader("Authorization", "bearer "+ accessToken);
     }
-
-    // 리프레시 토큰 헤더 설정
-    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("refreshToken", "bearer "+ refreshToken);
-    }
-
     // RefreshToken 존재유무 확인
     public boolean existsRefreshToken(String refreshToken) {
 
@@ -131,29 +124,5 @@ public class JwtTokenProvider {
 
         return false;
 
-    }
-
-    /**
-     * AccessToken 헤더 설정
-     */
-    public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
-        response.setHeader(accessHeader, accessToken);
-    }
-
-    /**
-     * RefreshToken 헤더 설정
-     */
-    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(refreshHeader, refreshToken);
-    }
-    /**
-     * AccessToken + RefreshToken 헤더에 실어서 보내기
-     */
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
-        log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 }

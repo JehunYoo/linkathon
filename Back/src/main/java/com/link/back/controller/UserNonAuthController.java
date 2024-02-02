@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -44,6 +45,39 @@ public class UserNonAuthController {
         String response = userService.signup(userSignUpDto);
         log.info("Response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    //회원가입 이메일 인증 - 메일 발송
+    @PostMapping("/signup/email")
+    public ResponseEntity<String> verifyingEmail(@Valid @RequestBody SendEmailRequest SendEmailRequest){
+
+        userService.sendVerificationSignUpEmail(SendEmailRequest.email());
+
+        return new ResponseEntity<>("이메일을 발송했습니다.", HttpStatus.CREATED);
+    }
+    //회원가입 이메일 인증 - 확인
+    @GetMapping("/signup/email/verification")
+    public ResponseEntity<String> confirmEmailVerification(@Valid @RequestParam String verificationCode, @RequestParam String email){
+
+        userService.compareVerificationKey(verificationCode, email);
+
+        return new ResponseEntity<>("이메일 인증이 완료되었씁니다.", HttpStatus.ACCEPTED);
+
+        //리다이렉트 필요
+
+    }
+
+
+    //회원가입 경력인증
+    @PostMapping("career")
+    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
+        UnsupportedEncodingException,
+        JsonProcessingException,
+        InterruptedException {
+
+        int result = userService.careerValidation(useApiRequest);
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     //로그인
@@ -95,7 +129,7 @@ public class UserNonAuthController {
         return new ResponseEntity<>("아이디는" + email +  "입니다", HttpStatus.CREATED);
     }
 
-    //메일인증요청
+    //비밀번호 찾기 메일인증요청
     @PostMapping("/email/verification")
     public ResponseEntity<String> requestVerification(@Valid @RequestBody SendEmailRequest sendEmailRequest){
 
@@ -107,7 +141,7 @@ public class UserNonAuthController {
 
     }
 
-    //메일인증확인
+    //비밀번호 찾기 - 메일인증확인
     @PostMapping("/password/verification")
     public ResponseEntity<Boolean> comparedVerification(@Valid @RequestBody VerificationRequest verificationRequest){
 
@@ -120,7 +154,7 @@ public class UserNonAuthController {
 
     }
 
-    //비밀번호 찾기
+    //비밀번호 찾기 - 비밀번호 변경
     //로직 바꾸기
     @PostMapping("/password")
     public ResponseEntity<String> changePassword (@Valid @RequestBody UserPasswordResetRequest userPasswordResetRequest) throws Exception {
@@ -131,15 +165,6 @@ public class UserNonAuthController {
         return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
     }
 
-    //경력인증
-    @PostMapping("career")
-    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
-        UnsupportedEncodingException,
-        JsonProcessingException,
-        InterruptedException {
 
-        int result = userService.careerValidation(useApiRequest);
 
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
 }

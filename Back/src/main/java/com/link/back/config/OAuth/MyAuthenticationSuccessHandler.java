@@ -23,15 +23,6 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-   @Value("${JWT_SECRET_KEY}")
-   private String secretKey;
-
-   @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
-   private Long accessTokenExpiredMs;
-
-   @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
-   private Long refreshTokenExpiredMs;
-
    private final UserRepository userRepository;
    private final JwtTokenProvider jwtTokenProvider;
 
@@ -54,7 +45,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
            JwtToken token = jwtTokenProvider.generateToken(userId);
 
            //로그인 성공페이지 url 확인해서 받아야함
-           String targetUrl = UriComponentsBuilder.fromUriString("https://www.google.com/")
+           String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/")
                    .queryParam("accessToken", token)
                    .build()
                    //이 부분은 더 확인해봐야함
@@ -66,7 +57,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         //존재하지 않으면
        //회원가입 페이지로 넘김
        //회원가입 페이지 모름;;;
-       getRedirectStrategy().sendRedirect(request, response, "https://www.op.gg/");
+       getRedirectStrategy().sendRedirect(request, response, "http://localhost:5173/register");
 
    }
 

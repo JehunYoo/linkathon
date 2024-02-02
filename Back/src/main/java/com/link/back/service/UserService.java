@@ -104,9 +104,8 @@ public class UserService {
 
 		return jwtToken;
 	}
-	//이메일 찾기
 
-	//아이디 찾기
+	//이메일 찾기
 	//이름, 생일, 전화번호 받음
 	public String findEmail(String name, LocalDate birth, String phoneNumber){
 
@@ -117,8 +116,6 @@ public class UserService {
 
 		return email;
 	}
-
-	//이메일 인증
 	@Transactional
 	public void sendVerificationEmail(String email){
 
@@ -130,7 +127,6 @@ public class UserService {
 		}
 
 		//이메일에 인증번호보내기
-
 		//1. 인증번호 생성(6자리)
 		StringBuilder verificationCode = new StringBuilder();
 
@@ -151,6 +147,46 @@ public class UserService {
 				messageHelper.setTo(email);
 				messageHelper.setSubject("이메일 인증번호");//일단 새 비밀번호로
 				messageHelper.setText(verificationCode.toString());
+			}
+		});
+
+		//3. 인증번호와 이메일을 redis에 저장
+		verificationCodeRepository.save(new VerificationCode(verificationCode.toString(), email));
+
+	}
+
+
+	//이메일 인증 - 회원가입시
+	@Transactional
+	public void sendVerificationSignUpEmail(String email){
+
+		//이메일에 인증번호보내기
+		//1. 인증번호 생성(6자리)
+		StringBuilder verificationCode = new StringBuilder();
+
+		Random random = new Random();
+
+		for (int i = 0; i < 6; i++) {
+			int tmp = random.nextInt(10);
+			verificationCode.append(tmp);
+		}
+
+		//2. 인증번호 보내기(messageAPI 사용)
+		javaMailSender.send(new MimeMessagePreparator() {
+
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+				messageHelper.setFrom("dlawhdfbf12@gmail.com");
+				messageHelper.setTo(email);
+				messageHelper.setSubject("이메일 인증번호");//일단 새 비밀번호로
+
+				// HTML 형식으로 메일 내용을 작성
+				String verificationLink = "http://localhost:8080/api/users/signup/email/verification?verificationCode=" + verificationCode + "&email=" + email.split("@")[0] + "%40" + email.split("@")[1];
+				String emailContent = "<html><body><p>이메일 인증을 위한 링크를 클릭하세요:</p>"
+					+ "<a href='" + verificationLink + "'>" + verificationLink + "</a></body></html>";
+
+				messageHelper.setText(emailContent, true);
 			}
 		});
 
