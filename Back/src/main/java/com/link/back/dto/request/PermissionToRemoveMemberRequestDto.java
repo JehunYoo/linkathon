@@ -1,5 +1,7 @@
 package com.link.back.dto.request;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,5 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PermissionToRemoveMemberRequestDto {
 
-	private String uuid;
+	@NotNull
+	@Positive
+	private Long memberId;
+
+	@NotNull
+	private String code;
 }

@@ -48,7 +48,7 @@ public class JwtTokenProvider {
     // User 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public JwtToken generateToken(Long userId) {
         long now = System.currentTimeMillis();
-        long thirtyMinutesInMillis = 5 * 60 * 60 * 1000; // 30 minutes in milliseconds
+        long thirtyMinutesInMillis = 30 * 60 * 1000; // 30 minutes in milliseconds
         long accessTokenExpiresInMillis = now + thirtyMinutesInMillis;
         Date accessTokenExpiresIn = new Date(accessTokenExpiresInMillis);
 
@@ -104,7 +104,7 @@ public class JwtTokenProvider {
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken.charAt(6)==32?jwtToken.substring(7):jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             log.info(e.getMessage());
