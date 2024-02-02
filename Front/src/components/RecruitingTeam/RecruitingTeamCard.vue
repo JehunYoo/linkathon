@@ -3,6 +3,7 @@ import {PropType, ref} from "vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import ModalTeam from "@/components/Modal/ModalTeam.vue";
+import {HackathonTeamInfoDTO} from "@/dto/hackathonTeamInfoDTO.ts";
 
 const props = defineProps({
   data: Object as PropType<HackathonTeamInfoDTO>

@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import {PropType, ref, watch} from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-const pageableDTO = ref({ pageNumber: 1, totalPages: 5 });
 const route = useRoute();
 const router = useRouter();
 
@@ -10,9 +8,14 @@ const props = defineProps({
   pageName: {
     type:String,
     default:"page"
+  },
+  pageableDTO: {
+    type:Object as PropType<PageableDto>,
+    default: ref({pageNumber:1, totalPages:5})
   }
 });
 
+const pageableDTO = ref<PageableDto>(props.pageableDTO);
 const updatePageFromQuery = () => {
   const queryParam = props.pageName ? route.query[props.pageName] : route.query.page;
   const queryPageNum = parseInt(queryParam as string);

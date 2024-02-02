@@ -9,7 +9,7 @@ const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
     .starCount(10)
     .projectId(1)
     .starred(true)
-    .projectUrl("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
+    //.projectUrl("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
     .build();
 const dummy: ProjectInfoDTO[] = [];
 dummy.push(tempDummy);

@@ -8,6 +8,7 @@ import {Builder} from "builder-pattern";
 import {provide, ref} from "vue";
 import Modal from "@/components/Modal/Modal.vue";
 import ModalAddTeam from "@/components/Modal/ModalAddteam.vue";
+import {HackathonTeamInfoDTO} from "@/dto/hackathonTeamInfoDTO.ts";
 
 const dummySkillList: SkillDTO[] = [];
 dummySkillList.push(Builder<SkillDTO>()

@@ -3,6 +3,7 @@
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import RecruitingTeamCard from "@/components/RecruitingTeam/RecruitingTeamCard.vue";
 import {Builder} from "builder-pattern";
+import {HackathonTeamInfoDTO} from "@/dto/hackathonTeamInfoDTO.ts";
 
 const dummy = Builder<HackathonTeamInfoDTO>()
     .projectId(1)
