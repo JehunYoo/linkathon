@@ -175,11 +175,7 @@ public class TeamBuildingController {
 	@ResponseStatus(OK)
 	public List<MemberDetailResponseDto> findMemberByCond(
 		Pageable pageable,
-		@RequestParam(required = false) UserSearchConditionDto userSearchConditionDto,
-		@RequestParam(required = false) String field) {
-		if (field != null && !field.isEmpty()) {
-			userSearchConditionDto.setField(Field.valueOf(field));
-		}
+		@RequestBody(required = false) UserSearchConditionDto userSearchConditionDto) {
 		return teamBuildingService.findMemberByCond(pageable, userSearchConditionDto);
 	}
 
