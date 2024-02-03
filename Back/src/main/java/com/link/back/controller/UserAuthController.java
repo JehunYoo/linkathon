@@ -64,14 +64,4 @@ public class UserAuthController {
         return new ResponseEntity<>("추가정보입력이 완료되었습니다.", HttpStatus.ACCEPTED);
     }
 
-    //로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token){
-
-        userService.logout(token);
-
-        return new ResponseEntity<>("로그아웃되었습니다.", HttpStatus.ACCEPTED);
-    }
-
-
 }

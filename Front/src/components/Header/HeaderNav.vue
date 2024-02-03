@@ -24,6 +24,7 @@ const logout = () => {
   userService.logout();
 }
 
+
 </script>
 
 <template>

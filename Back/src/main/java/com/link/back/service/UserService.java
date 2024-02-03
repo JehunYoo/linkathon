@@ -105,6 +105,12 @@ public class UserService {
 		return jwtToken;
 	}
 
+	public String oauth2Token(String refreshToken) {
+		String accessToken = jwtTokenProvider.generateOauth2token(refreshToken);
+
+		return accessToken;
+	}
+
 	//이메일 찾기
 	//이름, 생일, 전화번호 받음
 	public String findEmail(String name, LocalDate birth, String phoneNumber){
@@ -155,7 +161,6 @@ public class UserService {
 
 	}
 
-
 	//이메일 인증 - 회원가입시
 	@Transactional
 	public void sendVerificationSignUpEmail(String email){
@@ -205,7 +210,7 @@ public class UserService {
 
 	}
 
-	//어처피 e
+	//비밀번호 재설정
 	public void resetPassword(UserPasswordResetRequest userPasswordResetRequest) {
 		String email = userPasswordResetRequest.getEmail();
 		String password = userPasswordResetRequest.getPassword();

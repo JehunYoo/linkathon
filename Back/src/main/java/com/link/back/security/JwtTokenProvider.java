@@ -115,6 +115,7 @@ public class JwtTokenProvider {
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
         response.setHeader("Authorization", "bearer "+ accessToken);
     }
+
     // RefreshToken 존재유무 확인
     public boolean existsRefreshToken(String refreshToken) {
 
@@ -125,4 +126,26 @@ public class JwtTokenProvider {
         return false;
 
     }
+
+    //refreshToken을 받아서 accessToken을 발급해주는 메소드
+    public String generateOauth2token(String refreshToken){
+
+        Date accessTokenExpiresIn = new Date(System.currentTimeMillis() + accessTokenExpireTime);
+
+        long userId = getUserId(refreshToken);
+
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+
+        String accessToken = Jwts.builder()
+            .setClaims(claims)
+            .setExpiration(accessTokenExpiresIn)
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
+
+        return accessToken;
+
+    }
+
+
+
 }

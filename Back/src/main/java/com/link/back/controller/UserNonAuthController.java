@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.link.back.dto.*;
+import com.link.back.dto.request.RefreshTokenRequest;
 import com.link.back.dto.request.SendEmailRequest;
 import com.link.back.dto.request.UseApiRequest;
 import com.link.back.dto.request.UserFindEmailRequest;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +45,7 @@ public class UserNonAuthController {
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Valid @RequestBody UserSignUpDto userSignUpDto) throws Exception {
         String response = userService.signup(userSignUpDto);
-        log.info("Response: {}", response);
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -66,7 +68,6 @@ public class UserNonAuthController {
         //리다이렉트 필요
 
     }
-
 
     //회원가입 경력인증
     @PostMapping("career")
@@ -113,8 +114,25 @@ public class UserNonAuthController {
                 .headers(headers)
                 .build();
     }
+    //oauth2 로그인 성공시
+    @PostMapping("/oauth2/access")
+    public ResponseEntity<String> getAccessToken(@CookieValue(value = "refreshToken", defaultValue = "") String refreshToken){
 
+        System.out.println("쿠키 내용 : " + refreshToken);
+        // if(refreshTokenRequest.refreshToken().isEmpty()) throw new IllegalArgumentException("쿠키가 제대로 설정되지 않았습니다.");
 
+        String accessToken = userService.oauth2Token(refreshToken);
+
+        // 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+
+        // AUTHORIZATION에 Access 토큰을 넣음
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+
+        return ResponseEntity.ok()
+            .headers(headers)
+            .build();
+    }
 
     //이메일 찾기
     @GetMapping("/email")
@@ -165,6 +183,26 @@ public class UserNonAuthController {
         return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
     }
 
+    //로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token) {
+
+        userService.logout(token);
+
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", token)
+            .maxAge(0)
+            .httpOnly(true)
+            .path("/")
+            .build();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+
+        return ResponseEntity.ok()
+            .headers(headers)
+            .build();
+    }
 
 
 }

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {ref} from "vue";
+import { RouteLocationNormalized } from 'vue-router';
 import {UserService} from "@/api/UserService.ts";
 import {Builder} from "builder-pattern";
 import googleIcon from "@/assets/google.png";
@@ -19,6 +20,10 @@ const login = function () {
 
 const googleLogin = function () {
   userService.googleLogin()
+}
+
+const githubLogin = function () {
+  userService.githubLogin()
 }
 
 </script>

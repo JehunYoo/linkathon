@@ -1,5 +1,8 @@
 package com.link.back.controller;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +34,11 @@ public class Oauth2Controller {
 	@Value("${spring.security.oauth2.client.registration.github.scope}")
 	private String githubScope;
 
-	@CrossOrigin(origins = "http://localhost:5173")
+
 	@GetMapping("/google")
 	public String googleLogin(){
 
-		String URL = "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=" + googleId + "&redirect_uri=" + googleUri + "&scope=" + googleScope;
+		String URL = "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=" + googleId + "&redirect_uri=" + URLEncoder.encode(googleUri, StandardCharsets.UTF_8) + "&scope=" + googleScope;
 
 		return URL;
 	}

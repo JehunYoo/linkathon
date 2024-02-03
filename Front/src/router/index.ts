@@ -14,6 +14,7 @@ import HackathonDetail from "@/view/HackathonDetail.vue";
 import MyPage from "@/view/MyPage.vue";
 import Exit from "@/view/Exit.vue";
 import EditInfo from "@/view/EditInfo.vue";
+import Refresh from "@/view/Refresh.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -30,7 +31,9 @@ const routes = [
     {path: '/hackathonDetail', component: HackathonDetail},
     {path: '/myPage', component: MyPage},
     {path: '/exit', component: Exit},
-    {path: '/editInfo', component: EditInfo}
+    {path: '/editInfo', component: EditInfo},
+    {path: '/refresh', component: Refresh}
+
 ];
 
 const router = createRouter({
