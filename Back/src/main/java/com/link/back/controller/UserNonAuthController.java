@@ -1,21 +1,9 @@
 package com.link.back.controller;
 
-
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.link.back.dto.*;
-import com.link.back.dto.request.RefreshTokenRequest;
-import com.link.back.dto.request.SendEmailRequest;
-import com.link.back.dto.request.UseApiRequest;
-import com.link.back.dto.request.UserFindEmailRequest;
-import com.link.back.dto.request.UserPasswordResetRequest;
-import com.link.back.dto.request.VerificationRequest;
-import com.link.back.repository.RefreshTokenRepository;
-import com.link.back.service.UserService;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -28,13 +16,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.link.back.dto.JwtToken;
+import com.link.back.dto.LoginRequest;
+import com.link.back.dto.RefreshToken;
+import com.link.back.dto.UserSignUpDto;
+import com.link.back.dto.request.SendEmailRequest;
+import com.link.back.dto.request.UseApiRequest;
+import com.link.back.dto.request.UserFindEmailRequest;
+import com.link.back.dto.request.UserPasswordResetRequest;
+import com.link.back.dto.request.VerificationRequest;
+import com.link.back.repository.RefreshTokenRepository;
+import com.link.back.service.UserService;
+
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/users")
 public class UserNonAuthController {
 
-    private UserService userService;
-    private RefreshTokenRepository refreshTokenRepository;
+    private final UserService userService;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
+    private long refreshTokenExpireTime;
 
     public UserNonAuthController(UserService userService, RefreshTokenRepository refreshTokenRepository ) {
         this.userService = userService;
@@ -57,16 +64,14 @@ public class UserNonAuthController {
 
         return new ResponseEntity<>("이메일을 발송했습니다.", HttpStatus.CREATED);
     }
+
     //회원가입 이메일 인증 - 확인
     @GetMapping("/signup/email/verification")
     public ResponseEntity<String> confirmEmailVerification(@Valid @RequestParam String verificationCode, @RequestParam String email){
 
         userService.compareVerificationKey(verificationCode, email);
 
-        return new ResponseEntity<>("이메일 인증이 완료되었씁니다.", HttpStatus.ACCEPTED);
-
-        //리다이렉트 필요
-
+        return new ResponseEntity<>("이메일 인증이 완료되었습니다.", HttpStatus.ACCEPTED);
     }
 
     //회원가입 경력인증
@@ -95,7 +100,7 @@ public class UserNonAuthController {
 
         // ResponseCookie 객체를 생성하고, 쿠키에 Refresh 토큰을 설정
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", jwtToken.getRefreshToken())
-                .maxAge(7 * 24 * 60 * 60)  // 7 days expiration
+                .maxAge(refreshTokenExpireTime)
                 .httpOnly(true)
 //                .sameSite("None") // SameSite 속성을 제3자 쿠키에 대해 None으로 설정
 //                .secure(true) // 필수로 같이 설정해줘야함
@@ -118,8 +123,7 @@ public class UserNonAuthController {
     @PostMapping("/oauth2/access")
     public ResponseEntity<String> getAccessToken(@CookieValue(value = "refreshToken", defaultValue = "") String refreshToken){
 
-        System.out.println("쿠키 내용 : " + refreshToken);
-        // if(refreshTokenRequest.refreshToken().isEmpty()) throw new IllegalArgumentException("쿠키가 제대로 설정되지 않았습니다.");
+        if(refreshToken.isEmpty()) throw new IllegalArgumentException("쿠키가 제대로 설정되지 않았습니다.");
 
         String accessToken = userService.oauth2Token(refreshToken);
 
@@ -203,6 +207,5 @@ public class UserNonAuthController {
             .headers(headers)
             .build();
     }
-
 
 }

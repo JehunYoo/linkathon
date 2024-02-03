@@ -45,9 +45,14 @@ class UserService {
         try {
             const response = await apiService.postData(false, `${url}/login`, user);
             if (response && response.status === httpStatusCode.OK) {
-                await store.dispatch("updateToken", response.headers['authorization']);
-                alert("로그인 성공");
-                await router.push('/')
+                const authToken = response.headers['authorization'];
+                if (authToken) {
+                    await store.dispatch("updateToken", authToken);
+                    alert("로그인 성공");
+                    await router.push('/')
+                } else {
+                    alert("로그인 실패");
+                }
             }
         } catch (error) {
             alert("로그인 실패");

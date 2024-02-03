@@ -22,7 +22,7 @@ const props = defineProps({
 <template>
   <div v-for="(data, i) in props.dataList" class="project-card">
     <div>
-      <img :src="data?.projectUrl" alt="">
+      <img :src="data?.imgSrc" alt="">
     </div>
 
     <div class="right-box-container">
