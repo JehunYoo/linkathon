@@ -29,10 +29,14 @@ public class BackPerformanceMessage {
 	private BackPerformance backPerformance;
 
 	private String message;
+
+	private Long messageCount;
+
 	@Builder
-	public BackPerformanceMessage(Long messageId, BackPerformance backPerformance, String message) {
+	public BackPerformanceMessage(Long messageId, BackPerformance backPerformance, String message, Long messageCount) {
 		this.messageId = messageId;
 		this.backPerformance = backPerformance;
 		this.message = message;
+		this.messageCount = messageCount;
 	}
 }
