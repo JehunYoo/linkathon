@@ -3,10 +3,12 @@
 import UserCard from "@/components/User/UserCard.vue";
 import {TeamService} from "@/api/TeamService.ts";
 
-const teamService = new TeamService();
-const idResponseDto = await teamService.getActiveTeamId();
-const teamId = idResponseDto.id;
-const suggestionListOfTeam = teamService.getSuggestionListOfTeam(teamId);
+async function getSuggestions() {
+  const teamService = new TeamService();
+  const idResponseDto = await teamService.getActiveTeamId();
+  const teamId = idResponseDto.id;
+  return teamService.getSuggestionListOfTeam(teamId);
+}
 
 </script>
 
@@ -38,7 +40,8 @@ const suggestionListOfTeam = teamService.getSuggestionListOfTeam(teamId);
     <div class="fx1">
       <h2>권유한 사용자</h2>
       <div class="list">
-        <template v-for="suggestion in suggestionListOfTeam">
+<!--        <template v-for="_ in getSuggestions()">-->
+        <template v-for="_ in 6">
           <UserCard :t="true"/>
         </template>
       </div>
