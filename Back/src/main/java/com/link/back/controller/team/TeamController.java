@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.link.back.annotation.Login;
 import com.link.back.dto.request.PermissionToRemoveMemberRequestDto;
+import com.link.back.dto.response.IdResponseDto;
 import com.link.back.service.TeamService;
 
 import jakarta.validation.constraints.Positive;
@@ -26,11 +27,16 @@ public class TeamController {
 
 	private final TeamService teamService;
 
-	@DeleteMapping("/{teamId}/members/{userId}")
+	@GetMapping("/members")
+	@ResponseStatus(OK)
+	public IdResponseDto getTeamIdOfUser(@Login Long userId) {
+		return teamService.getTeamId(userId);
+	}
+
+	@DeleteMapping("/members/{userId}")
 	@ResponseStatus(NO_CONTENT)
-	public void deleteMember(@PathVariable @Positive Long teamId, @PathVariable @Positive Long userId,
-		@Login Long loginId) {
-		teamService.requestToRemoveMember(teamId, userId, loginId);
+	public void deleteMember(@PathVariable @Positive Long userId, @Login Long loginId) {
+		teamService.requestToRemoveMember(userId, loginId);
 	}
 
 	@GetMapping("/{teamId}/members/{userId}/permission/remove")

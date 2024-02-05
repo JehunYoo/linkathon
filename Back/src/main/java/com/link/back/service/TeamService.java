@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.link.back.dto.response.IdResponseDto;
 import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
@@ -41,12 +42,20 @@ public class TeamService {
 
 	private final RedisTemplate<String, String> redisTemplate;
 
-	public void requestToRemoveMember(Long teamId, Long excludedMemberId, Long leaderId) {
-		Team team = teamRepository.findById(teamId)
-			.orElseThrow(RuntimeException::new);// todo: create exception
+	public IdResponseDto getTeamId(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(RuntimeException::new);
 
+		Team team = teamRepository.findActiveTeamByUser(user);
+
+		return new IdResponseDto(team.getTeamId());
+	}
+
+	public void requestToRemoveMember(Long excludedMemberId, Long leaderId) {
 		User loginUser = userRepository.findById(leaderId)
 			.orElseThrow(RuntimeException::new); // todo: create exception
+
+		Team team = teamRepository.findActiveTeamByUser(loginUser);
 
 		UserTeam leader = userTeamRepository.findUserTeamByTeamAndUser(team, loginUser);
 
@@ -77,7 +86,7 @@ public class TeamService {
 
 			emailService.sendEmail(fromEmail, member.getUser().getEmail(),
 				"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
-				getRemoveMemberEmailContent(url, teamId, excludedMemberId, member.getUserTeamId(), uuid), false);
+				getRemoveMemberEmailContent(url, team.getTeamId(), excludedMemberId, member.getUserTeamId(), uuid), false);
 		}
 	}
 

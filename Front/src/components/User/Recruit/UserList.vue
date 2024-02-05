@@ -15,7 +15,7 @@ const handleModalClose = (num: number) => {
   <div class="user-card-container">
     <template v-for="i in 16">
       <Modal v-if="clickedModal===i" @closeModal="handleModalClose">
-        <ModalMember/>
+        <ModalMember :user-id="i" />
       </Modal>
       <UserCard @click="handleModalClose(i)"/>
     </template>

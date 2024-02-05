@@ -6,6 +6,7 @@ import MyInfo from "@/components/MyPage/MyInfo.vue";
 import MyPageRecruitTeamInfo from "@/components/MyPage/MyPageRecruitTeamInfo.vue";
 import MyPageMyProject from "@/components/MyPage/MyPageMyProject.vue";
 import MyPageSchedule from "@/components/MyPage/MyPageSchedule.vue";
+import {TeamService} from "@/api/TeamService.ts";
 
 const route = useRoute();
 const mode = ref<number>(0);
@@ -16,6 +17,19 @@ const updatePageFromQuery = () => {
 };
 
 watch([() => route.query], updatePageFromQuery, {immediate: true});
+
+const teamService = new TeamService();
+async function acceptSuggestion() {
+  const idResponseDto = await teamService.getActiveTeamId();
+  const teamId = idResponseDto.id;
+  teamService.postSuggestionByUser(teamId);
+}
+async function declineSuggestion() {
+  const idResponseDto = await teamService.getActiveTeamId();
+  const teamId = idResponseDto.id;
+  teamService.deleteSuggestionByTeam(teamId);
+}
+
 </script>
 
 <template>
@@ -30,8 +44,8 @@ watch([() => route.query], updatePageFromQuery, {immediate: true});
       <MyPageRecruitTeamInfo v-else-if="mode===2">
         <div class="title-container">
           <h1>권유받은 팀</h1>
-          <div class="accept-button">수락</div>
-          <div class="remove-button">거절</div>
+          <div class="accept-button" @click="acceptSuggestion">수락</div>
+          <div class="remove-button" @click="declineSuggestion">거절</div>
         </div>
       </MyPageRecruitTeamInfo>
       <MyPageMyProject v-else-if="mode===3"/>
