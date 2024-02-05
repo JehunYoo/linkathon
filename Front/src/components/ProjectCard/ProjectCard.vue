@@ -27,7 +27,7 @@ const props = defineProps({
     </div>
 
     <div class="right-box-container">
-      <div class="star-container" @click="props.starClick(starRef[i], data?.projectId)">
+      <div class="star-container" @click="props.starClick(starRef[i], i, data?.projectId)">
         <svg v-show="!props.starRef[i].value" fill="none" height="15" viewBox="0 0 16 15" width="16"
              xmlns="http://www.w3.org/2000/svg">
           <path

@@ -1,45 +1,50 @@
 <script setup lang="ts">
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 import Pagination from "@/components/Pagination.vue";
-import {ref, Ref} from "vue";
+import {ref, Ref, watch} from "vue";
 import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
+import ProjectStore from "@/store/ProjectStore.ts";
+import {useRoute} from "vue-router";
 
-const projectService: ProjectService = new ProjectService();
+const route = useRoute();
+
+const projectService: ProjectService = ProjectStore.getters.getProjectService;
 
 const projectsRef: Ref<ProjectInfoDTO[]> = ref([]); // 반응형 배열 ref 객체로 선언
 const starRef: Ref<Boolean>[] = [];
 
 const popularProjectsRef: Ref<ProjectInfoDTO[]> = ref([]);
 const popularStarRef: Ref<Boolean>[] = [];
+const pageableRef: Ref<PageableDto> = ref({pageNumber:1, totalPages:5} as PageableDto);
 
 const bind = async () => {
-  projectsRef.value = await projectService.getALlProjects();
+  popularProjectsRef.value = await projectService.getPopularProjects();
+  for (let i = 0; i < popularProjectsRef.value?.length; i++) {
+    popularStarRef.push(ref(popularProjectsRef.value[i].starred));
+  }
+
+  const projects = await projectService.getALlProjects(parseInt(route.query.page as string) - 1, 5);
+  projectsRef.value = projects.closedProjects;
   for (let i = 0; i < projectsRef.value?.length; i++) {
     starRef.push(ref(projectsRef.value[i].starred));
   }
+  pageableRef.value = projects.pageable;
 
-  popularProjectsRef.value = await projectService.getPopularProjects();
-  for (let i = 0; i < projectsRef.value?.length; i++) {
-    popularStarRef.push(ref(projectsRef.value[i].starred));
-  }
 };
 
 
-const starClick = (v: Ref<Boolean>, projectId: number) => {
+const starClick = async (v: Ref<Boolean>, i: number, projectId: number) => {
   if (v.value) {
-    projectService.unlikeProject(projectId).then(() => {
-      v.value = !v.value;
-    });
+    await projectService.unlikeProject(projectId);
   } else {
-    projectService.likeProject(projectId).then(() => {
-      v.value = !v.value;
-    });
+    await projectService.likeProject(projectId);
   }
+  v.value = !v.value;
 }
 
+watch([() => route.query], () => bind());
 bind();
-
 </script>
 
 <template>
@@ -52,7 +57,7 @@ bind();
     <ProjectCard :data-list="projectsRef" :star-click="starClick" :star-ref="starRef"/>
   </div>
   <!-- TODO: 페이지네이션 적용하기 -->
-  <Pagination style="margin-bottom: 60px"/>
+  <Pagination :pageable-d-t-o="pageableRef" />
 </template>
 
 <style scoped>

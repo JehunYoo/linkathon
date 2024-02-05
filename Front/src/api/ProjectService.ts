@@ -1,6 +1,6 @@
 import {ApiService} from "@/api/ApiService.ts";
 import {httpStatusCode} from "@/util/httpStatus.ts";
-import {ProjectDetailDto, ProjectInfoDTO, ProjectRequestDto} from "@/dto/projectDTO.ts";
+import {ClosedProjects, ProjectDetailDto, ProjectInfoDTO, ProjectRequestDto} from "@/dto/projectDTO.ts";
 import {Builder} from "builder-pattern";
 // import store from "@/store";
 // import {CatchError} from "@/util/error.ts";
@@ -10,16 +10,27 @@ const apiService = new ApiService();
 const url = "/api/projects"
 
 class ProjectService {
-    async getALlProjects(): Promise<ProjectInfoDTO[]> {
+    async getALlProjects(pageNumber: number | undefined, pageSize: number | undefined): Promise<ClosedProjects> {
         try {
-            const response = await apiService.getData(false, `${url}`, null);
+            const response = await apiService.getData(false, `${url}`,
+                {params: {
+                        page: pageNumber,
+                        size: pageSize
+                    }});
             if (response && response.status === httpStatusCode.OK) {
-                return response.data.content as ProjectInfoDTO[];
+                console.log(response)
+                return Builder<ClosedProjects>()
+                    .closedProjects(response.data.content as ProjectInfoDTO[])
+                    .pageable(Builder<PageableDto>()
+                        .pageNumber(response.data.pageable.pageNumber)
+                        .totalPages(response.data.totalPages)
+                        .build())
+                    .build();
             }
         } catch (error) {
             console.error(error);
         }
-        return [];
+        return {} as ClosedProjects;
     }
 
     async getMyLikedProjects(): Promise<ProjectInfoDTO[]> {
@@ -140,36 +151,36 @@ class ProjectService {
 }
 
 class ProjectServiceTest {
-    async testAll() {
-        const projectService: ProjectService = new ProjectService();
-
-        projectService.getALlProjects().then(d => console.log(d));
-        projectService.getMyLikedProjects().then(d => console.log(d));
-        projectService.getPopularProjects().then(d => console.log(d));
-        projectService.getMyProjects().then(d => console.log(d));
-
-        projectService.getProjectDetail(2).then(d => console.log(d));
-        // projectService.deleteProject(1).then(d => console.log(d));
-        // projectService.registProject(Builder<ProjectRequestDto>()
-        //     .projectName("asd")
-        //     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-        //     .projectUrl("asd")
-        //     .deployUrl("asd")
-        //     .teamId(1)
-        //     .build()).then(d => console.log(d));
-
-        // projectService.updateProject(2, Builder<ProjectRequestDto>()
-        //     .projectName("asd")
-        //     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-        //     .projectUrl("asd")
-        //     .deployUrl("asd")
-        //     .teamId(2)
-        //     .build()).then(d => console.log(d));
-
-        // projectService.submitProject(2).then(d => console.log(d));
-        projectService.likeProject(4).then(d => console.log(d));
-        projectService.unlikeProject(4).then(d => console.log(d));
-    }
+    // async testAll() {
+    //     const projectService: ProjectService = new ProjectService();
+    //
+    //     projectService.getALlProjects().then(d => console.log(d));
+    //     projectService.getMyLikedProjects().then(d => console.log(d));
+    //     projectService.getPopularProjects().then(d => console.log(d));
+    //     projectService.getMyProjects().then(d => console.log(d));
+    //
+    //     projectService.getProjectDetail(2).then(d => console.log(d));
+    //     // projectService.deleteProject(1).then(d => console.log(d));
+    //     // projectService.registProject(Builder<ProjectRequestDto>()
+    //     //     .projectName("asd")
+    //     //     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
+    //     //     .projectUrl("asd")
+    //     //     .deployUrl("asd")
+    //     //     .teamId(1)
+    //     //     .build()).then(d => console.log(d));
+    //
+    //     // projectService.updateProject(2, Builder<ProjectRequestDto>()
+    //     //     .projectName("asd")
+    //     //     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
+    //     //     .projectUrl("asd")
+    //     //     .deployUrl("asd")
+    //     //     .teamId(2)
+    //     //     .build()).then(d => console.log(d));
+    //
+    //     // projectService.submitProject(2).then(d => console.log(d));
+    //     projectService.likeProject(4).then(d => console.log(d));
+    //     projectService.unlikeProject(4).then(d => console.log(d));
+    // }
 }
 
 export {

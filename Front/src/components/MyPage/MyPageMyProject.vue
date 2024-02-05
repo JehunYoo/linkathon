@@ -3,6 +3,7 @@ import {Builder} from "builder-pattern";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 import {ref, Ref} from "vue";
 import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
+import ProjectStore from "@/store/ProjectStore.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
 
 // const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
@@ -29,7 +30,7 @@ import {ProjectService} from "@/api/ProjectService.ts";
 //   v.value = !v.value;
 // }
 
-const projectService: ProjectService = new ProjectService();
+const projectService: ProjectService = ProjectStore.getters.getProjectService;
 const projectsRef: Ref<ProjectInfoDTO[]> = ref([]); // 반응형 배열 ref 객체로 선언
 const starRef: Ref<Boolean>[] = [];
 

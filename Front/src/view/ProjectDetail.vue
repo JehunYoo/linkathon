@@ -5,9 +5,10 @@ import {Builder} from "builder-pattern";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import ProjectTeam from "@/components/Project/ProjectTeam.vue";
 import ProjectLink from "@/components/Project/ProjectLink.vue";
-import {ProjectService} from "@/api/ProjectService.ts";
 import {Ref, ref} from "vue";
 import {ProjectDetailDto, ProjectRequestDto} from "@/dto/projectDTO.ts";
+import ProjectStore from "@/store/ProjectStore.ts";
+import {ProjectService} from "@/api/ProjectService.ts";
 
 const dummySkillList: SkillDTO[] = [];
 const dummySkill: SkillDTO = Builder<SkillDTO>()
@@ -33,7 +34,7 @@ dummyList.push(Builder<SkillCategory>()
     .skillList(dummySkillList)
     .build())
 
-const projectService = new ProjectService();
+const projectService: ProjectService = ProjectStore.getters.getProjectService;
 const projectDetail: Ref<ProjectDetailDto> = ref(Builder<ProjectDetailDto>().build()) // 임시 데이터
 
 const projectRequestDto: ProjectRequestDto = Builder<ProjectRequestDto>()
