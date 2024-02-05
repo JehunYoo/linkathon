@@ -18,7 +18,6 @@ class ProjectService {
                         size: pageSize
                     }});
             if (response && response.status === httpStatusCode.OK) {
-                console.log(response)
                 return Builder<ClosedProjects>()
                     .closedProjects(response.data.content as ProjectInfoDTO[])
                     .pageable(Builder<PageableDto>()
