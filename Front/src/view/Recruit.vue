@@ -2,7 +2,7 @@
 import SkillCategory from "@/components/Skill/SkillCategory.vue";
 
 import {Builder} from "builder-pattern";
-import {provide, ref} from "vue";
+import {provide, ref,} from "vue";
 import UserCategory from "@/components/User/Recruit/UserCategory.vue";
 import SkillCategoryList from "@/components/Skill/SkillCategoryList.vue";
 import UserList from "@/components/User/Recruit/UserList.vue";
@@ -107,6 +107,7 @@ const refDummy = ref<MemberRecruit>(dummy);
 provide('skillCategorySelect', refDummy);
 provide('updateSelectedCategory', updateSelectedCategory);
 provide('updateSelectSkillId', updateSelectSkillId);
+
 </script>
 
 <template>

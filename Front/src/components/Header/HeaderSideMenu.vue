@@ -22,9 +22,17 @@ const props = defineProps({
   sidebarController: {
     type: Function,
     required: true
+  },
+  refToken: {
+    type: String,
+    required: true
   }
 })
+const emits = defineEmits(['logout']);
 
+const logout = () => {
+  emits('logout')
+}
 </script>
 
 <template>
@@ -46,12 +54,16 @@ const props = defineProps({
     <div class="side-bar-menu">
       <router-link to="/">홈으로</router-link>
       <router-link to="/recruit">팀원구하기</router-link>
-      <div>내 프로젝트</div>
-      <div>해커톤</div>
+      <router-link to="/hackathonList">해커톤</router-link>
       <router-link to="/sharedProject">공유 프로젝트</router-link>
-      <div>마이페이지</div>
-      <router-link to="/login">로그인</router-link>
-      <router-link to="/register">회원가입</router-link>
+      <template v-if="refToken==='' || refToken===null">
+        <router-link to="/login">로그인</router-link>
+        <router-link to="/register">회원가입</router-link>
+      </template>
+      <template v-else>
+        <router-link class="tr header-nav-menu-hover" to="/myPage">마이페이지</router-link>
+        <div class="tr header-nav-menu-hover" @click="logout">로그아웃</div>
+      </template>
     </div>
   </div>
 </template>
@@ -135,7 +147,7 @@ h1 {
   flex-direction: column;
   gap: 20px;
   position: fixed;
-  z-index: 99999;
+  z-index: 1001;
   right: 0;
   top: 0;
   width: 260px;

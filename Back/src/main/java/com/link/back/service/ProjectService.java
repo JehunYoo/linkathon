@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.link.back.dto.ProjectImageDto;
 import com.link.back.dto.request.ProjectRequestDto;
+import com.link.back.dto.response.ProjectDetailResponseDto;
 import com.link.back.dto.response.ProjectResponseDto;
 import com.link.back.entity.Project;
 import com.link.back.entity.ProjectImage;
@@ -106,10 +107,10 @@ public class ProjectService {
 			.toList();
 	}
 
-	public ProjectResponseDto getProjectDetail(Long userId, Long projectId) {
+	public ProjectDetailResponseDto getProjectDetail(Long userId, Long projectId) {
 		User user = userId != null ? userRepository.getReferenceById(userId) : null;
 		Project project = projectRepository.findById(projectId).orElseThrow();
-		return toProjectResponseDto(project, user);
+		return toProjectDetailResponseDto(project, user);
 	}
 
 	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto) {
@@ -168,6 +169,17 @@ public class ProjectService {
 	private ProjectResponseDto toProjectResponseDto(Project project, User user) {
 		return ProjectResponseDto.builder()
 			.projectId(project.getProjectId())
+			.projectName(project.getProjectName())
+			.projectDesc(project.getProjectDesc())
+			.starCount(projectLikeRepository.countByProject(project))
+			.starred(projectLikeRepository.findByProjectAndUser(project, user).isPresent())
+			.imgSrc(project.getProjectImage() == null ? null : project.getProjectImage().getProjectImageUrl())
+			.build();
+	}
+
+	private ProjectDetailResponseDto toProjectDetailResponseDto(Project project, User user) {
+		return ProjectDetailResponseDto.builder()
+			.projectId(project.getProjectId())
 			.teamId(project.getTeam().getTeamId())
 			.hackathonId(project.getTeam().getHackathon().getHackathonId())
 			.hackathonName(project.getTeam().getHackathon().getHackathonName())
@@ -180,10 +192,7 @@ public class ProjectService {
 			.projectUrl(project.getProjectUrl())
 			.deployUrl(project.getDeployUrl())
 			.winState(project.getWinState())
-			.projectImage(
-				project.getProjectImage() == null ? null :
-					toProjectImageDto(project.getProjectImage())
-			)
+			.imsSrc(project.getProjectImage() == null ? null : project.getProjectImage().getProjectImageUrl())
 			.starCount(projectLikeRepository.countByProject(project))
 			.starred(projectLikeRepository.findByProjectAndUser(project, user).isPresent())
 			.build();
@@ -214,7 +223,6 @@ public class ProjectService {
 
 	private void updateProjectEntity(Project project, ProjectImage projectImage, ProjectRequestDto projectRequestDto) {
 		project.updateProjectDetail(
-			projectRequestDto.projectName(),
 			projectRequestDto.projectDesc(),
 			projectRequestDto.projectUrl(),
 			projectRequestDto.deployUrl(),
