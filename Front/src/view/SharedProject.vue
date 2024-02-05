@@ -34,13 +34,16 @@ const bind = async () => {
 };
 
 
-const starClick = async (v: Ref<Boolean>, i: number, projectId: number) => {
+const starClick = async (v: Ref<Boolean>, data: ProjectInfoDTO, projectId: number) => {
   if (v.value) {
     await projectService.unlikeProject(projectId);
+    data.starCount--;
   } else {
     await projectService.likeProject(projectId);
+    data.starCount++;
   }
   v.value = !v.value;
+
 }
 
 watch([() => route.query], () => bind());
