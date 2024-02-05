@@ -91,45 +91,9 @@ public class RabbitListener {
 			BackPerformance backPerformance = BackPerformance.builder().bugs(bugs).codeSmells(codeSmells).coverage(coverage).duplications(duplications)
 				.securityRating(securityRating).vulnerabilities(vulnerabilities).project(project).build();
 			backPerformanceRepository.save(backPerformance);
-			Long[] msgCountArr = new Long[SONARQUBE_MESSAGE_LENGTH]; // 0 : Add, 1 :Remove, 2: Make, 3: Complete, 4: Change, 5: Merge, 6: Refactor, 7: Move, 8: Replace, 9: etc
 
 			for (JsonNode issue : issues) {
 				String msg = issue.get("message").asText();
-				// String[] msgArr = msg.split(" ");
-				// msg = msgArr[0];
-				// switch (msgArr[0]) {
-				// 	case "Add" :
-				// 		msgCountArr[0] += 1;
-				// 		break;
-				// 	case "Remove" :
-				// 		msgCountArr[1] += 1;
-				// 		break;
-				// 	case "Make" :
-				// 		msgCountArr[2] += 1;
-				// 		break;
-				// 	case "Complete" :
-				// 		msgCountArr[3] += 1;
-				// 		break;
-				// 	case "Change" :
-				// 		msgCountArr[4] += 1;
-				// 		break;
-				// 	case "Merge" :
-				// 		msgCountArr[5] += 1;
-				// 		break;
-				// 	case "Refactor" :
-				// 		msgCountArr[6] += 1;
-				// 		break;
-				// 	case "Move" :
-				// 		msgCountArr[7] += 1;
-				// 		break;
-				// 	case "Replace" :
-				// 		msgCountArr[8] += 1;
-				// 		break;
-				// 	default :
-				// 		msgCountArr[9] += 1;
-				// 		break;
-				// }
-
 				BackPerformanceMessage backPerformanceMessage = BackPerformanceMessage.builder().backPerformance(backPerformance)
 					.message(msg).build();
 				backPerformanceMessageRepository.save(backPerformanceMessage);
