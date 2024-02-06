@@ -1,20 +1,5 @@
 <script lang="ts" setup>
-import {Builder} from "builder-pattern";
-import {PropType} from "vue";
-
-// const dummy: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
-//     .flowStart(new Date())
-//     .flowEnd(new Date())
-//     .recruitmentStart(new Date())
-//     .recruitmentEnd(new Date())
-//     .announce(new Date())
-//     .subject("IT 교육 수강생 대상 서비스")
-//     .imgSrc("https://cdn.crowdpic.net/list-thumb/thumb_l_F25C5FD45B78842BE8B499E04852D8CB.jpg")
-//     .title(['제 1회 교육관련 웹 / 앱 서비스 제작 해커톤'])
-//     .status("참가 신청중")
-//     .count(100)
-//     .hackathonId(1)
-//     .build()
+import {PropType, ref} from "vue";
 
 const props = defineProps({
   data : {
@@ -37,17 +22,12 @@ function formatDate(date: Date) {
 </script>
 
 <template>
-  <Suspense>
-  <RouterLink :to="`/hackathonDetail?id=${props.data.hackathonId}&mode=${0}`" class="card-container">
-<!--    <RouterLink to="{ path: '/hackathonDetail', query: { id: props.data.hackathonId, mode: 0 } }" class="card-container">-->
+  <RouterLink :to="`/hackathonDetail?id=${props.data.hackathonId}`" class="card-container">
     <img :src="props.data?.hackathonImageUrl" alt="" class="img">
     <div style="width: 100%">
       <div style="display: flex; width: 100%; gap: 10px">
         <div style="flex: 8">
           <h1>
-<!--            <template v-for="data in props.data?.hackathonName">-->
-<!--              {{ data }}-->
-<!--            </template>-->
             {{props.data.hackathonName}}
           </h1>
         </div>
@@ -86,15 +66,11 @@ function formatDate(date: Date) {
             </h3>
           </div>
         </div>
-<!--        <div class="t">-->
-<!--          참가인원 {{ dummy.count }}명-->
-<!--        </div>-->
       </div>
 
     </div>
 
   </RouterLink>
-  </Suspense>
 </template>
 
 <style scoped>

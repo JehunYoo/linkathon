@@ -4,8 +4,7 @@ import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
 import {HackathonService} from "@/api/HackathonService.ts"
 import {onMounted, PropType, Ref, ref} from "vue";
-
-
+import store from "@/store/hackathon.ts";
 
 const categorySelect = new Set<number>();
 const refSelect = ref(categorySelect);
@@ -25,9 +24,16 @@ const click = async (num: number) => {
     refSelect.value.add(num);
     refSelectName.value = listName[num];
   hackathonsRef.value = await hackathonService.getHackathonList(listName[num], 0, 6);
+  updateStatusName();
 }
 
 const listName:string[] = ["모집중", "진행중", "완료됨"];
+
+function updateStatusName() {
+  // Vuex Store를 업데이트
+  store.dispatch('updateStatusName', refSelectName.value);
+}
+
 </script>
 
 <template>

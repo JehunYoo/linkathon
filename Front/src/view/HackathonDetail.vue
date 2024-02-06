@@ -5,6 +5,7 @@ import {useRoute} from "vue-router";
 import HackathonLeaderBoard from "@/components/Hackathon/HackathonLeaderBoard.vue";
 import HackathonReward from "@/components/Hackathon/HackathonReward.vue";
 import {HackathonService} from "@/api/HackathonService.ts";
+import store from "@/store/hackathon.ts";
 
 const route = useRoute();
 const hackathonService : HackathonService = new HackathonService();
@@ -13,23 +14,7 @@ onMounted(async () => {
   const queryId = route.query.id;
   const queryPage = parseInt(queryId as string);
   hackathonDetail.value = await hackathonService.getHackathonDetail(!isNaN(queryPage) ? queryPage : 0);
-  console.log(hackathonDetail)
 })
-console.log(hackathonDetail)
-
-// const test: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
-//     .flowStart(new Date())
-//     .flowEnd(new Date())
-//     .recruitmentStart(new Date())
-//     .recruitmentEnd(new Date())
-//     .announce(new Date())
-//     .subject("IT 교육 수강생 대상 서비스")
-//     .imgSrc("https://cdn.crowdpic.net/list-thumb/thumb_l_F25C5FD45B78842BE8B499E04852D8CB.jpg")
-//     .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
-//     .status("참가 신청중")
-//     .count(100)
-//     .hackathonId(1)
-//     .build()
 
 function formatDate(date: Date): string {
   const format_date = new Date(date);
@@ -43,12 +28,19 @@ function formatDate(date: Date): string {
 }
 
 const mode = ref<Number>(0);
-const updatePageFromQuery = () => {
-  const queryParam = route.query.mode;
-  mode.value = parseInt(queryParam as string);
-};
-
-watch([() => route.query], updatePageFromQuery, {immediate: true});
+if (store.getters.getStatusName === "모집중") {
+  mode.value = 0;
+} else if(store.getters.getStatusName === "진행중") {
+  mode.value = 1;
+} else {
+  mode.value = 2;
+}
+// const updatePageFromQuery = () => {
+//   const queryParam = route.query.mode;
+//   mode.value = parseInt(queryParam as string);
+// };
+//
+// watch([() => route.query], updatePageFromQuery, {immediate: true});
 </script>
 
 <template>
@@ -87,7 +79,7 @@ watch([() => route.query], updatePageFromQuery, {immediate: true});
     </div>
 
     <HackathonLeaderBoard v-if="mode===1"/>
-    <HackathonReward v-else-if="mode===2"/>
+    <HackathonReward v-else-if="mode===2" :id="route.query.id"/>
     <HackathonRecruiting v-else/>
   </template>
 
