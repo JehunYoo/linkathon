@@ -133,6 +133,8 @@ public class HackathonService {
 	private WinnerProjectInfoDto mapToWinnerProjectInfoDto(Project project) {
 		return WinnerProjectInfoDto.builder().projectId(project.getProjectId())
 			.projectName(project.getProjectName()).teamId(project.getTeam().getTeamId())
-			.projectDesc(project.getProjectDesc()).build();
+			.projectDesc(project.getProjectDesc())
+			.imgSrc(project.getProjectImage() != null ? project.getProjectImage().getProjectImageUrl() : null)
+			.build();
 	}
 }
