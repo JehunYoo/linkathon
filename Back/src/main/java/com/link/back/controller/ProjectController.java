@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.link.back.dto.request.ProjectRequestDto;
+import com.link.back.dto.response.BackPerformanceMessageResponseDto;
 import com.link.back.dto.response.BackPerformanceResponseDto;
 import com.link.back.dto.response.ProjectDetailResponseDto;
 import com.link.back.dto.response.ProjectResponseDto;
@@ -62,6 +63,11 @@ public class ProjectController {
 			HttpStatus.OK);
 	}
 
+	@GetMapping("/{backperformanceId}/message-count")
+	public ResponseEntity<BackPerformanceMessageResponseDto> getMessageCount(@PathVariable Long backperformanceId){
+		BackPerformanceMessageResponseDto backPerformanceMessageResponseDto = backPerformanceService.getMessageCount(backperformanceId);
+		return new ResponseEntity<>(backPerformanceMessageResponseDto,HttpStatus.OK);
+	}
 	@GetMapping("/contributions/{owner}/{repo}")
 	public ResponseEntity<List<Contribution>> getContributions(@PathVariable String owner, @PathVariable String repo) {
 		List<Contribution> contributions = projectContributionService.getContributionsList(owner, repo);
