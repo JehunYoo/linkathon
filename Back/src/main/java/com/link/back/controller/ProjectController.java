@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.link.back.dto.request.ProjectRequestDto;
 import com.link.back.dto.response.BackPerformanceResponseDto;
@@ -76,9 +78,9 @@ public class ProjectController {
 	}
 
 	@GetMapping("/my-project")
-	public ResponseEntity<List<ProjectResponseDto>> getMyProject() {
+	public ResponseEntity<Page<ProjectResponseDto>> getMyProject(Pageable pageable) {
 		Long myUserId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
-		List<ProjectResponseDto> myProjects = projectService.getMyProjects(myUserId);
+		Page<ProjectResponseDto> myProjects = projectService.getMyProjects(myUserId, pageable);
 		return new ResponseEntity<>(myProjects, HttpStatus.OK);
 	}
 
@@ -90,15 +92,21 @@ public class ProjectController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> postProject(@RequestBody @NotNull ProjectRequestDto projectRequestDto) {
-		projectService.createProject(projectRequestDto);
+	public ResponseEntity<?> postProject(
+		@RequestPart(value = "project") @NotNull ProjectRequestDto projectRequestDto,
+		@RequestPart(value = "image") MultipartFile image
+	) {
+		projectService.createProject(projectRequestDto, image);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PutMapping("/{project_id}")
-	public ResponseEntity<?> putProject(@PathVariable("project_id") Long projectId,
-		@NotNull @RequestBody ProjectRequestDto projectRequestDto) {
-		projectService.updateProject(projectId, projectRequestDto);
+	public ResponseEntity<?> putProject(
+		@PathVariable("project_id") Long projectId,
+		@RequestPart(value = "project") @NotNull ProjectRequestDto projectRequestDto,
+		@RequestPart(value = "image") MultipartFile image
+		) {
+		projectService.updateProject(projectId, projectRequestDto, image);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -131,17 +139,17 @@ public class ProjectController {
 
 	@GetMapping("/like")
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<List<ProjectResponseDto>> getLikedProjects() {
+	public ResponseEntity<Page<ProjectResponseDto>> getLikedProjects(Pageable pageable) {
 		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
-		List<ProjectResponseDto> likedProjects = projectService.getLikedProjects(userId);
+		Page<ProjectResponseDto> likedProjects = projectService.getLikedProjects(userId, pageable);
 		return new ResponseEntity<>(likedProjects, HttpStatus.OK);
 	}
 
 	@GetMapping("/popular")
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<List<ProjectResponseDto>> getPopularProjects(@NotNull Pageable pageable) {
+	public ResponseEntity<Page<ProjectResponseDto>> getPopularProjects(Pageable pageable) {
 		Long userId = 1L; // FIXME: 토큰에서 내 아이디 가져오기
-		List<ProjectResponseDto> likedProjects = projectService.getPopularProjects(userId);
+		Page<ProjectResponseDto> likedProjects = projectService.getPopularProjects(userId, pageable);
 		return new ResponseEntity<>(likedProjects, HttpStatus.OK);
 	}
 

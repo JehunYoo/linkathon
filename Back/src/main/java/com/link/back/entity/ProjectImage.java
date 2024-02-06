@@ -38,4 +38,12 @@ public class ProjectImage {
 		this.projectImageUrl = projectImageUrl;
 		this.projectOriginImageName = projectOriginImageName;
 	}
+
+	public static ProjectImage create(String imgName, String imgUrl, String OriginImgName) {
+		return ProjectImage.builder()
+			.projectImageName(imgName)
+			.projectImageUrl(imgUrl)
+			.projectOriginImageName(OriginImgName)
+			.build();
+	}
 }
