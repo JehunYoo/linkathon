@@ -7,46 +7,36 @@ const props = defineProps({
   pc: {
     type: Object as PropType<PerformanceChartDTO>,
     required: true
-  }
+  },
 });
 
-const centerTextPlugin = {
-  id: 'centerText',
-  //@ts-ignore
-  afterDraw(chart) {
-    const ctx = chart.ctx;
-    const {width, height} = chart;
-    const centerText = chart.config._config.centerText;
-
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = '30px Jockey One';
-    ctx.fillStyle = props.pc.color;
-
-    ctx.fillText(centerText, width / 2, height / 2);
-    ctx.restore();
+function getScoreColor(score: number): string {
+  if (score >= 90) {
+    return "#388E3C"; // 진한 녹색
+  } else if (score >= 70) {
+    return "#1976D2"; // 진한 파란색
+  } else if (score >= 50) {
+    return "#FBC02D"; // 진한 노랑색
+  } else {
+    return "#D32F2F"; // 진한 빨강색
   }
-};
-
-Chart.register(...registerables, centerTextPlugin);
-
-
-const computedCenterText = computed(() => {
-  return props.pc.centerText ?? props.pc.actualValue.toString();
-});
+}
 
 onMounted(() => {
+  Chart.register(...registerables);
+  const color = getScoreColor(props.pc?.actualValue);
+  const computedCenterText = computed(() => {
+    return props.pc.centerText ?? props.pc.actualValue.toString();
+  });
   const maxValue = 100;
   const actualValue = props.pc.actualValue;
   const remainingValue = maxValue - actualValue;
-
   const data = {
     datasets: [{
       data: [remainingValue, actualValue],
       backgroundColor: [
         '#D9D9D9',
-        props.pc.color
+        color
       ]
     }]
   };
@@ -72,9 +62,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <canvas ref="donutChart"></canvas>
+  <div class="center-text" :style="{'color':getScoreColor(props.pc?.actualValue)}">{{ pc.centerText }}</div>
+  <canvas ref="donutChart"/>
 </template>
 
 <style scoped>
-
+.center-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Jockey One", sans-serif;
+  font-size: 30px;
+}
 </style>
