@@ -22,19 +22,15 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-public class UserRepositoryImpl extends QuerydslRepositorySupport implements UserRepositoryCustom {
+public class UserRepositoryImpl implements UserRepositoryCustom {
 
 	@Autowired
 	private JPAQueryFactory queryFactory;
 
-	public UserRepositoryImpl() {
-		super(User.class);
-	}
-
 	@Override
 	public Page<User> findBySearchCondition(Pageable pageable, UserSearchConditionDto userSearchConditionDto) {
 
-		JPQLQuery<User> query = queryFactory.select(user)
+		List<User> userList = queryFactory.select(user)
 			.from(user)
 			.leftJoin(user.userSkills, userSkill).fetchJoin()
 			.leftJoin(skill).on(skill.skillId.eq(userSkill.skill.skillId))
@@ -43,26 +39,20 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
 				eqTier(userSearchConditionDto.getTier()),
 				eqCareer(userSearchConditionDto.getCareer()),
 				eqGender(userSearchConditionDto.getGender()),
-				eqField(Field.valueOf(userSearchConditionDto.getField())));
+				eqField(userSearchConditionDto.getField()))
+			.fetch();
 
-		List<User> users = getQuerydsl().applyPagination(pageable, query).fetch();
-		return new PageImpl<>(users, pageable, query.fetchCount());
+		return new PageImpl<>(userList, pageable, userList.size());
 	}
 
 	private BooleanExpression eqSkillSets(List<Long> skillIds) {
 		if (skillIds == null || skillIds.isEmpty()) {
 			return null;
 		}
-		BooleanExpression predicate = null;
-		for (Long skillId : skillIds) {
-			BooleanExpression skillCondition = userSkill.skill.skillId.in(skillId);
-			if (predicate == null) {
-				predicate = skillCondition;
-			} else {
-				predicate = predicate.and(skillCondition);
-			}
-		}
-		return predicate;
+		return skillIds.stream()
+			.map(skillId -> user.userSkills.any().skill.skillId.eq(skillId))
+			.reduce(BooleanExpression::and)
+			.orElse(null);
 	}
 
 	private BooleanExpression eqTier(Integer rating) {
@@ -77,8 +67,8 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
 		return (gender == null) ? null : user.gender.eq(gender);
 	}
 
-	private BooleanExpression eqField(Field field) {
-		return (field == null) ? null : user.field.eq(field);
+	private BooleanExpression eqField(String field) {
+		return (field == null) ? null : user.field.eq(Field.valueOf(field));
 	}
 
 }
