@@ -1,36 +1,47 @@
 <script lang="ts" setup>
-import {Builder} from "builder-pattern";
 import HackathonRecruiting from "@/components/Hackathon/HackathonRecruiting.vue";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import HackathonLeaderBoard from "@/components/Hackathon/HackathonLeaderBoard.vue";
 import HackathonReward from "@/components/Hackathon/HackathonReward.vue";
+import {HackathonService} from "@/api/HackathonService.ts";
 
-const test: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
-    .flowStart(new Date())
-    .flowEnd(new Date())
-    .recruitmentStart(new Date())
-    .recruitmentEnd(new Date())
-    .announce(new Date())
-    .subject("IT 교육 수강생 대상 서비스")
-    .imgSrc("https://cdn.crowdpic.net/list-thumb/thumb_l_F25C5FD45B78842BE8B499E04852D8CB.jpg")
-    .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
-    .status("참가 신청중")
-    .count(100)
-    .hackathonId(1)
-    .build()
+const route = useRoute();
+const hackathonService : HackathonService = new HackathonService();
+const hackathonDetail = ref({} as HackathonInfoDTO);
+onMounted(async () => {
+  const queryId = route.query.id;
+  const queryPage = parseInt(queryId as string);
+  hackathonDetail.value = await hackathonService.getHackathonDetail(!isNaN(queryPage) ? queryPage : 0);
+  console.log(hackathonDetail)
+})
+console.log(hackathonDetail)
+
+// const test: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
+//     .flowStart(new Date())
+//     .flowEnd(new Date())
+//     .recruitmentStart(new Date())
+//     .recruitmentEnd(new Date())
+//     .announce(new Date())
+//     .subject("IT 교육 수강생 대상 서비스")
+//     .imgSrc("https://cdn.crowdpic.net/list-thumb/thumb_l_F25C5FD45B78842BE8B499E04852D8CB.jpg")
+//     .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
+//     .status("참가 신청중")
+//     .count(100)
+//     .hackathonId(1)
+//     .build()
 
 function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1; // getMonth()는 0부터 시작
-  const day = date.getDate();
+  const format_date = new Date(date);
+  const year = format_date.getFullYear();
+  const month = format_date.getMonth() + 1; // getMonth()는 0부터 시작
+  const day = format_date.getDate();
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
-  const weekday = weekdays[date.getDay()];
+  const weekday = weekdays[format_date.getDay()];
 
   return `${year}. ${month}. ${day} (${weekday})`;
 }
 
-const route = useRoute();
 const mode = ref<Number>(0);
 const updatePageFromQuery = () => {
   const queryParam = route.query.mode;
@@ -41,42 +52,45 @@ watch([() => route.query], updatePageFromQuery, {immediate: true});
 </script>
 
 <template>
-  <h1>
-    제 1회 교육관련 웹 / 앱 서비스 제작 해커톤
-  </h1>
-  <div class="title-container">
-    <div class="hackathon-banner-list-container">
-      <div class="list-title-container">
-        <div v-for="title in test.title" class="list-title">
-          {{ title }}
+  <template v-if="hackathonDetail">
+    <h1>
+      제 1회 교육관련 웹 / 앱 서비스 제작 해커톤
+    </h1>
+    <div class="title-container">
+      <div class="hackathon-banner-list-container">
+        <div class="list-title-container">
+          <div v-for="title in hackathonDetail.hackathonName" class="list-title">
+            {{ title }}
+          </div>
+        </div>
+        <div class="img-container">
+          <img :alt="hackathonDetail.hackathonTopic" :src="hackathonDetail.hackathonImageUrl" class="img">
         </div>
       </div>
-      <div class="img-container">
-        <img :alt="test.subject" :src="test.imgSrc" class="img">
+      <div class="text-holder" style="max-width: 290px">
+        <h3>접수 기간</h3>
+        <h4>{{ formatDate(hackathonDetail.registerDate) }} ~ {{ formatDate(hackathonDetail.teamDeadlineDate) }}</h4>
+        <h3>대회 기간</h3>
+        <h4>{{ formatDate(hackathonDetail.startDate) }} ~ {{ formatDate(hackathonDetail.endDate) }}</h4>
+        <h3>팀 최대 점수</h3>
+        <h4>{{ hackathonDetail.maxPoint }}</h4>
+        <h3>유의 사항</h3>
+        <h5>어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h5>
+      </div>
+      <div class="text-holder mg60">
+        <h3>참가 방법</h3>
+        <h4>1. 어쩌구 저쩌구한다.</h4>
+        <h4>2. 어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h4>
+        <h4>3. 어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h4>
+        <h4>4. 어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h4>
       </div>
     </div>
-    <div class="text-holder" style="max-width: 290px">
-      <h3>접수 기간</h3>
-      <h4>{{ formatDate(test.recruitmentStart) }} ~ {{ formatDate(test.recruitmentEnd) }}</h4>
-      <h3>대회 기간</h3>
-      <h4>{{ formatDate(test.flowStart) }} ~ {{ formatDate(test.flowEnd) }}</h4>
-      <h3>팀 최대 점수</h3>
-      <h4>20점</h4>
-      <h3>유의 사항</h3>
-      <h5>어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h5>
-    </div>
-    <div class="text-holder mg60">
-      <h3>참가 방법</h3>
-      <h4>1. 어쩌구 저쩌구한다.</h4>
-      <h4>2. 어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h4>
-      <h4>3. 어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h4>
-      <h4>4. 어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.어쩌구 저쩌구 한다.</h4>
-    </div>
-  </div>
 
-  <HackathonLeaderBoard v-if="mode===1"/>
-  <HackathonReward v-else-if="mode===2"/>
-  <HackathonRecruiting v-else/>
+    <HackathonLeaderBoard v-if="mode===1"/>
+    <HackathonReward v-else-if="mode===2"/>
+    <HackathonRecruiting v-else/>
+  </template>
+
 </template>
 
 <style scoped>

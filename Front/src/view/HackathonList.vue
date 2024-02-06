@@ -2,18 +2,32 @@
 
 import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
-import {ref} from "vue";
+import {HackathonService} from "@/api/HackathonService.ts"
+import {onMounted, PropType, Ref, ref} from "vue";
+
+
 
 const categorySelect = new Set<number>();
 const refSelect = ref(categorySelect);
-const click = (num: number) => {
+const hackathonsRef: Ref<HackathonInfoDTO[]> = ref([]);
+const hackathonService : HackathonService = new HackathonService();
+const refSelectName = ref<String>('');
+
+onMounted(() => {
+  click(0);
+})
+
+const click = async (num: number) => {
   if (refSelect.value.has(num))
     refSelect.value.delete(num);
   else
+    refSelect.value.clear();
     refSelect.value.add(num);
+    refSelectName.value = listName[num];
+  hackathonsRef.value = await hackathonService.getHackathonList(listName[num], 0, 6);
 }
 
-const listName:String[] = ["모집중", "모집전", "진행중", "종료됨"];
+const listName:string[] = ["모집중", "진행중", "완료됨"];
 </script>
 
 <template>
@@ -27,12 +41,15 @@ const listName:String[] = ["모집중", "모집전", "진행중", "종료됨"];
     </template>
   </div>
   <div class="container">
-    <template v-for="_ in 6">
-      <HackathonCard/>
+<!--    <template v-for="_ in 6">-->
+    <template v-for="hackathon in hackathonsRef">
+      <HackathonCard :data="hackathon" :name="refSelectName"/>
     </template>
+
+<!--    </template>-->
   </div>
 
-  <Pagination style="margin-bottom: 60px"/>
+  <Pagination style="margin-bottom: 60px" />
 </template>
 
 <style scoped>

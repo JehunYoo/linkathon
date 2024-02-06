@@ -1,47 +1,63 @@
 <script lang="ts" setup>
 import {Builder} from "builder-pattern";
+import {PropType} from "vue";
 
-const dummy: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
-    .flowStart(new Date())
-    .flowEnd(new Date())
-    .recruitmentStart(new Date())
-    .recruitmentEnd(new Date())
-    .announce(new Date())
-    .subject("IT 교육 수강생 대상 서비스")
-    .imgSrc("https://cdn.crowdpic.net/list-thumb/thumb_l_F25C5FD45B78842BE8B499E04852D8CB.jpg")
-    .title(['제 1회 교육관련 웹 / 앱 서비스 제작 해커톤'])
-    .status("참가 신청중")
-    .count(100)
-    .hackathonId(1)
-    .build()
+// const dummy: HackathonInfoDetailDTO = Builder<HackathonInfoDetailDTO>()
+//     .flowStart(new Date())
+//     .flowEnd(new Date())
+//     .recruitmentStart(new Date())
+//     .recruitmentEnd(new Date())
+//     .announce(new Date())
+//     .subject("IT 교육 수강생 대상 서비스")
+//     .imgSrc("https://cdn.crowdpic.net/list-thumb/thumb_l_F25C5FD45B78842BE8B499E04852D8CB.jpg")
+//     .title(['제 1회 교육관련 웹 / 앱 서비스 제작 해커톤'])
+//     .status("참가 신청중")
+//     .count(100)
+//     .hackathonId(1)
+//     .build()
+
+const props = defineProps({
+  data : {
+    type : Object as PropType<HackathonInfoDetailDTO>,
+    required: true
+  },
+  name : {
+    type : String,
+    required : true
+  }
+});
 
 function formatDate(date: Date) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const format_date = new Date(date);
+  const month = format_date.getMonth() + 1;
+  const day = format_date.getDate();
   return `${month}.${day}`;
 }
 
 </script>
 
 <template>
-  <RouterLink :to="`/hackathonDetail?id=${dummy.hackathonId}&mode=${0}`" class="card-container">
-    <img :src="dummy.imgSrc" alt="" class="img">
+  <Suspense>
+  <RouterLink :to="`/hackathonDetail?id=${props.data.hackathonId}&mode=${0}`" class="card-container">
+<!--    <RouterLink to="{ path: '/hackathonDetail', query: { id: props.data.hackathonId, mode: 0 } }" class="card-container">-->
+    <img :src="props.data?.hackathonImageUrl" alt="" class="img">
     <div style="width: 100%">
       <div style="display: flex; width: 100%; gap: 10px">
         <div style="flex: 8">
           <h1>
-            <template v-for="data in dummy.title">
-              {{ data }}
-            </template>
+<!--            <template v-for="data in props.data?.hackathonName">-->
+<!--              {{ data }}-->
+<!--            </template>-->
+            {{props.data.hackathonName}}
           </h1>
         </div>
         <div class="status">
-          {{ dummy.status }}
+          {{ props.name}}
         </div>
       </div>
 
       <h2>
-        {{ dummy.subject }}
+        {{ props.data.hackathonTopic }}
       </h2>
       <div style="display: flex; gap: 10px; flex-direction: row">
         <div class="text-container">
@@ -50,7 +66,7 @@ function formatDate(date: Date) {
               모집기간
             </h4>
             <h3>
-              {{ formatDate(dummy.recruitmentStart) }}~{{ formatDate(dummy.recruitmentEnd) }}
+              {{ formatDate(props.data.registerDate) }}~{{ formatDate(props.data.teamDeadlineDate) }}
             </h3>
           </div>
           <div>
@@ -58,7 +74,7 @@ function formatDate(date: Date) {
               진행기간
             </h4>
             <h3>
-              {{ formatDate(dummy.flowStart) }}~{{ formatDate(dummy.flowEnd) }}
+              {{ formatDate(props.data.startDate) }}~{{ formatDate(props.data.endDate) }}
             </h3>
           </div>
           <div>
@@ -66,17 +82,19 @@ function formatDate(date: Date) {
               결과발표
             </h4>
             <h3>
-              {{ formatDate(dummy.announce) }}~{{ formatDate(dummy.recruitmentEnd) }}
+              {{ formatDate(props.data.endDate) }}
             </h3>
           </div>
         </div>
-        <div class="t">
-          참가인원 {{ dummy.count }}명
-        </div>
+<!--        <div class="t">-->
+<!--          참가인원 {{ dummy.count }}명-->
+<!--        </div>-->
       </div>
 
     </div>
+
   </RouterLink>
+  </Suspense>
 </template>
 
 <style scoped>
