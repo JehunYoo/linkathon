@@ -54,6 +54,9 @@ public class OAuth2Attribute {
 
     //github도 Google처럼 바로 get 가능
     private static OAuth2Attribute ofGithub(String provider, String attributeKey, Map<String, Object> attributes){
+
+        System.out.println(attributes.toString());
+
         return OAuth2Attribute.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))

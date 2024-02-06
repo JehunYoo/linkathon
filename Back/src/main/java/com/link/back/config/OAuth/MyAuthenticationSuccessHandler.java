@@ -67,7 +67,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 				.build();
 
             //프론트로 헤더에 accessToken, 쿠키에 refreshToken 을 들고 감
-			response.setHeader(HttpHeaders.AUTHORIZATION, token.getAccessToken());
 			response.setHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
             //리프레시 토큰 레디스에 저장 -> 비교목적

@@ -1,9 +1,12 @@
 import { createStore } from 'vuex';
 
+type Email = string;
+
 export default createStore({
     state() {
         return {
-            token: localStorage.getItem('token') || null
+            token: localStorage.getItem('token') || null,
+            email: '' as Email
         };
     },
     mutations: {
@@ -14,6 +17,9 @@ export default createStore({
         clearToken(state) {
             state.token = null;
             localStorage.removeItem('token');
+        },
+        setEmail(state, newEmail) {
+            state.email = newEmail;
         }
     },
     actions: {

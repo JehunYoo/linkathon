@@ -39,8 +39,9 @@ public class SecurityConfig {
 
 		return httpSecurity
 			.authorizeHttpRequests((authorize) ->
-				authorize.requestMatchers("api/users/**").permitAll()
+				authorize.requestMatchers("/api/users/**").permitAll()
 					.requestMatchers("/oauth2/**").permitAll()
+					.requestMatchers("/githubLogin/success").permitAll()
 					.requestMatchers("/error").permitAll()
 					.anyRequest().authenticated()
 			)
@@ -50,7 +51,8 @@ public class SecurityConfig {
 			.oauth2Login(oauth2Configurer -> oauth2Configurer
 				.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
 				.successHandler(successHandler)
-				.failureHandler(failureHandler))
+				// .failureHandler(failureHandler)
+			)
 			// JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
 			.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)

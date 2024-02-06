@@ -23,7 +23,7 @@ const routes = [
     {path: '/register', component: Register},
     {path: '/login', component: Login},
     {path: '/findAccount', component: FindAccount},
-    {path: '/passwordChange', component: PasswordChange},
+    {path: '/passwordChange', component: PasswordChange, props: true},
     {path: '/detailInfo', component: DetailInfo},
     {path: '/video', component: Video},
     {path: '/sharedProject', component: SharedProject},

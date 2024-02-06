@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.link.back.dto.JwtToken;
@@ -115,8 +116,9 @@ public class UserService {
 	//이름, 생일, 전화번호 받음
 	public String findEmail(String name, LocalDate birth, String phoneNumber){
 
-		User user = userRepository.findByNameAndBirthAndPhoneNumber(name, birth, phoneNumber);
+		if(userRepository.findByNameAndBirthAndPhoneNumber(name, birth, phoneNumber).isEmpty()) return "NotFound";
 
+		User user = userRepository.findByNameAndBirthAndPhoneNumber(name, birth, phoneNumber).get();
 
 		String email = user.getEmail();
 
@@ -203,6 +205,10 @@ public class UserService {
 	//인증번호 확인 메소드
 	//맞으면 그냥 동작 틀리면 에러
 	public void compareVerificationKey(String verificationKey, String email){
+
+		System.out.println(verificationKey);
+		System.out.println(email);
+
 
 		if(!verificationCodeRepository.findById(verificationKey).isPresent()) throw new IllegalArgumentException("올바른 인증번호가 아닙니다.");
 
@@ -419,10 +425,13 @@ public class UserService {
 	@Transactional
 	public void deleteUser(String token) {
 
+		System.out.println("서비스:"+token);
+
 		long userId = jwtTokenProvider.getUserId(token);
 
-		userRepository.deleteById(userId);
+		System.out.println("서비스:"+userId);
 
+		userRepository.deleteById(userId);
 	}
 
 	//User 정보 수정할 때 검증할 메소드

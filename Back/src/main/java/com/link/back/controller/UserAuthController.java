@@ -43,9 +43,10 @@ public class UserAuthController {
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String token){
 
+        System.out.println(token);
         userService.deleteUser(token);
 
-        return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
     }
 
     //회원 정보 수정

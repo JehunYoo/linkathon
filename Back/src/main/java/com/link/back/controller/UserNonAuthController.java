@@ -10,6 +10,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +52,12 @@ public class UserNonAuthController {
     //회원 가입
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Valid @RequestBody UserSignUpDto userSignUpDto) throws Exception {
+
+        //이메일 보내기
+        //이 과정에서 오류나면 잘못된 이메일이라고 오류 보내기
+        // userService.sendVerificationSignUpEmail(userSignUpDto.getEmail());
+
+        //이메일 보낸거 확인
         String response = userService.signup(userSignUpDto);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -62,7 +69,7 @@ public class UserNonAuthController {
 
         userService.sendVerificationSignUpEmail(SendEmailRequest.email());
 
-        return new ResponseEntity<>("이메일을 발송했습니다.", HttpStatus.CREATED);
+        return new ResponseEntity<>("이메일을 발송했습니다.", HttpStatus.OK);
     }
 
     //회원가입 이메일 인증 - 확인
@@ -139,8 +146,11 @@ public class UserNonAuthController {
     }
 
     //이메일 찾기
-    @GetMapping("/email")
+    @PostMapping("/email")
     public ResponseEntity<String> findEmail (@Valid @RequestBody UserFindEmailRequest userFindEmailRequest) throws Exception {
+
+        System.out.println(userFindEmailRequest.getBirth());
+
         String name = userFindEmailRequest.getName();
         LocalDate birth = userFindEmailRequest.getBirth();
         String phoneNumber = userFindEmailRequest.getPhoneNumber();
@@ -148,10 +158,14 @@ public class UserNonAuthController {
         String email = userService.findEmail(name, birth, phoneNumber);
 
         //로그인 페이지로 보내주기
-        return new ResponseEntity<>("아이디는" + email +  "입니다", HttpStatus.CREATED);
+        if(email.equals("NotFound")){
+            return new ResponseEntity<>("아이디가 존재하지 않습니다", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>("아이디는" + email +  "입니다", HttpStatus.OK);
     }
 
     //비밀번호 찾기 메일인증요청
+    //이걸 password/verification
     @PostMapping("/email/verification")
     public ResponseEntity<String> requestVerification(@Valid @RequestBody SendEmailRequest sendEmailRequest){
 
@@ -159,20 +173,25 @@ public class UserNonAuthController {
 
         userService.sendVerificationEmail(email);
 
-        return new ResponseEntity<>("메일을 확인하세요", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("메일을 확인하세요", HttpStatus.OK);
 
     }
 
     //비밀번호 찾기 - 메일인증확인
+    //요걸 password/verification/confirm 요렇게 바꿀까 생각중
     @PostMapping("/password/verification")
     public ResponseEntity<Boolean> comparedVerification(@Valid @RequestBody VerificationRequest verificationRequest){
 
         String verificationKey = verificationRequest.verificationKey();
         String email = verificationRequest.email();
+
+        System.out.println(verificationKey);
+        System.out.println(email);
+
         userService.compareVerificationKey(verificationKey, email);
 
         //에러 안나면 항상 True
-        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 
     }
 
@@ -184,7 +203,7 @@ public class UserNonAuthController {
         userService.resetPassword(userPasswordResetRequest);
 
         //로그인 페이지로 보내주기
-        return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.CREATED);
+        return new ResponseEntity<>("비밀번호 변경 완료", HttpStatus.OK);
     }
 
     //로그아웃
@@ -207,5 +226,7 @@ public class UserNonAuthController {
             .headers(headers)
             .build();
     }
+
+
 
 }
