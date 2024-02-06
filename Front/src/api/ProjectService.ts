@@ -10,7 +10,7 @@ const url = "/api"
 class ProjectService {
     async getALlClosedProjects() : Promise<void | ProjectInfoDTO[]> {
         try {
-            const response = await apiService.getData(true, `${url}/projects`, null);
+            const response = await apiService.getData(true, `${url}/projects`);
             if (response && response.status === httpStatusCode.OK) {
                 alert("조회 성공");
                 return response.data as ProjectInfoDTO[];
