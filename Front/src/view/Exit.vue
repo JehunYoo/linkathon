@@ -1,14 +1,22 @@
 <script setup lang="ts">
 
 import ContentFit from "@/components/Util/ContentFit.vue";
+import {UserService} from "@/api/UserService.ts";
+import router from "@/router";
+
+const userService = new UserService();
+const resignation = function () {
+  userService.resignation();
+  router.push("/");
+}
 </script>
 
 <template>
   <ContentFit>
     <h1>탈퇴하시겠습니까?</h1>
     <div class="button-container">
-      <div class="yes-button">네 탈퇴할게요.</div>
-      <router-link to="/" class="no-button">아니오</router-link>
+      <div @click = "resignation" class="yes-button">네 탈퇴할게요.</div>
+      <router-link to="/myPage" class="no-button">아니오</router-link>
     </div>
   </ContentFit>
 </template>

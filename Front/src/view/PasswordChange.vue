@@ -1,15 +1,69 @@
 <script lang="ts" setup>
-
 import ContentFit from "@/components/Util/ContentFit.vue";
+import {computed, ref} from "vue";
+import router from "@/router";
+import {UserService} from "@/api/UserService.ts";
+import {Builder} from "builder-pattern";
+import {ChangePasswordDTO} from "@/dto/ChangePasswordDTO.ts";
+import Store from "@/store/index.ts";
+
+const userService = new UserService();
+
+const email = computed(() => String(Store.state.email));
+
+const pw1 = ref<string>('');
+const pw2 = ref<string>('');
+
+const changePassword = function () {
+
+  console.log(email.value)
+
+  if(!email.value) {
+    alert("과정에서 오류가 발생했습니다.");
+  }
+
+  if (pw1.value.length < 8 && pw1.value.length > 13) {
+    alert("비밀번호는 8자리 이상, 13자리 미만으로 설정해주세요")
+    return;
+  }
+
+  // 영어, 숫자, 특수문자 각각 하나 이상 포함
+  if(!(/[a-zA-Z]/.test(pw1.value))){
+    alert("비밀번호에 영어를 하나 이상 포함시켜야 합니다.")
+    return;
+  }
+  //숫자를 하나 이상 포합
+  if(!(/\d/.test(pw1.value))){
+    alert("비밀번호에 숫자를 하나 이상 포함시켜야 합니다.")
+    return;
+  }
+  if(!(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(pw1.value))){
+    alert("비밀번호에 특수문자를 하나 이상 포함시켜야 합니다.")
+    return;
+  }
+  if(pw1.value !== pw2.value) {
+    alert("비밀번호가 일치하지 않습니다.")
+    return;
+  }
+
+  const data = Builder<ChangePasswordDTO>()
+      .email(email.value)
+      .password(pw1.value)
+      .build();
+
+  userService.changePassword(data);
+
+  router.push("/login");
+}
 </script>
 
 <template>
   <ContentFit>
     <h1>비밀번호 변경</h1>
     <div class="input-container">
-      <input class="input-text" placeholder="비밀번호 입력" type="password">
-      <input class="input-text" placeholder="비밀번호 재입력" type="password">
-      <input class="button" type="button" value="비밀번호 변경">
+      <input v-model="pw1" class="input-text" placeholder="비밀번호 입력" type="password">
+      <input v-model="pw2" class="input-text" placeholder="비밀번호 재입력" type="password">
+      <input @click = "changePassword" class="button" type="button" value="비밀번호 변경">
     </div>
 
   </ContentFit>
