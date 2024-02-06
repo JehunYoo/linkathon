@@ -1,6 +1,12 @@
 <script lang="ts" setup>
 
 import DropDownBox from "@/components/DropDownBox.vue";
+
+const tierSelect = (
+  ["선택", "브론즈", "실버", "골드", "다이아"]
+);
+
+
 </script>
 
 <template>
@@ -8,7 +14,7 @@ import DropDownBox from "@/components/DropDownBox.vue";
     <div>
       <div class="user-info-category-text">티어</div>
       <div class="dropdown-container">
-        <DropDownBox/>
+        <DropDownBox :tierSelect="tierSelect"/>
       </div>
     </div>
     <div>

@@ -2,111 +2,87 @@
 import SkillCategory from "@/components/Skill/SkillCategory.vue";
 
 import {Builder} from "builder-pattern";
-import {provide, ref,} from "vue";
+import {onMounted, provide, Ref, ref, watch,} from "vue";
 import UserCategory from "@/components/User/Recruit/UserCategory.vue";
 import SkillCategoryList from "@/components/Skill/SkillCategoryList.vue";
 import UserList from "@/components/User/Recruit/UserList.vue";
+import {SkillCategoryResponseDto} from "@/dto/tmpDTOs/SkillTypeDTO.ts";
+import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
+import {useRoute, useRouter} from "vue-router";
+const router = useRouter();
 
-const dummySkillList: SkillDTO[] = [];
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("JavaScript")
-    .skillId(1)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("MjScript")
-    .skillId(2)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
-dummySkillList.push(Builder<SkillDTO>()
-    .skillName("TypeScript")
-    .skillId(3)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build());
+const teamBuildingService = new TeamBuildingService();
+const refSkillCategory: Ref<SkillCategoryResponseDto | undefined> = ref();
+const refUser: Ref<TeamMemberFindDTO | undefined> = ref();
+const skillCategoryList: Ref<SkillCategory[]> = ref([]);
+const route = useRoute();
 
-const skillCategoryList: SkillCategory[] = [];
+onMounted(async () => {
+  refSkillCategory.value = await teamBuildingService.getAllSkillType();
+  refUser.value = await teamBuildingService.getAllTeamFindMember({
+    page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page), size: 4
+  });
+  if (refSkillCategory.value) {
+    const skillTypeResponseDtoMap = refSkillCategory.value;
 
-const dm2: SkillDTO[] = [];
-dm2.push(Builder<SkillDTO>()
-    .skillName("삐뽀스크립트")
-    .skillId(4)
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .build())
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("언어")
-        .skillList(dm2)
-        .build());
+    for (const category in skillTypeResponseDtoMap) {
+      if (Object.prototype.hasOwnProperty.call(skillTypeResponseDtoMap, category)) {
+        const skillList = skillTypeResponseDtoMap[category];
+        skillCategoryList.value.push(
+            Builder<SkillCategory>()
+                .categoryName(category)
+                .skillList(skillList)
+                .build()
+        );
+      }
+    }
+  }
+})
 
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("프론트엔드")
-        .skillList(dummySkillList)
-        .build());
 
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("백엔드")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("테스팅 툴")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("데이터베이스")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("데이터")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("데브옵스")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("협업툴")
-        .skillList(dummySkillList)
-        .build());
-
-skillCategoryList.push(
-    Builder<SkillCategory>()
-        .categoryName("디자인")
-        .skillList(dummySkillList)
-        .build());
-
-const dummy = Builder<MemberRecruit>()
+const memberRecruit = Builder<MemberRecruit>()
     .selectedCategory(-1)
-    .skillCategoryList(skillCategoryList)
+    .skillCategoryList(skillCategoryList.value)
     .selectSkillId(new Set<number>())
     .build()
+const refMemberRecruit = ref<MemberRecruit>(memberRecruit);
 
 const updateSelectedCategory = (newCategory: number) => {
-  refDummy.value.selectedCategory = newCategory;
+  refMemberRecruit.value.selectedCategory = newCategory;
 };
 
-const updateSelectSkillId = (skillId: number) => {
-  if (refDummy.value.selectSkillId.has(skillId))
-    refDummy.value.selectSkillId.delete(skillId)
+const updateSelectSkillId = async (skillId: number) => {
+  if (refMemberRecruit.value.selectSkillId.has(skillId))
+    refMemberRecruit.value.selectSkillId.delete(skillId)
   else
-    refDummy.value.selectSkillId.add(skillId)
-}
+    refMemberRecruit.value.selectSkillId.add(skillId)
 
-const refDummy = ref<MemberRecruit>(dummy);
-provide('skillCategorySelect', refDummy);
+  refUser.value = await teamBuildingService.getAllTeamFindMember({
+    skillIds: Array.from(refMemberRecruit.value.selectSkillId),
+    page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page),
+    size: 4
+
+  });
+    await router.push("/recruit?page=1");
+};
+
+provide('skillCategorySelect', refMemberRecruit);
 provide('updateSelectedCategory', updateSelectedCategory);
 provide('updateSelectSkillId', updateSelectSkillId);
+
+watch(
+    () => route.query.page,
+    async (newPage, oldPage) => {
+      if (newPage !== oldPage) {
+        refUser.value = await teamBuildingService.getAllTeamFindMember({
+          skillIds: Array.from(refMemberRecruit.value.selectSkillId),
+          page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page), size: 4
+        })
+      }
+    }
+)
+
 
 </script>
 
@@ -120,7 +96,9 @@ provide('updateSelectSkillId', updateSelectSkillId);
   </div>
   <SkillCategoryList/>
   <div class="hr"/>
-  <UserList/>
+  <template v-if="refUser">
+    <UserList :refUser="refUser"/>
+  </template>
 </template>
 
 <style scoped>

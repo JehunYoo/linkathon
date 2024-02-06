@@ -1,6 +1,6 @@
 export interface TeamMemberFindDTO {
     content: TeamMemberFindUserDTO[],
-    pageable: teamFindPageableDTO,
+    pageable: TeamFindPageableDTO,
     last: boolean,
     totalElements: number,
     totalPages: number,
@@ -19,20 +19,28 @@ export interface TeamMemberFindUserDTO {
     field: string,
     profileOriginImageName: string,
     profileImageURL: string,
-    skillSets: teamFindSkillDTO[]
+    skillSets: TeamFindSkillDTO[]
 }
 
-export interface teamFindSkillDTO {
+export interface TeamFindSkillDTO {
     skillName: string,
     skillImageUrl: string,
-    skillLevel: number
+    skillLevel: number,
+    skillType: string
 }
 
-export interface teamFindPageableDTO {
+export interface TeamFindPageableDTO {
     pageNumber: number,
     pageSize: number
 }
 
+export interface TeamFindRespDTO {
+    skillIds: number[],
+    tier: number,
+    career: number,
+    gender: boolean,
+    field: string
+}
 
 // {
 //     "content": [

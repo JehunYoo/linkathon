@@ -10,12 +10,12 @@ const skillSelectRef: Ref<Set<Number>> = ref(skillSelect);
 skillList.push(Builder<SkillDTO>()
     .skillId(1)
     .skillName("자바스크립트")
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
+    .skillImageUrl("https://i.postimg.cc/C50Qnxmj/image.png")
     .build());
 skillList.push(Builder<SkillDTO>()
     .skillId(2)
     .skillName("타입스크립트")
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
+    .skillImageUrl("https://i.postimg.cc/C50Qnxmj/image.png")
     .build());
 skillSelect.add(1);
 skillSelect.add(2);

@@ -1,29 +1,52 @@
 <script lang="ts" setup>
 import {PropType} from "vue";
+import {TeamFindSkillDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
+import {Builder} from "builder-pattern";
 
 const props = defineProps({
-  skill: Object as PropType<SkillDTO>,
+  skill: {
+    type: Object as PropType<TeamFindSkillDTO>,
+    default: Builder<TeamFindSkillDTO>().build()
+  },
   width: String,
   height: String,
   radius: String,
   fontSize: String,
 });
 </script>
-
 <template>
-  <div v-if="props.skill?.skillYear"
-       :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
-       class="normal-container hover-container">
-    <div v-if="props.skill?.skillYear" class="year-text">
-      {{ props.skill?.skillYear + "Y" }}
+  <div>
+    <div v-if="props.skill?.skillLevel"
+         :style="{ width: props.width, height: props.height, borderRadius: props.radius, fontSize: props.fontSize }"
+         class="normal-container hover-container">
+      <div class="year-text">
+        {{ props.skill?.skillLevel + "Y" }}
+      </div>
+      <img :src="props.skill?.skillImageUrl" :style="{ width: props.width, height: props.height, borderRadius: props.radius }" alt="">
     </div>
-    <img :src="props.skill?.skillImgUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">
-  </div>
-  <div v-else :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"
-       class="normal-container">
-    <img :src="props.skill?.skillImgUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">
+    <div v-else
+         :style="{ width: props.width, height: props.height, borderRadius: props.radius, fontSize: props.fontSize }"
+         class="normal-container">
+      <img :src="props.skill?.skillImageUrl" :style="{ width: props.width, height: props.height, borderRadius: props.radius }" alt="">
+    </div>
   </div>
 </template>
+
+<!--<template>-->
+<!--  <div v-if="props.skill?.skillLevel"-->
+<!--       :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"-->
+<!--       class="normal-container hover-container">-->
+<!--    <div v-if="skill?.skillLevel" class="year-text">-->
+<!--      {{ props.skill?.skillLevel + "Y" }}-->
+<!--    </div>-->
+<!--    <img :src="props.skill.skillImageUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">-->
+<!--  </div>-->
+<!--  <div v-else :style="{ width: width, height: height,borderRadius: radius, fontSize:fontSize }"-->
+<!--       class="normal-container">-->
+<!--    <img :src="props.skill?.skillImageUrl" :style="{ width: width, height: height,borderRadius: radius }" alt="">-->
+<!--  </div>-->
+
+<!--</template>-->
 
 <style scoped>
 .normal-container {

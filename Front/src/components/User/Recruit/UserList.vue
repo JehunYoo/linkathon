@@ -2,36 +2,47 @@
 import UserCard from "@/components/User/UserCard.vue";
 import Pagination from "@/components/Pagination.vue";
 import Modal from "@/components/Modal/Modal.vue";
-import {onMounted, Ref, ref} from "vue";
+import {PropType, ref, watch} from "vue";
 import ModalMember from "@/components/Modal/ModalMember.vue";
-import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
-import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import {Builder} from "builder-pattern";
+import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 
 const clickedModal = ref<Number>();
 const handleModalClose = (num: number) => {
   clickedModal.value = num;
 }
-const teamBuildingService = new TeamBuildingService();
-const refData: Ref<TeamMemberFindDTO[]> = ref([]);
-onMounted(async () => {
-  refData.value = await teamBuildingService.getALlTeamFindMember();
-})
+const props = defineProps({
+  refUser: {
+    type: Object as PropType<TeamMemberFindDTO>,
+    default: Builder<TeamMemberFindDTO>().build()
+  },
+});
 
-const pageableDTO = Builder<PageableDto>().pageNumber(1).totalPages(10).build();
+const pageableDto = ref<PageableDto>({
+  pageNumber: props?.refUser.number+1,
+  totalPages: props?.refUser.totalPages
+});
+
+watch(() => props.refUser, (newVal) => {
+  pageableDto.value.pageNumber = newVal.number+1;
+  pageableDto.value.totalPages = newVal.totalPages;
+});
+
 
 </script>
 
 <template>
   <div class="user-card-container">
-    <template v-for="i in 16">
-      <Modal v-if="clickedModal===i" @closeModal="handleModalClose">
-        <ModalMember/>
-      </Modal>
-      <UserCard @click="handleModalClose(i)"/>
+    <template v-if="refUser?.content">
+      <template v-for="(data, i) in refUser?.content">
+        <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
+          <ModalMember :userInfo="data"/>
+        </Modal>
+        <UserCard @click="handleModalClose(i+1)" :userInfo="data"/>
+      </template>
     </template>
   </div>
-  <Pagination style="margin-bottom: 60px" :pageableDTO="pageableDTO"/>
+  <Pagination style="margin-bottom: 60px" :pageableDTO="pageableDto" />
 </template>
 
 <style scoped>
