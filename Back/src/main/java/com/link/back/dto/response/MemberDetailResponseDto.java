@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.*;
 import java.util.List;
 
 import com.link.back.entity.Field;
+import com.link.back.entity.SkillType;
 import com.link.back.entity.User;
 
 import lombok.Getter;
