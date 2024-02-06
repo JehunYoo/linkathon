@@ -1,7 +1,12 @@
 <script lang="ts" setup>
-import {ref} from 'vue';
+import {PropType, ref} from 'vue';
 
-const dummy = ref(["선택", "브론즈", "실버", "골드", "다이아"]);
+defineProps({
+  tierSelect:{
+    type: Object as PropType<String[]>
+  }
+})
+
 const dropdownOpen = ref(false);
 const select = ref(0)
 const toggleDropdown = () => {
@@ -15,15 +20,15 @@ const clickDropdownMenu = (item: number) => {
 
 <template>
   <div class="dropdown-container" @click="toggleDropdown">
-    <div class="dropdown-box">
-      {{ dummy[select] }}
+    <div class="dropdown-box" v-if="tierSelect">
+      {{ tierSelect[select] }}
       <svg fill="none" height="6" style="margin-left: 11px" viewBox="0 0 12 6" width="12"
            xmlns="http://www.w3.org/2000/svg">
         <path d="M1 1L6 5L11 1" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
       </svg>
     </div>
     <div v-if="dropdownOpen" class="dropdown-content">
-      <div v-for="(item, index) in dummy" :key="index" @click="clickDropdownMenu(index)">{{ item }}</div>
+      <div v-for="(item, index) in tierSelect" :key="index" @click="clickDropdownMenu(index)">{{ item }}</div>
     </div>
   </div>
 </template>
