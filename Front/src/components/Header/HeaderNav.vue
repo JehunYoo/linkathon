@@ -1,16 +1,35 @@
 <script lang="ts" setup>
 import HeaderSideMenu from "@/components/Header/HeaderSideMenu.vue";
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
+import {useStore} from "vuex";
+import {UserService} from "@/api/UserService.ts";
 
 const sidebarControl = ref<Number>(0);
 
 const sidebarController = (num: number) => {
   sidebarControl.value = num;
 }
+
+const store = useStore();
+const token = computed(() => store.getters.getToken);
+const refToken = ref<string>('');
+
+watch(token, (newToken) => {
+  refToken.value = newToken
+});
+
+const userService = new UserService();
+
+const logout = () => {
+  userService.logout();
+}
+
+
 </script>
 
 <template>
-  <HeaderSideMenu v-if="sidebarControl===1" :sidebar-controller="sidebarController"/>
+
+  <HeaderSideMenu v-if="sidebarControl===1" :sidebar-controller="sidebarController" :refToken="refToken" @logout="logout"></HeaderSideMenu>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0"
         rel="stylesheet"/>
   <div class="header-nav-container">
@@ -28,11 +47,15 @@ const sidebarController = (num: number) => {
             menu
           </span>
         </div>
-        <router-link class="tl header-nav-menu-hover" to="/login">로그인</router-link>
-        <div class="right-menu-divider">|</div>
-        <router-link class="tr header-nav-menu-hover" to="/register">가입</router-link>
-        <div class="right-menu-divider">|</div>
-        <router-link class="tr header-nav-menu-hover" to="/myPage">MY</router-link>
+        <template v-if="refToken==='' || refToken===null">
+          <router-link class="tl header-nav-menu-hover" to="/login">로그인</router-link>
+          <div class="right-menu-divider">|</div>
+          <router-link class="tr header-nav-menu-hover" to="/register">가입</router-link>
+        </template>
+        <template v-else>
+          <router-link class="tr header-nav-menu-hover" to="/myPage">마이페이지</router-link>
+          <div class="tr header-nav-menu-hover" @click="logout">로그아웃</div>
+        </template>
       </div>
     </div>
   </div>

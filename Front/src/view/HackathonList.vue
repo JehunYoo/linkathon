@@ -2,6 +2,18 @@
 
 import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
+import {ref} from "vue";
+
+const categorySelect = new Set<number>();
+const refSelect = ref(categorySelect);
+const click = (num: number) => {
+  if (refSelect.value.has(num))
+    refSelect.value.delete(num);
+  else
+    refSelect.value.add(num);
+}
+
+const listName:String[] = ["모집중", "모집전", "진행중", "종료됨"];
 </script>
 
 <template>
@@ -10,10 +22,9 @@ import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
   <div class="button">해커톤 참여방법 알아보기</div>
   <hr>
   <div class="category-button-container">
-    <div class="category-button">모집중</div>
-    <div class="category-button">모집전</div>
-    <div class="category-button">진행중</div>
-    <div class="category-button">종료됨</div>
+    <template v-for="(name, i) in listName">
+      <div class="category-button" :class="{'select':refSelect.has(i)}" @click="click(i)">{{name}}</div>
+    </template>
   </div>
   <div class="container">
     <template v-for="_ in 6">
@@ -25,6 +36,11 @@ import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
 </template>
 
 <style scoped>
+.select {
+  background: #7d3bff;
+  color: white;
+}
+
 .container {
   margin-top: 12px;
   display: flex;
@@ -45,6 +61,7 @@ import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
   border: 1px solid #606060;
   padding: 8px 12px;
   width: max-content;
+  transition: color 0.3s ease;
 }
 
 hr {

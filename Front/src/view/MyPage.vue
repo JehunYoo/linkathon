@@ -8,10 +8,11 @@ import MyPageMyProject from "@/components/MyPage/MyPageMyProject.vue";
 import MyPageSchedule from "@/components/MyPage/MyPageSchedule.vue";
 
 const route = useRoute();
-const mode = ref<Number>(0);
+const mode = ref<number>(0);
 const updatePageFromQuery = () => {
   const queryParam = route.query.mode;
   mode.value = parseInt(queryParam as string);
+  if (isNaN(mode.value)) mode.value=0;
 };
 
 watch([() => route.query], updatePageFromQuery, {immediate: true});
@@ -79,6 +80,7 @@ watch([() => route.query], updatePageFromQuery, {immediate: true});
 </template>
 
 <style scoped>
+
 .accept-button {
   background: #7D3BFF;
   border: #7D3BFF solid 1px;

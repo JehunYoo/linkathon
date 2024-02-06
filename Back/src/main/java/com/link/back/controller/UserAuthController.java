@@ -1,20 +1,23 @@
 package com.link.back.controller;
 
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.link.back.dto.UserSignUpDto;
 import com.link.back.dto.request.AdditionalUserInfoRequest;
 import com.link.back.dto.request.UserUpdateInfoRequest;
 import com.link.back.dto.response.UserInfoResponsse;
-import com.link.back.entity.UserSkill;
 import com.link.back.service.UserService;
 
-import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserAuthController {
 
     private UserService userService;
-//    private JwtTokenProvider jwtTokenProvider;
 
     public UserAuthController(UserService userService) {
         this.userService = userService;
@@ -41,9 +43,10 @@ public class UserAuthController {
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String token){
 
+        System.out.println(token);
         userService.deleteUser(token);
 
-        return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("회원탈퇴가 완료되었습니다.", HttpStatus.OK);
     }
 
     //회원 정보 수정
@@ -63,15 +66,4 @@ public class UserAuthController {
 
         return new ResponseEntity<>("추가정보입력이 완료되었습니다.", HttpStatus.ACCEPTED);
     }
-
-    //로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(@CookieValue(name = "refreshToken") String token){
-
-        userService.logout(token);
-
-        return new ResponseEntity<>("로그아웃되었습니다.", HttpStatus.ACCEPTED);
-    }
-
-
 }
