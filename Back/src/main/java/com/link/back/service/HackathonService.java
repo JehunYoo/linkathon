@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.link.back.config.S3Uploader;
 import com.link.back.dto.Image;
 import com.link.back.dto.request.HackathonRequest;
+import com.link.back.dto.response.HackathonProceedingProjectResponseDto;
 import com.link.back.dto.response.HackathonResponseDto;
 import com.link.back.dto.response.HackathonsResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
@@ -23,10 +24,12 @@ import com.link.back.dto.response.WinnerProjectResponseDto;
 import com.link.back.entity.Hackathon;
 import com.link.back.entity.HackathonImage;
 import com.link.back.entity.Project;
+import com.link.back.entity.ProjectStatus;
 import com.link.back.repository.HackathonImageRepository;
 import com.link.back.repository.HackathonRepository;
 import com.link.back.repository.HackathonsRepository;
 import com.link.back.repository.ProjectRepository;
+import com.link.back.repository.UserTeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +42,7 @@ public class HackathonService {
 	private final S3Uploader s3Uploader;
 	private final ProjectRepository projectRepository;
 	private final TeamBuildingService teamBuildingService;
+	private final UserTeamRepository userTeamRepository;
 
 	public void createHackathon(HackathonRequest hackathonRequest, MultipartFile image) throws IOException {
 		Image img = s3Uploader.upload(image, "static");
@@ -88,6 +92,27 @@ public class HackathonService {
 
 		return new PageImpl<>(hackathonsResponseDtos, pageable, hackathons.getTotalElements());
 	}
+
+	public Page<HackathonProceedingProjectResponseDto> getProceedingProjects(Long hackathonId, Pageable pageable) {
+		Page<Project> projects = projectRepository.findByHackathonIdAndProjectStatus(hackathonId, ProjectStatus.OPENED,
+			pageable);
+		return new PageImpl<>(
+			projects.getContent().stream().map(
+				project -> HackathonProceedingProjectResponseDto.builder()
+					.projectId(project.getProjectId())
+					.teamId(project.getTeam().getTeamId())
+					.teamName(project.getTeam().getTeamName())
+					.teamMembers(userTeamRepository.findMembersByTeamId(project.getTeam().getTeamId())
+						.stream()
+						.map(userTeam -> userTeam.getUser().getName())
+						.toList())
+					.hackathonScore(project.getHackathonScore())
+					.build()
+			).toList(),
+			pageable,
+			projects.getTotalElements());
+	}
+
 
 	public void updateHackathon(Long hackathonId, HackathonRequest hackathonRequest) {
 		Hackathon hackathon = hackathonRepository.findById(hackathonId).orElseThrow(RuntimeException::new);
