@@ -6,6 +6,7 @@ import {PropType, ref, watch} from "vue";
 import ModalMember from "@/components/Modal/ModalMember.vue";
 import {Builder} from "builder-pattern";
 import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
+import ModalButton from "@/components/Modal/ModalButton.vue";
 
 const clickedModal = ref<Number>();
 const handleModalClose = (num: number) => {
@@ -36,7 +37,10 @@ watch(() => props.refUser, (newVal) => {
     <template v-if="refUser?.content">
       <template v-for="(data, i) in refUser?.content">
         <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
-          <ModalMember :userInfo="data"/>
+          <ModalMember :userInfo="data">
+            <ModalButton button-text="합류 요청"/>
+            <ModalButton button-text="합류 요청"/>
+          </ModalMember>
         </Modal>
         <UserCard @click="handleModalClose(i+1)" :userInfo="data"/>
       </template>

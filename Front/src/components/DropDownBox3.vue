@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {inject, onMounted, onUnmounted, PropType, ref} from 'vue';
 
-const updateSelect: Function = <Function>inject('selectedMenuTier');
+const updateSelect: Function = <Function>inject('selectedMenuField');
 defineProps({
   menuList: {
     type: Object as PropType<String[]>
@@ -19,9 +19,8 @@ const clickDropdownMenu = (item: number) => {
   dropdownOpen.value = false;
 };
 
-// 클릭 이벤트가 다른 곳에서 발생했을 때 dropdown을 닫음
 const handleClickOutside = (event: MouseEvent) => {
-  const dropdownContainer = document.querySelector('.dropdown-container');
+  const dropdownContainer = document.querySelector('.click-out2');
   if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
     dropdownOpen.value = false;
   }
@@ -40,7 +39,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="dropdown-container" @click="toggleDropdown">
+  <div class="dropdown-container click-out2" @click="toggleDropdown">
     <div class="dropdown-box" v-if="menuList">
       {{ menuList[select] }}
       <svg fill="none" height="6" style="margin-left: 11px" viewBox="0 0 12 6" width="12"

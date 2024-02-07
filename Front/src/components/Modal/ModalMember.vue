@@ -49,7 +49,7 @@ const groupedSkills = computed(() => {
             <ModalGithubButton/>
           </a>
           <RouterLink class="button-right-container" to="/video">
-            <ModalButton button-text="합류 요청"/>
+            <slot/>
           </RouterLink>
         </div>
       </div>
