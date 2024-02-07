@@ -52,7 +52,7 @@ const updateProject = (key: string, url: string) => {
 
 const bind = async () => {
   // TODO: 프로젝트 번호를 상위에서 받아오기
-  const dummyProjectId = 2;
+  const dummyProjectId = 1;
   projectDetail.value = await projectService.getProjectDetail(dummyProjectId);
   projectRequestDto.projectName = projectDetail.value.projectName;
   projectRequestDto.teamId = projectDetail.value.teamId;
@@ -62,7 +62,6 @@ const bind = async () => {
 };
 
 bind();
-
 </script>
 
 

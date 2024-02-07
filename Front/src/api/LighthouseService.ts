@@ -24,4 +24,9 @@ export class LighthouseService {
             };
         });
     }
+
+    @CatchError
+    async updateLighthouseReport(projectId: number) {
+        await apiService.postData(true, `${url}/report/${projectId}`, '');
+    }
 }

@@ -75,7 +75,7 @@ const editStart = (e: EditLink) => {
 <template>
   <div class="link-container">
     <h1>링크</h1>
-    <template v-for="(edit, i) in editList">
+    <template v-for="(edit) in editList">
       <div class="link-content-container" v-if="!edit.isEditing">
         <div style="flex: 1; padding-top: 3px">
           <h2>{{ edit.text }}</h2>

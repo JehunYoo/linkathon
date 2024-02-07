@@ -22,7 +22,7 @@ onMounted(() => {
   if (radarChartRef.value) {
     const keys: string[] = Object.keys(props.report);
     const data: number[] = [];
-    for (const key: string in keys) {
+    for (let key in keys) {
       data.push(props.report[keys[key]].score * 100);
     }
     //@ts-ignore
