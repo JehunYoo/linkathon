@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 
 import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
@@ -18,16 +17,26 @@ onMounted(async () => {
   }
 })
 
+import {PropType} from "vue";
+import {ProjectDetailDto} from "@/dto/projectDTO.ts";
+
+const props = defineProps({
+  projectDetail: {
+    type: Object as PropType<ProjectDetailDto>,
+    required: true
+  },
+});
+
 </script>
 
 <template v-if="gitStatusRef">
   <div>
     <div class="title-container">
-      <h1>프로젝트 명</h1>
+      <h1> {{ props.projectDetail.projectName }} </h1>
       <div class="remove-button">프로젝트 삭제</div>
     </div>
     <section>
-      프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.
+      {{ props.projectDetail.projectDesc }}
     </section>
     <ProjectAnalyse/>
     <GitAnalyse :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
