@@ -1,5 +1,5 @@
 interface GitStatusDTO {
-    name:string,
+    userName:string,
     commits:number,
     insertions:number,
     deletions:number

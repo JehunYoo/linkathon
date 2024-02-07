@@ -16,13 +16,13 @@ class HackathonService {
                 }
             });
             if (response && response.status === httpStatusCode.OK) {
-                alert("조회 성공");
+
                 console.log(response.data)
                 return response.data.content as HackathonInfoDTO[];
             }
         } catch (error) {
             console.log(error);
-            alert("조회 실패");
+
         }
         return [];
     }
@@ -36,7 +36,7 @@ class HackathonService {
             }
         } catch (error) {
             console.log(error);
-            alert("조회 실패");
+
         }
         return {} as HackathonInfoDTO;
     }
@@ -50,7 +50,7 @@ class HackathonService {
             }
         } catch (error) {
             console.log(error);
-            alert("조회 실패");
+
         }
         return [] as WinnerProjectResponseDto[];
     }

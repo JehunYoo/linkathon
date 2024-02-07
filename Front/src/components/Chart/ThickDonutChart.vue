@@ -5,19 +5,72 @@ import {Chart} from 'chart.js';
 const donutChart = ref(null);
 const props = defineProps({
   pc: {
-    type: Object as PropType<PerformanceChartDTO>,
+    type: Object as PropType<GitStatusDTO[]>,
+    required:true
+  },
+  total : {
+    type: Number,
     required:true
   }
 });
-
+console.log(props.pc)
 onMounted(() => {
-  const actualValue = props.pc.actualValue;
+  // const actualValue = props.pc.actualValue;
   const data = {
-    labels: ['Labe', 'Label2', 'Label3', 'Label4', 'Label5', 'Label6'],
+    // labels: ["username","commits","insertions","deletions","changes"],
+    labels: props.pc.map(data => data.userName),
     datasets: [{
-      data: [actualValue, 20, 30, 40, 50, 60, 70, 80, 90], // 데이터 값과 일치하는 라벨들
+      // data: props.pc.map(data => data.commits),
+      // backgroundColor: [
+      //   'cadetblue',
+      //   '#D9D9D9',
+      //   '#404040',
+      //   '#FF6161',
+      //   '#483d8b',
+      //   '#F4D35E',
+      //   'crimson',
+      //   'midnightblue',
+      //   'lightcoral'
+      // ]
+      // data: props.pc.map(data => data.insertions),
+      // backgroundColor: [
+      //   'lightblue',
+      //   '#D9D9D9',
+      //   '#404040',
+      //   '#FF6161',
+      //   '#483d8b',
+      //   '#F4D35E',
+      //   'crimson',
+      //   'midnightblue',
+      //   'lightcoral'
+      // ]},{
+      // data: props.pc.map(data => data.deletions),
+      // backgroundColor: [
+      //   'lightblue',
+      //   '#D9D9D9',
+      //   '#404040',
+      //   '#FF6161',
+      //   '#483d8b',
+      //   '#F4D35E',
+      //   'crimson',
+      //   'midnightblue',
+      //   'lightcoral'
+      // ]},{
+      // data: props.pc.map(data => data.insertions),
+      // backgroundColor: [
+      //   'lightblue',
+      //   '#D9D9D9',
+      //   '#404040',
+      //   '#FF6161',
+      //   '#483d8b',
+      //   '#F4D35E',
+      //   'crimson',
+      //   'midnightblue',
+      //   'lightcoral'
+      // ],
+      data: props.pc.map(data => ((data.commits / props.total)*100).toFixed(1)),
       backgroundColor: [
-        'cadetblue',
+        'lightblue',
         '#D9D9D9',
         '#404040',
         '#FF6161',
@@ -28,7 +81,7 @@ onMounted(() => {
         'lightcoral'
       ],
     }]
-  };
+    };
   const config = {
     type: 'doughnut',
     data,
