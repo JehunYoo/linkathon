@@ -43,8 +43,6 @@ public class SecurityConfig {
 					.requestMatchers("/oauth2/**").permitAll()
 					.requestMatchers("/githubLogin/success").permitAll()
 					.requestMatchers("/error").permitAll()
-
-					.requestMatchers("/**").permitAll()
 					.anyRequest().authenticated()
 			)
 			.csrf(AbstractHttpConfigurer::disable)
