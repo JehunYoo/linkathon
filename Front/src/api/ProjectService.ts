@@ -20,7 +20,18 @@ class ProjectService {
         }
     }
 
-
+    async getProjectContributions(owner : String, repo : String) : Promise<GitStatusDTO[]> {
+        try {
+            const response = await apiService.getData(true, `${url}/projects/contributions/${owner}/${repo}`, null);
+            if (response && response.status === httpStatusCode.OK) {
+                alert("조회 성공");
+                return response.data as GitStatusDTO[];
+            }
+        } catch (error) {
+            alert("조회 실패");
+        }
+        return [] as GitStatusDTO[];
+    }
 
     // async login(user: UserDTO): Promise<void> {
     //     try {

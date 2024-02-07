@@ -1,10 +1,26 @@
+
 <script setup lang="ts">
 
 import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
 import GitAnalyse from "@/components/Project/GitAnalyse.vue";
+import {ProjectService} from "@/api/ProjectService.ts";
+import {onMounted, ref, Ref} from "vue";
+
+const projectService = new ProjectService();
+const gitStatusRef : Ref<GitStatusDTO[]> = ref([]);
+let totalCommits = 0;
+onMounted(async () => {
+  gitStatusRef.value = await projectService.getProjectContributions("jooyun-1", "Quicklog");
+  console.log(gitStatusRef.value);
+//@ts-nocheck
+  for (let i = 0; i < gitStatusRef.value.length; i++) {
+    totalCommits += gitStatusRef.value[i].commits;
+  }
+})
+
 </script>
 
-<template>
+<template v-if="gitStatusRef">
   <div>
     <div class="title-container">
       <h1>프로젝트 명</h1>
@@ -14,7 +30,7 @@ import GitAnalyse from "@/components/Project/GitAnalyse.vue";
       프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.
     </section>
     <ProjectAnalyse/>
-    <GitAnalyse/>
+    <GitAnalyse :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
   </div>
 
 </template>

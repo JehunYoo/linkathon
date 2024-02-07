@@ -61,8 +61,8 @@ public class HackathonsRepository {
 	}
 
 	private BooleanExpression hackathonStartDateBetweenAndEndDate(LocalDate currentDate) {
-		return QHackathon.hackathon.startDate.goe(currentDate)
-			.and(QHackathon.hackathon.endDate.loe(currentDate));
+		return QHackathon.hackathon.startDate.loe(currentDate)
+			.and(QHackathon.hackathon.endDate.goe(currentDate));
 	}
 
 	private BooleanExpression hackathonEndDateGreaterThan(LocalDate currentDate) {

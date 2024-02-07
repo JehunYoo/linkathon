@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.link.back.openfeign.dto.GithubClientResponse;
 
 import feign.Headers;
 
-@FeignClient(name = "feign", url = "https://api.github.com")
+@FeignClient(name = "feign", url = "https://api.github.com", configuration = GithubFeignConfig.class)
 public interface ProjectContributionServiceClient {
 	@GetMapping("/repos/{owner}/{repo}/stats/contributors")
 	@Headers("Accept: application/vnd.github+json")
