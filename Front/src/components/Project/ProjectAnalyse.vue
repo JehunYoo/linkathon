@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProjectFrontAnalyse from "@/components/Project/ProjectFrontAnalyse.vue";
+import ProjectBackendAnalyse from "@/components/Project/ProjectBackendAnalyse.vue";
 </script>
 
 <template>
@@ -8,7 +9,7 @@ import ProjectFrontAnalyse from "@/components/Project/ProjectFrontAnalyse.vue";
       <ProjectFrontAnalyse/>
     </div>
     <div class="container">
-      <ProjectFrontAnalyse/>
+      <ProjectBackendAnalyse/>
     </div>
   </div>
 </template>
