@@ -18,6 +18,7 @@ import com.link.back.dto.request.UpdateTeamRequestDto;
 import com.link.back.dto.request.UserSearchConditionDto;
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MemberDetailResponseDto;
+import com.link.back.dto.response.RecruitingTeamResponseDto;
 import com.link.back.dto.response.TeamApplicationResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
 import com.link.back.entity.MemberStatus;
@@ -177,4 +178,10 @@ public class TeamBuildingService {
 
 		return new PageImpl<>(memberDetailResponseDtos, pageable, userPage.getTotalElements());
 	}
+
+	public RecruitingTeamResponseDto findRecruitingTeam(Long userId) {
+		Long teamId = userTeamRepository.findByIdAndStatus(userId).orElseThrow(RuntimeException::new).getTeam().getTeamId();
+		return new RecruitingTeamResponseDto(userTeamRepository.findUserTeamsByTeamId(teamId));
+	}
+
 }

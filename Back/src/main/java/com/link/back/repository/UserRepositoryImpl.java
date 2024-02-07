@@ -86,8 +86,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 		return (gender == null) ? null : user.gender.eq(gender);
 	}
 
-	private BooleanExpression eqField(String field) {
-		return (field == null) ? null : user.field.eq(Field.valueOf(field));
+	private BooleanExpression eqField(Field field) {
+		return (field == null) ? null : user.field.eq(field);
 	}
 
 }
