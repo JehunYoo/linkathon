@@ -5,10 +5,11 @@ import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
 import {HackathonService} from "@/api/HackathonService.ts"
 import {onMounted, PropType, Ref, ref} from "vue";
 import store from "@/store/hackathon.ts";
+import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
 
 const categorySelect = new Set<number>();
 const refSelect = ref(categorySelect);
-const hackathonsRef: Ref<HackathonInfoDTO[]> = ref([]);
+const hackathonsRef: Ref<PageableHackathonList> = ref({} as PageableHackathonList);
 const hackathonService : HackathonService = new HackathonService();
 const refSelectName = ref<String>('');
 
@@ -47,15 +48,11 @@ function updateStatusName() {
     </template>
   </div>
   <div class="container">
-<!--    <template v-for="_ in 6">-->
-    <template v-for="hackathon in hackathonsRef">
+    <template v-for="hackathon in hackathonsRef.hackathons">
       <HackathonCard :data="hackathon" :name="refSelectName"/>
     </template>
-
-<!--    </template>-->
   </div>
-
-  <Pagination style="margin-bottom: 60px" />
+  <Pagination :pageable-d-t-o="hackathonsRef.pageable" style="margin-bottom: 60px" />
 </template>
 
 <style scoped>

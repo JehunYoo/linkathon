@@ -1,4 +1,5 @@
-interface HackathonInfoDTO {
+
+export interface HackathonInfoDTO {
     hackathonId: number,
     hackathonName:string[],
     registerDate:Date,
@@ -12,7 +13,12 @@ interface HackathonInfoDTO {
     maxPoint : number
 }
 
-interface HackathonInfoDetailDTO extends HackathonInfoDTO {
+export interface HackathonInfoDetailDTO extends HackathonInfoDTO {
     status: string,
     count: number
+}
+
+export interface PageableHackathonList {
+    hackathons: HackathonInfoDTO[];
+    pageable: PageableDto;
 }
