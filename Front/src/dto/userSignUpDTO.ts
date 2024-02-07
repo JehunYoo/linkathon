@@ -5,5 +5,4 @@ interface UserSignUpDto {
     gender: boolean;
     birth: Date;
     phoneNumber: string;
-    rating: number;
 }

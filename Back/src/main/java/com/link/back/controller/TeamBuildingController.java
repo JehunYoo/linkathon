@@ -5,6 +5,8 @@ import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -173,9 +175,10 @@ public class TeamBuildingController {
 
 	@GetMapping("/recruit")
 	@ResponseStatus(OK)
-	public List<MemberDetailResponseDto> findMemberByCond(
-		Pageable pageable,
-		@RequestBody(required = false) UserSearchConditionDto userSearchConditionDto) {
+	public Page<MemberDetailResponseDto> findMemberByCond(
+		@RequestParam int size, @RequestParam int page,
+		UserSearchConditionDto userSearchConditionDto) {
+		Pageable pageable = PageRequest.of(page-1, size);
 		return teamBuildingService.findMemberByCond(pageable, userSearchConditionDto);
 	}
 
