@@ -12,6 +12,10 @@ const props = defineProps({
     type: Object as PropType<ProjectDetailDto>,
     required: true
   },
+  editable: {
+    type: Boolean,
+    default: true
+  },
 });
 
 const projectService = projectStorage.getters.getProjectService;
@@ -27,7 +31,7 @@ const deleteProject = (projectId: number) => {
   <div>
     <div class="title-container">
       <h1> {{ props.projectDetail.projectName }} </h1>
-      <div class="remove-button" @click="deleteProject(props.projectDetail?.projectId)">프로젝트 삭제</div>
+      <div v-if="editable" class="remove-button" @click="deleteProject(props.projectDetail?.projectId)">프로젝트 삭제</div>
     </div>
     <section>
       {{ props.projectDetail.projectDesc }}

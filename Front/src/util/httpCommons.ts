@@ -21,7 +21,7 @@ function createLocalAxios(requireAuth: boolean, isFormData?: boolean): AxiosInst
 function authorization(axiosInstance: any) {
     const token = store.getters.getToken;
     if (token) {
-        axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
+        axiosInstance.defaults.headers['Authorization'] = `${token}`;
     } else {
         throw new Error('Authorization token is missing');
     }

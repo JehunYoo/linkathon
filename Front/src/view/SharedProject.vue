@@ -21,7 +21,6 @@ const bind = async () => {
   projectsRef.value = projects.projects;
   pageableRef.value = projects.pageable;
 };
-
 watch([() => route.query], () => bind());
 bind();
 </script>

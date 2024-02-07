@@ -48,7 +48,7 @@ class ProjectService {
 
     async getALlProjects(pageNumber: number | undefined, pageSize: number | undefined): Promise<PageableProjects> {
         try {
-            const response = await apiService.getData(true, `${url}`,
+            const response = await apiService.getData(false, `${url}`,
                 {params: {
                         page: pageNumber,
                         size: pageSize
@@ -76,7 +76,7 @@ class ProjectService {
 
     async getPopularProjects(pageNumber: number | undefined, pageSize: number | undefined): Promise<PageableProjects> {
         try {
-            const response = await apiService.getData(true, `${url}/popular`, {params: {
+            const response = await apiService.getData(false, `${url}/popular`, {params: {
                     page: pageNumber,
                     size: pageSize
                 }});
@@ -103,15 +103,15 @@ class ProjectService {
 
     async getProjectDetail(projectId: number): Promise<ProjectDetailDto> {
         try {
-            const response = await apiService.getData(true, `${url}/${projectId}`, null);
+            const response = await apiService.getData(false, `${url}/${projectId}`, null);
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as ProjectDetailDto;
             }
         } catch (error) {
             console.error(error);
+            return Promise.reject();
         }
         return {} as ProjectDetailDto;
-
     }
 
     // async registProject(projectRequestDto: ProjectRequestDto): Promise<void> {

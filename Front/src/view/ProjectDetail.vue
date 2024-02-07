@@ -5,15 +5,15 @@ import {Builder} from "builder-pattern";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import ProjectTeam from "@/components/Project/ProjectTeam.vue";
 import ProjectLink from "@/components/Project/ProjectLink.vue";
-import {onMounted, Ref, ref} from "vue";
+import {onMounted, Ref, ref, watch} from "vue";
 import {ProjectDetailDto, ProjectRequestDto} from "@/dto/projectDTO.ts";
 import ProjectStore from "@/store/projectStorage.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
 import {useRoute} from "vue-router";
+import router from "@/router";
 
 const route = useRoute();
 
-const projectId: number = route.params.id ? parseInt(route.params.id as string) : 2;
 
 // TODO: 팀 아이디로 스킬셋 목록 가져오는 요청 필요
 const dummySkillList: SkillDTO[] = [];
@@ -49,7 +49,6 @@ const projectRequestDto: ProjectRequestDto = Builder<ProjectRequestDto>()
 const projectImg = ref();
 
 const updateProject = (key: string, url: string) => {
-  console.log(key, url);
   if (key === 'projectUrl')
     projectRequestDto.projectUrl = projectDetail.value.projectUrl = url;
   else if (key === 'deployUrl') {
@@ -58,15 +57,27 @@ const updateProject = (key: string, url: string) => {
   projectService.updateProject(projectDetail.value.projectId, projectRequestDto, null);
 }
 
-onMounted(async () => {
-  projectDetail.value = await projectService.getProjectDetail(projectId);
+const init = async () => {
+  try {
+    projectDetail.value = await projectService.getProjectDetail(parseInt(route.params.id as string));
+  } catch (error) {
+    alert("잘못된 링크입니다!!");
+    await router.push('/');
+  }
   projectRequestDto.projectName = projectDetail.value.projectName;
   projectRequestDto.teamId = projectDetail.value.teamId;
   projectRequestDto.projectDesc = projectDetail.value.projectDesc;
   projectRequestDto.projectUrl = projectDetail.value.projectUrl;
   projectRequestDto.deployUrl = projectDetail.value.deployUrl
-  console.log(projectImg.value.files && projectImg.value.files[0]);
-});
+}
+
+// FIXME: 내 프로젝트가 하나도 없을 경우 처리 필요
+
+onMounted(() => init);
+watch(() => route.path, () => init());
+
+// TODO: 해당 팀을 소유한 리더인지 확인 필요
+const isLeader = ref(false);
 
 </script>
 
@@ -77,9 +88,9 @@ onMounted(async () => {
       <img class="project-image"
            :src="projectDetail.imgSrc"
            ref="projectImg">
-      <ProjectLink :project-detail="projectDetail" :update-project="updateProject"/>
+      <ProjectLink :project-detail="projectDetail" :update-project="updateProject" :editable="isLeader"/>
     </div>ㅡ
-    <project-center :project-detail="projectDetail"/>
+    <project-center :project-detail="projectDetail" :editable="isLeader"/>
     <div class="side-container">
       <div>
         <h1>기술스택</h1>
