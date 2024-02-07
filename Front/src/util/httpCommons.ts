@@ -3,12 +3,12 @@ import store from "@/store";
 
 const {VITE_VUE_API_URL} = import.meta.env;
 
-function createLocalAxios(requireAuth: boolean): AxiosInstance {
+function createLocalAxios(requireAuth: boolean, isFormData?: boolean): AxiosInstance {
     const local: any = axios.create({
         baseURL: VITE_VUE_API_URL,
         withCredentials: true,
         headers: {
-            "Content-Type": "application/json;charset=utf-8",
+            "Content-Type": !isFormData ? "application/json;charset=utf-8" : 'multipart/form-data',
         },
     });
     if (requireAuth) {

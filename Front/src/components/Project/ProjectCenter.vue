@@ -4,6 +4,8 @@ import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
 import GitAnalyse from "@/components/Project/GitAnalyse.vue";
 import {PropType} from "vue";
 import {ProjectDetailDto} from "@/dto/projectDTO.ts";
+import projectStorage from "@/store/projectStorage.ts";
+import router from "@/router";
 
 const props = defineProps({
   projectDetail: {
@@ -12,13 +14,20 @@ const props = defineProps({
   },
 });
 
+const projectService = projectStorage.getters.getProjectService;
+
+const deleteProject = (projectId: number) => {
+  projectService.deleteProject(projectId);
+  router.push('/myPage');
+}
+
 </script>
 
 <template>
   <div>
     <div class="title-container">
       <h1> {{ props.projectDetail.projectName }} </h1>
-      <div class="remove-button">프로젝트 삭제</div>
+      <div class="remove-button" @click="deleteProject(props.projectDetail?.projectId)">프로젝트 삭제</div>
     </div>
     <section>
       {{ props.projectDetail.projectDesc }}

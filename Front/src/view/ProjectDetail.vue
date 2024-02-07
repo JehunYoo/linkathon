@@ -5,11 +5,17 @@ import {Builder} from "builder-pattern";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import ProjectTeam from "@/components/Project/ProjectTeam.vue";
 import ProjectLink from "@/components/Project/ProjectLink.vue";
-import {Ref, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import {ProjectDetailDto, ProjectRequestDto} from "@/dto/projectDTO.ts";
-import ProjectStore from "@/store/ProjectStore.ts";
+import ProjectStore from "@/store/projectStorage.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
+import {useRoute} from "vue-router";
 
+const route = useRoute();
+
+const projectId: number = route.params.id ? parseInt(route.params.id as string) : 2;
+
+// TODO: 팀 아이디로 스킬셋 목록 가져오는 요청 필요
 const dummySkillList: SkillDTO[] = [];
 const dummySkill: SkillDTO = Builder<SkillDTO>()
     .skillId(1)
@@ -35,33 +41,32 @@ dummyList.push(Builder<SkillCategory>()
     .build())
 
 const projectService: ProjectService = ProjectStore.getters.getProjectService;
-const projectDetail: Ref<ProjectDetailDto> = ref(Builder<ProjectDetailDto>().build()) // 임시 데이터
+const projectDetail: Ref<ProjectDetailDto> = ref({} as ProjectDetailDto);
 
 const projectRequestDto: ProjectRequestDto = Builder<ProjectRequestDto>()
     .build();
+
+const projectImg = ref();
 
 const updateProject = (key: string, url: string) => {
   console.log(key, url);
   if (key === 'projectUrl')
     projectRequestDto.projectUrl = projectDetail.value.projectUrl = url;
-  else if (key === 'deployUrl'){
+  else if (key === 'deployUrl') {
     projectRequestDto.deployUrl = projectDetail.value.deployUrl = url;
   }
-  projectService.updateProject(projectDetail.value.projectId, projectRequestDto);
+  projectService.updateProject(projectDetail.value.projectId, projectRequestDto, null);
 }
 
-const bind = async () => {
-  // TODO: 프로젝트 번호를 상위에서 받아오기
-  const dummyProjectId = 2;
-  projectDetail.value = await projectService.getProjectDetail(dummyProjectId);
+onMounted(async () => {
+  projectDetail.value = await projectService.getProjectDetail(projectId);
   projectRequestDto.projectName = projectDetail.value.projectName;
   projectRequestDto.teamId = projectDetail.value.teamId;
   projectRequestDto.projectDesc = projectDetail.value.projectDesc;
   projectRequestDto.projectUrl = projectDetail.value.projectUrl;
-  projectRequestDto.deployUrl = projectDetail.value.deployUrl;
-};
-
-bind();
+  projectRequestDto.deployUrl = projectDetail.value.deployUrl
+  console.log(projectImg.value.files && projectImg.value.files[0]);
+});
 
 </script>
 
@@ -70,10 +75,10 @@ bind();
   <div class="detail-container">
     <div class="side-container">
       <img class="project-image"
-           src="https://d34u8crftukxnk.cloudfront.net/slackpress/prod/sites/6/Project-management-steps2.ko-KR.png"
-           alt="">
+           :src="projectDetail.imgSrc"
+           ref="projectImg">
       <ProjectLink :project-detail="projectDetail" :update-project="updateProject"/>
-    </div>
+    </div>ㅡ
     <project-center :project-detail="projectDetail"/>
     <div class="side-container">
       <div>
@@ -87,6 +92,7 @@ bind();
           </div>
         </div>
       </div>
+      <!-- TODO: 프로젝트 팀 아이디 넘겨서 팀 목록 호출하기 -->
       <ProjectTeam/>
     </div>
   </div>

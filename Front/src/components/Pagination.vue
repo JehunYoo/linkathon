@@ -17,7 +17,6 @@ const props = defineProps({
 
 const pageableDTO = ref(props.pageableDTO);
 const updatePageFromQuery = () => {
-  console.log(1);
   pageableDTO.value = props.pageableDTO;
 
   const queryParam = props.pageName ? route.query[props.pageName] : route.query.page;
