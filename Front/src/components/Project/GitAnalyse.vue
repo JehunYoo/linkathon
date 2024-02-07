@@ -2,7 +2,7 @@
 
 import ThickDonutChart from "@/components/Chart/ThickDonutChart.vue";
 import {Builder} from "builder-pattern";
-import {PropType, ref, Ref} from "vue";
+import {onMounted, PropType, ref, Ref} from "vue";
 import {ProjectService} from "@/api/ProjectService.ts";
 
 // const dummy = Builder<PerformanceChartDTO>().actualValue(80)
@@ -15,7 +15,6 @@ import {ProjectService} from "@/api/ProjectService.ts";
 //     .insertions(7721)
 //     .deletions(4617)
 //     .name("홍길똥").build();
-
 const props = defineProps({
   gitStatus : {
     type : Object as PropType<GitStatusDTO[]>,
@@ -51,7 +50,7 @@ console.log("p",props.gitStatus)
       </table>
     </div>
     <div class="chart">
-      <ThickDonutChart :pc="props.gitStatus" :total="props.totalCommits"/>
+      <ThickDonutChart :pc="props?.gitStatus" :total="props?.totalCommits"/>
     </div>
   </div>
 

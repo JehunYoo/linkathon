@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {Builder} from "builder-pattern";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 import {ref, Ref} from "vue";
 

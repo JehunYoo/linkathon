@@ -13,9 +13,10 @@ const props = defineProps({
     required:true
   }
 });
-console.log(props.pc)
+
 onMounted(() => {
   // const actualValue = props.pc.actualValue;
+
   const data = {
     // labels: ["username","commits","insertions","deletions","changes"],
     labels: props.pc.map(data => data.userName),
