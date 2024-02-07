@@ -3,11 +3,6 @@
 import ThickDonutChart from "@/components/Chart/ThickDonutChart.vue";
 import {Builder} from "builder-pattern";
 
-const dummy = Builder<PerformanceChartDTO>().actualValue(80)
-    .centerText("80")
-    .label("Performance")
-    .color("#FFAA35").build()
-
 const dummyChanges = Builder<GitStatusDTO>()
     .commits(288)
     .insertions(7721)
@@ -42,7 +37,7 @@ for (let i = 0; i < 5; i++) {
       </table>
     </div>
     <div class="chart">
-      <ThickDonutChart :pc="dummy"/>
+      <ThickDonutChart :pc="dummyList"/>
     </div>
   </div>
 

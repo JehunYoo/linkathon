@@ -1,21 +1,24 @@
 <script lang="ts" setup>
 import {onMounted, PropType, ref} from 'vue';
-import {Chart} from 'chart.js';
+import {ArcElement, Chart, DoughnutController, Legend, Tooltip} from 'chart.js';
+
+Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 
 const donutChart = ref(null);
 const props = defineProps({
   pc: {
-    type: Object as PropType<PerformanceChartDTO>,
-    required:true
+    type: Object as PropType<GitStatusDTO[]>,
+    required: true
   }
 });
 
 onMounted(() => {
-  const actualValue = props.pc.actualValue;
+  const value = props.pc?.map((data) => data.commits);
+  const label = props.pc?.map((data) => data.name);
   const data = {
-    labels: ['Labe', 'Label2', 'Label3', 'Label4', 'Label5', 'Label6'],
+    labels: label,
     datasets: [{
-      data: [actualValue, 20, 30, 40, 50, 60, 70, 80, 90], // 데이터 값과 일치하는 라벨들
+      data: value, // 데이터 값과 일치하는 라벨들
       backgroundColor: [
         'cadetblue',
         '#D9D9D9',
@@ -25,7 +28,8 @@ onMounted(() => {
         '#F4D35E',
         'crimson',
         'midnightblue',
-        'lightcoral'
+        'lightcoral',
+        'red'
       ],
     }]
   };
