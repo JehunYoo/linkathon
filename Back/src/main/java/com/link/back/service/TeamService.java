@@ -2,23 +2,31 @@ package com.link.back.service;
 
 import static com.link.back.entity.Role.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.link.back.dto.response.IdResponseDto;
+import com.link.back.dto.response.IdsResponseDto;
+import com.link.back.dto.request.TeamSearchConditionDto;
+import com.link.back.dto.response.TeamRecruitResponseDto;
 import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
 import com.link.back.repository.TeamRepository;
 import com.link.back.repository.UserRepository;
 import com.link.back.repository.UserTeamRepository;
+import com.link.back.security.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,14 +47,45 @@ public class TeamService {
 
 	private final EmailService emailService; // todo: user Async
 
+	private final JwtTokenProvider jwtTokenProvider;
+
 	private final RedisTemplate<String, String> redisTemplate;
 
-	public void requestToRemoveMember(Long teamId, Long excludedMemberId, Long leaderId) {
-		Team team = teamRepository.findById(teamId)
-			.orElseThrow(RuntimeException::new);// todo: create exception
+	public IdResponseDto getTeamId(String token) {
+		long userId = jwtTokenProvider.getUserId(token);
 
+		User user = userRepository.findById(userId)
+			.orElseThrow(RuntimeException::new);
+
+		Team team = teamRepository.findActiveTeamByUser(user);
+
+		return new IdResponseDto(team.getTeamId());
+	}
+
+	public IdsResponseDto getTeamIds(String token) {
+		long userId = jwtTokenProvider.getUserId(token);
+
+		User user = userRepository.findById(userId)
+			.orElseThrow(RuntimeException::new);
+
+		List<Team> teams = teamRepository.findBuildingTeamsByUser(user);
+
+		List<Long> ids = teams.stream()
+			.map(Team::getTeamId)
+			.toList();
+		List<String> names = teams.stream()
+			.map(Team::getTeamName)
+			.toList();
+
+		return new IdsResponseDto(ids, names);
+	}
+
+	public void requestToRemoveMember(Long excludedMemberId, String token) {
+		long leaderId = jwtTokenProvider.getUserId(token);
 		User loginUser = userRepository.findById(leaderId)
 			.orElseThrow(RuntimeException::new); // todo: create exception
+
+		Team team = teamRepository.findActiveTeamByUser(loginUser);
 
 		UserTeam leader = userTeamRepository.findUserTeamByTeamAndUser(team, loginUser);
 
@@ -77,7 +116,7 @@ public class TeamService {
 
 			emailService.sendEmail(fromEmail, member.getUser().getEmail(),
 				"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
-				getRemoveMemberEmailContent(url, teamId, excludedMemberId, member.getUserTeamId(), uuid), false);
+				getRemoveMemberEmailContent(url, team.getTeamId(), excludedMemberId, member.getUserTeamId(), uuid), false);
 		}
 	}
 
@@ -119,5 +158,11 @@ public class TeamService {
 
 	private void removeMember(Team team, User user) {
 		userTeamRepository.deleteUserTeamByTeamAndUser(team, user);
+	}
+
+	public Page<TeamRecruitResponseDto> findTeamByHackathonAndTeamSearchCond(Long hackathonId, TeamSearchConditionDto teamSearchConditionDto, Pageable pageable) {
+		Page<Team> teamList = teamRepository.findTeamByHackathonAndTeamSearchCond(hackathonId, teamSearchConditionDto, pageable);
+		List<TeamRecruitResponseDto> teamRecruitResponseDtos = teamList.stream().map(TeamRecruitResponseDto::new).toList();
+		return new PageImpl<>(teamRecruitResponseDtos, pageable, teamList.getTotalElements());
 	}
 }

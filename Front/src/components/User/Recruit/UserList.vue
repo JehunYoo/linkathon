@@ -4,10 +4,19 @@ import Pagination from "@/components/Pagination.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import {ref} from "vue";
 import ModalMember from "@/components/Modal/ModalMember.vue";
+import ModalButton from "@/components/Modal/ModalButton.vue";
+import {TeamService} from "@/api/TeamService.ts";
 
 const clickedModal = ref<Number>();
 const handleModalClose = (num: number) => {
   clickedModal.value = num;
+}
+
+async function suggestTeam(userId: number) {
+  const teamService = new TeamService();
+  const team = await teamService.getActiveTeamId();
+  const teamId = team.id;
+  teamService.postSuggestionByTeam(teamId, userId);
 }
 </script>
 
@@ -15,7 +24,9 @@ const handleModalClose = (num: number) => {
   <div class="user-card-container">
     <template v-for="i in 16">
       <Modal v-if="clickedModal===i" @closeModal="handleModalClose">
-        <ModalMember/>
+        <ModalMember :user-id="i">
+          <ModalButton button-text="합류 요청" @click-event="suggestTeam(i)"/>
+        </ModalMember>
       </Modal>
       <UserCard @click="handleModalClose(i)"/>
     </template>

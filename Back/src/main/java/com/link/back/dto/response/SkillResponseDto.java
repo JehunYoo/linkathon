@@ -16,7 +16,7 @@ public class SkillResponseDto {
 		this.skillName = userSkill.getSkill().getSkillName();
 		this.skillImageUrl = userSkill.getSkill().getSkillImageUrl();
 		this.skillLevel = String.valueOf(userSkill.getSkillLevel());
-		this.skillType = String.valueOf(userSkill.getSkill().getSkillType());
+		this.skillType = userSkill.getSkill().getSkillType().getName();
 
 	}
 

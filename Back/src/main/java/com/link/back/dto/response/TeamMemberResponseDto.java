@@ -10,8 +10,10 @@ import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class TeamMemberResponseDto {
 
 	private final Long userId;
