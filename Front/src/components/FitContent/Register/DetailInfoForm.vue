@@ -24,9 +24,6 @@ const image = Builder<UserImageDTO>()
     .userOriginImageName('user_image_origin1.jpg')
     .build();
 
-const dropdownOpen = ref<boolean>(false);
-const telecom = ref<number>(0);
-
 const addUserInfo = function () {
   const data = Builder<AddUserInfoDTO>()
       .userSkills(skills.value)
@@ -67,7 +64,7 @@ const addUserInfo = function () {
           <input style="border: none; font-size: 16px; width: 100%" type="text">
           <div class="year" style="width: 60px">{{career}} 년차</div>
         </div>
-        <div @click="validCareer" class="button pp">경력인증</div>
+        <div class="button pp">경력인증</div>
       </div>
     </div>
     <div>

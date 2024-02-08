@@ -12,12 +12,6 @@ export interface HackathonInfoDTO {
     maxTeamMember:number,
     maxPoint : number
 }
-
-export interface HackathonInfoDetailDTO extends HackathonInfoDTO {
-    status: string,
-    count: number
-}
-
 export interface PageableHackathonList {
     hackathons: HackathonInfoDTO[];
     pageable: PageableDto;

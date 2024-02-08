@@ -1,7 +1,7 @@
 interface SkillDTO {
     skillId:number,
     skillName:string,
-    skillImageUrl:string,
-    skillYear:number
+    skillImgUrl:string,
+    skillYear:number,
     skillType:string
 }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {onMounted, PropType, ref, watchEffect} from 'vue';
+import {PropType, ref, watchEffect} from 'vue';
 import {ArcElement, Chart, DoughnutController, Legend, Tooltip} from 'chart.js';
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 

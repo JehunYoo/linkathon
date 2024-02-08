@@ -2,10 +2,8 @@
 import Tier from "@/components/Tier.vue";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import {Builder} from "builder-pattern";
-import {PropType, ref, Ref} from "vue";
-import {TeamMemberFindDTO, TeamMemberFindUserDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
-import ModalMember from "@/components/Modal/ModalMember.vue";
-import Modal from "@/components/Modal/Modal.vue";
+import {PropType} from "vue";
+import {TeamMemberFindUserDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 
 const props = defineProps({
   t: {
@@ -37,7 +35,11 @@ const props = defineProps({
       </div>
       <div style="display: flex; gap:4px; flex: 1">
         <template v-for="data in userInfo.skillSets">
-          <SkillIcon :skill="data" height="20px" radius="4px" width="20px"/>
+          <SkillIcon :skill="
+          Builder<SkillDTO>().skillType(data.skillType)
+          .skillYear(data.skillLevel)
+          .skillName(data.skillName)
+          .skillImgUrl(data.skillImageUrl).build()" height="20px" radius="4px" width="20px"/>
         </template>
         <!--        <SkillIcon :skill="userInfo.skillSets" height="20px" radius="4px" width="20px"/>-->
         <!--        <SkillIcon :skill="dummySkill" height="20px" radius="4px" width="20px"/>-->

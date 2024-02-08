@@ -12,7 +12,7 @@ export class TeamService {
 
     async getActiveTeamId() : Promise<IdResponseDto> {
         try {
-            const response = await apiService.getData(true, `${url}/id`, null);
+            const response = await apiService.getData(true, `${url}/id`);
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as IdResponseDto;
             }
@@ -25,7 +25,7 @@ export class TeamService {
 
     async getBuildingTeamIds() : Promise<IdsResponseDto> {
         try {
-            const response = await apiService.getData(true, `${url}/ids`, null);
+            const response = await apiService.getData(true, `${url}/ids`);
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as IdsResponseDto;
             }
@@ -38,7 +38,7 @@ export class TeamService {
 
     async postSuggestionByTeam(teamId: number, userId: number) : Promise<void> {
         try {
-            const response = await apiService.postData(true, `${url}/${teamId}/members/${userId}/suggest`, null);
+            const response = await apiService.postData(true, `${url}/${teamId}/members/${userId}/suggest`,{});
             if (response && response.status === httpStatusCode.CREATE) {
                 return;
             }
@@ -49,7 +49,7 @@ export class TeamService {
 
     async deleteSuggestionByTeam(teamId: number, userId: number) : Promise<void> {
         try {
-            const response = await apiService.deleteData(true, `${url}/${teamId}/members/${userId}/suggest`, null);
+            const response = await apiService.deleteData(true, `${url}/${teamId}/members/${userId}/suggest`,{});
             if (response && response.status === httpStatusCode.NOCONTENT) {
                 return;
             }
@@ -60,7 +60,7 @@ export class TeamService {
 
     async postSuggestionByUser(teamId: number) : Promise<void> {
         try {
-            const response = await apiService.postData(true, `${url}/${teamId}/members/suggest`, null);
+            const response = await apiService.postData(true, `${url}/${teamId}/members/suggest`, {});
             if (response && response.status === httpStatusCode.OK) {
                 return;
             }
@@ -71,7 +71,7 @@ export class TeamService {
 
     async deleteSuggestionByUser(teamId: number) : Promise<void> {
         try {
-            const response = await apiService.postData(true, `${url}/${teamId}/members/suggest`, null);
+            const response = await apiService.postData(true, `${url}/${teamId}/members/suggest`, {});
             if (response && response.status === httpStatusCode.NOCONTENT) {
                 return;
             }
@@ -82,7 +82,7 @@ export class TeamService {
 
     async getSuggestionListOfTeam(teamId: number) : Promise<CandidatesResponseDto> {
         try {
-            const response = await apiService.getData(true, `${url}/${teamId}/suggesting`, null);
+            const response = await apiService.getData(true, `${url}/${teamId}/suggesting`, {});
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as CandidatesResponseDto;
             }
@@ -95,7 +95,7 @@ export class TeamService {
 
     async getTeamParticipantsSuggestionList() : Promise<TeamApplicationResponseDto> {
         try {
-            const response = await apiService.getData(true, `${url}/suggested`, null);
+            const response = await apiService.getData(true, `${url}/suggested`, {});
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as TeamApplicationResponseDto;
             }
@@ -109,7 +109,7 @@ export class TeamService {
 
     async deleteMember(userId: number) : Promise<void> {
         try {
-            const response = await apiService.deleteData(true, `${url}/members/${userId}`, null);
+            const response = await apiService.deleteData(true, `${url}/members/${userId}`, {});
             if (response && response.status === httpStatusCode.NOCONTENT) {
                 return;
             }
@@ -120,7 +120,7 @@ export class TeamService {
 
     async isLeader() : Promise<boolean> {
         try {
-            const response = await apiService.getData(true, `${url}/leader`, null);
+            const response = await apiService.getData(true, `${url}/leader`, {});
             if (response && response.status == httpStatusCode.OK) {
                 return response.data;
             }

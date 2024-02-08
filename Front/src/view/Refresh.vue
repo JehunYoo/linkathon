@@ -12,7 +12,7 @@ onMounted(async () => {
   try {
 
     // Axios를 사용하여 백엔드로 요청을 보냅니다.
-    const response = await apiService.postData(false, `${url}/oauth2/access`);
+    const response = await apiService.postData(false, `${url}/oauth2/access`,"");
 
     // 응답을 처리하거나 상태를 업데이트할 수 있습
     if (response && response.status === httpStatusCode.OK) {

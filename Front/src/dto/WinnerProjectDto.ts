@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {TeamResponseDto} from "@/dto/tmpDTOs/teamDTO.ts"
 interface WinnerProjectDto {
     projectId : number,

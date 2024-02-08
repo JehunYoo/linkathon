@@ -1,4 +1,5 @@
 <script setup lang="ts">
+//@ts-nocheck
 import {onMounted, ref} from 'vue';
 import {BarController, BarElement, CategoryScale, Chart, Legend, LinearScale, Title, Tooltip} from 'chart.js';
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);

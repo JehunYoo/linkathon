@@ -1,8 +1,6 @@
 <script setup lang="ts">
 
 import {onMounted, Ref, ref} from "vue";
-import {Report} from "@/Interface/frontReport.ts";
-import {Builder} from "builder-pattern";
 import Modal from "@/components/Modal/Modal.vue";
 import BarChart from "@/components/Chart/BarChart.vue";
 import {ProjectService} from "@/api/ProjectService.ts";
@@ -52,12 +50,13 @@ const updateBackendReport = () => {
 
   projectService.getBackMetrics(1);
 }
-const buildObject = (score: number) => {
-  return Builder<PerformanceChartDTO>()
-      .centerText((score).toString())
-      .actualValue((score))
-      .build()
-}
+
+// const buildObject = (score: number) => {
+//   return Builder<PerformanceChartDTO>()
+//       .centerText((score).toString())
+//       .actualValue((score))
+//       .build()
+// }
 
 const modalController = ref<boolean>(false);
 

@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import {UserSkillDTO} from "@/dto/UserSkillDTO.ts";
+import {UserSkillDTO} from "@/dto/tmpDTOs/UserSkillDTO.ts";
 
 type Email = string;
 type Field = string;

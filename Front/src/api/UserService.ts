@@ -256,16 +256,15 @@ class UserService {
 
     }
 
-    async getUserData() :Promise<GetUserDataDTO> {
+    async getUserData() {
         try {
-            const response = await apiService.getData(true, `${authUrl}/users`, '');
+            const response = await apiService.getData(true, `${authUrl}/users`);
             if (response && response.status === httpStatusCode.OK) {
                 alert("추가 정보가 등록되었습니다.")
-                return response.data;
+                return response.data as Promise<GetUserDataDTO>;
             }
             else {
                 alert("작업중 문제가 발생했습니다.")
-                throw new Error("등록 실패")
             }
         }
         catch (error){

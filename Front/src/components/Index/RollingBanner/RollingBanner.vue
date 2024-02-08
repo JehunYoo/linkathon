@@ -2,42 +2,18 @@
 import {Builder} from "builder-pattern";
 import {onMounted, onUnmounted, ref} from 'vue';
 import RollingBannerRadioButton from "@/components/RadioButton.vue";
+import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
 
 const dummy: HackathonInfoDTO[] = [];
 dummy.push(
     Builder<HackathonInfoDTO>()
-        .title(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
-        .recruitmentStart(new Date(2024, 0, 1))
-        .recruitmentEnd(new Date(2024, 0, 15))
-        .flowStart(new Date(2024, 1, 1))
-        .flowEnd(new Date(2024, 1, 15))
-        .announce(new Date(2024, 1, 20))
-        .subject("교육 기술")
-        .imgSrc("https://images.unsplash.com/photo-1528301721190-186c3bd85418?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D")
-        .build(),
-);
-dummy.push(
-    Builder<HackathonInfoDTO>()
-        .title(["제2회", "게임관련", "해커톤"])
-        .recruitmentStart(new Date(2024, 0, 1))
-        .recruitmentEnd(new Date(2024, 0, 15))
-        .flowStart(new Date(2024, 2, 15))
-        .flowEnd(new Date(2024, 3, 15))
-        .announce(new Date(2024, 3, 20))
-        .subject("교육 기술")
-        .imgSrc("https://png.pngtree.com/thumb_back/fh260/background/20230316/pngtree-heaven-gate-ladder-background-image_1948845.jpg")
-        .build(),
-);
-dummy.push(
-    Builder<HackathonInfoDTO>()
-        .title(["제3회", "네트워크관련", "해킹 방어 대회", "해커톤"])
-        .recruitmentStart(new Date(2024, 0, 1))
-        .recruitmentEnd(new Date(2024, 0, 15))
-        .flowStart(new Date(2024, 1, 1))
-        .flowEnd(new Date(2024, 1, 15))
-        .announce(new Date(2024, 1, 20))
-        .subject("교육 기술")
-        .imgSrc("https://png.pngtree.com/thumb_back/fh260/background/20230609/pngtree-three-puppies-with-their-mouths-open-are-posing-for-a-photo-image_2902292.jpg")
+        .hackathonName(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
+        .registerDate(new Date(2024, 0, 1))
+        .teamDeadlineDate(new Date(2024, 0, 15))
+        .startDate(new Date(2024, 1, 1))
+        .endDate(new Date(2024, 1, 15))
+        .hackathonTopic("교육 기술")
+        .hackathonImageUrl("https://images.unsplash.com/photo-1528301721190-186c3bd85418?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D")
         .build(),
 );
 const activeIndex = ref(0);
@@ -74,37 +50,33 @@ onUnmounted(() => {
     <div v-for="(data, index) in dummy" :key="index">
       <div v-if="index === activeIndex" key="content">
         <div class="rolling-text-container">
-          <div v-for="title in data.title" :key="title" class="rolling-title">
+          <div v-for="title in data.hackathonName" :key="title" class="rolling-title">
             {{ title }}
           </div>
           <div class="rolling-detail-container">
             <div class="date">
               <div class="content-title">모집기간</div>
               <div class="date-font">
-                {{ formatDate(data.recruitmentStart) }} -
-                {{ formatDate(data.recruitmentEnd) }}
+                {{ formatDate(data.registerDate) }} -
+                {{ formatDate(data.teamDeadlineDate) }}
               </div>
             </div>
             <div class="date">
               <div class="content-title">진행기간</div>
               <div class="date-font">
-                {{ formatDate(data.flowStart) }} -
-                {{ formatDate(data.flowEnd) }}
+                {{ formatDate(data.startDate) }} -
+                {{ formatDate(data.endDate) }}
               </div>
-            </div>
-            <div class="date">
-              <div class="content-title">결과발표</div>
-              <div class="date-font">{{ formatDate(data.announce) }}</div>
             </div>
           </div>
           <div style="margin-top: 20px">
             <div class="content-title">주제</div>
-            <div class="subject-title"> {{ data.subject }}</div>
+            <div class="subject-title"> {{ data.hackathonTopic }}</div>
           </div>
         </div>
         <div class="img-container">
           <div class="img-cover"></div>
-          <img :src="data.imgSrc" alt="해커톤 이미지">
+          <img :src="data.hackathonImageUrl" alt="해커톤 이미지">
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import {PropType, ref} from "vue";
+import {PropType} from "vue";
+import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
 
 const props = defineProps({
   data : {
-    type : Object as PropType<HackathonInfoDetailDTO>,
+    type : Object as PropType<HackathonInfoDTO>,
     required: true
   },
   name : {

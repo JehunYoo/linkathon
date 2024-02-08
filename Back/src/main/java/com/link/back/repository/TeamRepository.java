@@ -17,6 +17,9 @@ public interface TeamRepository extends JpaRepository<Team, Long>, TeamRepositor
 	@Query("select t from Team t join fetch UserTeam u on t.teamId = u.team.teamId where u.user = :user and u.memberStatus = :status")
 	List<Team> findTeamByUserAndStatus(@Param("user") User user, @Param("status") MemberStatus status);
 
-	@Query("select t from Team t join UserTeam ut on ut.team = t where t.teamStatus = 'BUILDING' and ut.user = :user")
+	@Query("select t from Team t join UserTeam ut on ut.team = t where t.teamStatus = 'BUILDING' and ut.user = :user and ut.role = 'CANDIDATE'")
+	List<Team> findBuildingTeamsByUser(@Param("user") User user);
+
+	@Query("select t from Team t join UserTeam ut on ut.team = t where t.teamStatus = 'BUILDING' and ut.user = :user and ut.role = 'LEADER'")
 	Team findActiveTeamByUser(@Param("user") User user);
 }

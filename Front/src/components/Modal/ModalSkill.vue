@@ -25,7 +25,10 @@ defineProps({
     </div>
     <div class="skill-container">
       <SkillIcon v-for="skill in skillInfo"
-                 :skill="skill" font-size="28px" height="48px" radius="10px" width="48px">
+                 :skill="Builder<SkillDTO>().skillImgUrl(skill.skillImageUrl)
+                 .skillYear(skill.skillLevel)
+                 .skillName(skill.skillName)
+                 .build()" font-size="28px" height="48px" radius="10px" width="48px">
       </SkillIcon>
     </div>
   </div>

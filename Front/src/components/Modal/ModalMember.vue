@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 
 import Tier from "@/components/Tier.vue";
-import ModalButton from "@/components/Modal/ModalButton.vue";
 import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
 import {PropType} from "vue";

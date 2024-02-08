@@ -191,7 +191,10 @@ public class TeamBuildingService {
 	}
 
 	public RecruitingTeamResponseDto findRecruitingTeam(Long userId) {
-		Long teamId = userTeamRepository.findByIdAndStatus(userId).orElseThrow(RuntimeException::new).getTeam().getTeamId();
+		Long teamId = userTeamRepository.findByIdAndStatus(userId)
+			.orElseThrow(RuntimeException::new)
+			.getTeam()
+			.getTeamId();
 		return new RecruitingTeamResponseDto(userTeamRepository.findUserTeamsByTeamId(teamId));
-	
+	}
 }

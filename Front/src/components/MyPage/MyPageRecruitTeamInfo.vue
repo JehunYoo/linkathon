@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+//@ts-nocheck
 import UserCard from "@/components/User/UserCard.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
 import {onMounted, watch} from "vue";

@@ -21,14 +21,6 @@ onMounted(async () => {
   console.log(refTeam.value)
 })
 
-import {TeamService} from "@/api/TeamService.ts";
-
-async function getSuggestions() {
-  const teamService = new TeamService();
-  const idResponseDto = await teamService.getActiveTeamId();
-  const teamId = idResponseDto.id;
-  return teamService.getSuggestionListOfTeam(teamId);
-}
 
 </script>
 
@@ -37,10 +29,6 @@ async function getSuggestions() {
     <h1>모집중인 팀</h1>
     <div class="remove-button">프로젝트 삭제</div>
   </div>
-
-<!--  <h2>{{ refTeam.teamName }}</h2>-->
-<!--  <h3>{{ refTeam.teamDesc }}</h3>-->
-
   <div class="content">
     <div class="fx1">
       <h2>현재 팀원</h2>

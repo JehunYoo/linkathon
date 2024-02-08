@@ -1,9 +1,7 @@
 <script setup lang="ts">
 
 import ThickDonutChart from "@/components/Chart/ThickDonutChart.vue";
-import {Builder} from "builder-pattern";
-import {onMounted, PropType, ref, Ref} from "vue";
-import {ProjectService} from "@/api/ProjectService.ts";
+import {PropType} from "vue";
 
 
 const props = defineProps({

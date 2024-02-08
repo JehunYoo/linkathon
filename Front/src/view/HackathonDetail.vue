@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import HackathonRecruiting from "@/components/Hackathon/HackathonRecruiting.vue";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import HackathonLeaderBoard from "@/components/Hackathon/HackathonLeaderBoard.vue";
 import HackathonReward from "@/components/Hackathon/HackathonReward.vue";
 import {HackathonService} from "@/api/HackathonService.ts";
 import store from "@/store/hackathon.ts";
+import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
 
 const route = useRoute();
 const hackathonService : HackathonService = new HackathonService();
@@ -35,12 +36,6 @@ if (store.getters.getStatusName === "모집중") {
 } else {
   mode.value = 2;
 }
-// const updatePageFromQuery = () => {
-//   const queryParam = route.query.mode;
-//   mode.value = parseInt(queryParam as string);
-// };
-//
-// watch([() => route.query], updatePageFromQuery, {immediate: true});
 </script>
 
 <template>
@@ -78,8 +73,8 @@ if (store.getters.getStatusName === "모집중") {
       </div>
     </div>
 
-    <HackathonLeaderBoard v-if="mode===1" :id="route.query.id"/>
-    <HackathonReward v-else-if="mode===2" :id="route.query.id"/>
+    <HackathonLeaderBoard v-if="mode===1" :id="parseInt(<string>route.query.id)"/>
+    <HackathonReward v-else-if="mode===2" :id="parseInt(<string>route.query.id)"/>
     <HackathonRecruiting v-else/>
   </template>
 

@@ -8,6 +8,8 @@ import {
 import {AxiosResponse} from "axios";
 import {Builder} from "builder-pattern";
 import {HackathonInfoDTO, PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
+import {CatchError} from "@/util/error.ts";
+
 const apiService = new ApiService();
 
 const url = "/api"
@@ -19,68 +21,52 @@ interface pageableData {
     totalPages: number,
 }
 class HackathonService {
-    async getHackathonList(hackathonStatus : string, page :number, size:number): Promise<PageableHackathonList> {
-        try {
-            const response = await apiService.getData(true, `${url}/hackathons`,{
-                params : {
+    @CatchError
+    async getHackathonList(hackathonStatus: string, page: number, size: number): Promise<PageableHackathonList> {
+        const response = await apiService.getData(true, `${url}/hackathons`, {
+            params: {
                     page: page,
                     size: size,
                     status: hackathonStatus
                 }
             });
-            if (response && response.status === httpStatusCode.OK) {
 
-                console.log(response.data)
-                return this.toPageableHackathonsList(response) as PageableHackathonList;
-            }
-        } catch (error) {
-            console.log(error);
-
+        if (response && response.status === httpStatusCode.OK) {
+            return this.toPageableHackathonsList(response) as PageableHackathonList;
         }
         return {} as PageableHackathonList;
     }
 
-    async getHackathonDetail(hackathonId : number) : Promise<HackathonInfoDTO> {
-        try {
-            const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}`, '');
-            if (response && response.status === httpStatusCode.OK) {
-                console.log(response.data)
-                return response.data as HackathonInfoDTO;
-            }
-        } catch (error) {
-            console.log(error);
-
+    @CatchError
+    async getHackathonDetail(hackathonId: number): Promise<HackathonInfoDTO> {
+        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}`);
+        if (response && response.status === httpStatusCode.OK) {
+            return response.data as HackathonInfoDTO;
         }
         return {} as HackathonInfoDTO;
 
     }
-    async getWinnerProjects(hackathonId : number) : Promise<WinnerProjectResponseDto[]> {
-        try {
-            const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/winners`, '')
-            if (response && response.status === httpStatusCode.OK) {
-                console.log(response.data)
-                return response.data as WinnerProjectResponseDto[];
-            }
-        } catch (error) {
-            console.log(error);
 
+    @CatchError
+    async getWinnerProjects(hackathonId: number): Promise<WinnerProjectResponseDto[]> {
+        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/winners`)
+        if (response && response.status === httpStatusCode.OK) {
+            console.log(response.data)
+            return response.data as WinnerProjectResponseDto[];
         }
         return [] as WinnerProjectResponseDto[];
     }
 
-    async getProceedingLeaderboards(hackathonId : number) : Promise<PageableProceedingHackathons> {
-        try {
-            const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/proceeding`, '')
-            if (response && response.status === httpStatusCode.OK) {
-                console.log("r",response.data)
-                return this.toPageableHackathons(response) as PageableProceedingHackathons;
-            }
-        } catch (error) {
-            console.log(error);
-
+    @CatchError
+    async getProceedingLeaderboards(hackathonId: number): Promise<PageableProceedingHackathons> {
+        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/proceeding`)
+        if (response && response.status === httpStatusCode.OK) {
+            console.log("r", response.data)
+            return this.toPageableHackathons(response) as PageableProceedingHackathons;
         }
         return {} as PageableProceedingHackathons;
     }
+
     toPageableHackathons = (response: AxiosResponse<any, any>): PageableProceedingHackathons => {
         const data = response.data as pageableData;
         return Builder<PageableProceedingHackathons>()
@@ -91,6 +77,7 @@ class HackathonService {
                 .build())
             .build();
     }
+
     toPageableHackathonsList = (response: AxiosResponse<any, any>): PageableHackathonList => {
         const data = response.data as pageableData;
         return Builder<PageableHackathonList>()
@@ -100,8 +87,7 @@ class HackathonService {
                 .totalPages(data.totalPages)
                 .build())
             .build();
-        return {} as PageableHackathonList;
     }
-    }
+}
 
 export {HackathonService};

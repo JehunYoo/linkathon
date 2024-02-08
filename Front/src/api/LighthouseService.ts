@@ -10,7 +10,7 @@ export class LighthouseService {
 
     @CatchError
     async getLighthouseReport(projectId: number): Promise<Report[]> {
-        const response = await apiService.getData(false, `${url}/report/${projectId}`, '');
+        const response = await apiService.getData(false, `${url}/report/${projectId}`);
 
         interface TempReport {
             url: string,

@@ -2,7 +2,7 @@
 import {inject, onMounted, onUnmounted, PropType, ref} from 'vue';
 
 const updateSelect: Function = <Function>inject('selectedMenuCareer');
-const props = defineProps({
+defineProps({
   menuList: {
     type: Object as PropType<String[]>
   }

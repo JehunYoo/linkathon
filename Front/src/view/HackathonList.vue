@@ -3,7 +3,7 @@
 import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
 import {HackathonService} from "@/api/HackathonService.ts"
-import {onMounted, PropType, Ref, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import store from "@/store/hackathon.ts";
 import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
 
@@ -11,7 +11,7 @@ const categorySelect = new Set<number>();
 const refSelect = ref(categorySelect);
 const hackathonsRef: Ref<PageableHackathonList> = ref({} as PageableHackathonList);
 const hackathonService : HackathonService = new HackathonService();
-const refSelectName = ref<String>('');
+const refSelectName = ref("");
 
 onMounted(() => {
   click(0);

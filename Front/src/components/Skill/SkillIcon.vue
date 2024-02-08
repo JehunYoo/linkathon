@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 import {PropType} from "vue";
-import {TeamFindSkillDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import {Builder} from "builder-pattern";
 
 const props = defineProps({
   skill: {
-    type: Object as PropType<TeamFindSkillDTO>,
-    default: Builder<TeamFindSkillDTO>().build()
+    type: Object as PropType<SkillDTO>,
+    default: Builder<SkillDTO>().build()
   },
   width: String,
   height: String,
@@ -16,18 +15,18 @@ const props = defineProps({
 </script>
 <template>
   <div>
-    <div v-if="props.skill?.skillLevel"
+    <div v-if="props.skill?.skillYear"
          :style="{ width: props.width, height: props.height, borderRadius: props.radius, fontSize: props.fontSize }"
          class="normal-container hover-container">
       <div class="year-text">
-        {{ props.skill?.skillLevel + "Y" }}
+        {{ props.skill?.skillYear + "Y" }}
       </div>
-      <img :src="props.skill?.skillImageUrl" :style="{ width: props.width, height: props.height, borderRadius: props.radius }" alt="">
+      <img :src="props.skill?.skillImgUrl" :style="{ width: props.width, height: props.height, borderRadius: props.radius }" alt="">
     </div>
     <div v-else
          :style="{ width: props.width, height: props.height, borderRadius: props.radius, fontSize: props.fontSize }"
          class="normal-container">
-      <img :src="props.skill?.skillImageUrl" :style="{ width: props.width, height: props.height, borderRadius: props.radius }" alt="">
+      <img :src="props.skill?.skillImgUrl" :style="{ width: props.width, height: props.height, borderRadius: props.radius }" alt="">
     </div>
   </div>
 </template>

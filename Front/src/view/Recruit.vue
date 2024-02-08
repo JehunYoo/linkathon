@@ -33,7 +33,14 @@ onMounted(async () => {
 
     for (const category in skillTypeResponseDtoMap) {
       if (Object.prototype.hasOwnProperty.call(skillTypeResponseDtoMap, category)) {
-        const skillList = skillTypeResponseDtoMap[category];
+        const skillList:SkillDTO[] = skillTypeResponseDtoMap[category].map((data) => {
+          return Builder<SkillDTO>()
+              .skillId(data.skillId)
+              .skillYear(data.skillYear)
+              .skillName(data.skillName)
+              .skillImgUrl(data.skillImageUrl)
+              .build()
+        });
         skillCategoryList.value.push(
             Builder<SkillCategory>()
                 .categoryName(category)

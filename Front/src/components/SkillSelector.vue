@@ -82,7 +82,12 @@ const saveSkill = function (){
       </div>
       <template v-for="skill in skillSelectList">
         <div class="my-skill-container">
-          <SkillIcon :skill="skill" height="24px" radius="5px" style="margin: auto" width="24px"/>
+          <SkillIcon :skill="
+          Builder<SkillDTO>()
+          .skillId(skill.skill.skillId)
+          .skillName(skill.skill.skillName)
+          .skillType(skill.skill.skillType)
+          .build()" height="24px" radius="5px" style="margin: auto" width="24px"/>
           <div style="flex: 5; margin: auto">{{ skill.skill.skillName }}</div>
           <div style="display: flex; border-radius: 5px; border: 1px solid #303030; padding: 6px; width: 65px">
             <div class="year-text" style="white-space: nowrap">{{skill.skillLevel}} 년차</div>

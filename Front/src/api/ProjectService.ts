@@ -1,18 +1,17 @@
 import {ApiService} from "@/api/ApiService.ts";
 import {httpStatusCode} from "@/util/httpStatus.ts";
-import {PageableProjects, ProjectDetailDto, ProjectInfoDTO, ProjectRequestDto} from "@/dto/projectDTO.ts";
 import {
     BackPerformanceResponseDto,
-    ClosedProjects, PageableBackPerformance,
+    PageableBackPerformance, PageableProjects,
     ProjectDetailDto,
     ProjectInfoDTO,
     ProjectRequestDto
 } from "@/dto/projectDTO.ts";
 import {Builder} from "builder-pattern";
-import {AxiosResponse} from "axios";
 import projectStorage from "@/store/projectStorage.ts";
 import {AxiosResponse} from "axios";
 import {BackPerformanceMessageResponseDto} from "@/dto/BackPerformanceMessageResponseDto.ts";
+import {CatchError} from "@/util/error.ts";
 // import store from "@/store";
 // import {CatchError} from "@/util/error.ts";
 
@@ -73,7 +72,7 @@ class ProjectService {
 
     async getMyLikedProjects(): Promise<PageableProjects> {
         try {
-            const response = await apiService.getData(true, `${url}/like`, null);
+            const response = await apiService.getData(true, `${url}/like`);
             if (response && response.status === httpStatusCode.OK) {
                 return this.toPageableProjects(response);
             }
@@ -100,7 +99,7 @@ class ProjectService {
 
     async getMyProjects(): Promise<PageableProjects> {
         try {
-            const response = await apiService.getData(true, `${url}/my-project`, null);
+            const response = await apiService.getData(true, `${url}/my-project`);
             if (response && response.status === httpStatusCode.OK) {
                 return this.toPageableProjects(response);
             }
@@ -112,7 +111,7 @@ class ProjectService {
 
     async getProjectDetail(projectId: number): Promise<ProjectDetailDto> {
         try {
-            const response = await apiService.getData(false, `${url}/${projectId}`, null);
+            const response = await apiService.getData(false, `${url}/${projectId}`);
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as ProjectDetailDto;
             }
@@ -123,16 +122,6 @@ class ProjectService {
         return {} as ProjectDetailDto;
     }
 
-    // async registProject(projectRequestDto: ProjectRequestDto): Promise<void> {
-    //     try {
-    //         const response = await apiService.postData(true, `${url}`, projectRequestDto);
-    //         if (response && response.status === httpStatusCode.OK) {
-    //             return;
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
 
     async updateProject(projectId: number, projectRequestDto: ProjectRequestDto, image: File | null): Promise<void> {
         try {
@@ -150,70 +139,52 @@ class ProjectService {
         }
     }
 
+    @CatchError
     async deleteProject(projectId: number): Promise<void> {
-        try {
-            const response = await apiService.deleteData(true, `${url}/${projectId}`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                return;
-            }
-        } catch (error) {
-            console.error(error);
+        const response = await apiService.deleteData(true, `${url}/${projectId}`, null);
+        if (response && response.status === httpStatusCode.OK) {
+            return;
         }
     }
 
+    @CatchError
     async submitProject(projectId: number): Promise<void> {
-        try {
-            const response = await apiService.postData(true, `${url}/${projectId}/submit`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                return;
-            }
-        } catch (error) {
-            console.error(error);
+        const response = await apiService.postData(true, `${url}/${projectId}/submit`, null);
+        if (response && response.status === httpStatusCode.OK) {
+            return;
         }
     }
 
+    @CatchError
     async likeProject(projectId: number): Promise<void> {
-        try {
-            const response = await apiService.postData(true, `${url}/${projectId}/like`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                return;
-            }
-        } catch (error) {
-            console.error(error);
+        const response = await apiService.postData(true, `${url}/${projectId}/like`, null);
+        if (response && response.status === httpStatusCode.OK) {
+            return;
         }
     }
 
+    @CatchError
     async unlikeProject(projectId: number): Promise<void> {
-        try {
-            const response = await apiService.deleteData(true, `${url}/${projectId}/like`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                return;
-            }
-        } catch (error) {
-            console.error(error);
+        const response = await apiService.deleteData(true, `${url}/${projectId}/like`, null);
+        if (response && response.status === httpStatusCode.OK) {
+            return;
         }
     }
 
+    @CatchError
     async getProjectContributions(owner: String, repo: String): Promise<GitStatusDTO[]> {
-        try {
-            const response = await apiService.getData(true, `${url}/contributions/${owner}/${repo}`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                return response.data as GitStatusDTO[];
-            }
-        } catch (error) {
-            alert("조회 실패");
+        const response = await apiService.getData(true, `${url}/contributions/${owner}/${repo}`);
+        if (response && response.status === httpStatusCode.OK) {
+            return response.data as GitStatusDTO[];
         }
         return [] as GitStatusDTO[];
     }
 
+    @CatchError
     async getBackMetrics(projectId : number) : Promise<PageableBackPerformance> {
-        try {
-            const response = await apiService.getData(true, `${url}/${projectId}/back-metrics`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                return this.toPageableBackMetrics(response) as PageableBackPerformance;
-            }
-        } catch (error) {
-            alert("조회 실패");
+        const response = await apiService.getData(true, `${url}/${projectId}/back-metrics`);
+        if (response && response.status === httpStatusCode.OK) {
+            return this.toPageableBackMetrics(response) as PageableBackPerformance;
         }
         return {} as PageableBackPerformance;
     }
@@ -229,51 +200,15 @@ class ProjectService {
             .build();
     }
 
+    @CatchError
     async getBackMetricsMessageCounts(projectId : number) : Promise<BackPerformanceMessageResponseDto> {
-        try {
-            const response = await apiService.getData(true, `${url}/${projectId}/message-count`, null);
-            if (response && response.status === httpStatusCode.OK) {
-                console.log(response.data);
-                return response.data;
-            }
-        } catch (error) {
-            alert("조회 실패");
+        const response = await apiService.getData(true, `${url}/${projectId}/message-count`);
+        if (response && response.status === httpStatusCode.OK) {
+            console.log(response.data);
+            return response.data;
         }
         return {} as BackPerformanceMessageResponseDto;
     }
-
-// class ProjectServiceTest {
-    // async testAll() {
-    //     const projectService: ProjectService = new ProjectService();
-    //
-    //     projectService.getALlProjects().then(d => console.log(d));
-    //     projectService.getMyLikedProjects().then(d => console.log(d));
-    //     projectService.getPopularProjects().then(d => console.log(d));
-    //     projectService.getMyProjects().then(d => console.log(d));
-    //
-    //     projectService.getProjectDetail(2).then(d => console.log(d));
-    //     // projectService.deleteProject(1).then(d => console.log(d));
-    //     // projectService.registProject(Builder<ProjectRequestDto>()
-    //     //     .projectName("asd")
-    //     //     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-    //     //     .projectUrl("asd")
-    //     //     .deployUrl("asd")
-    //     //     .teamId(1)
-    //     //     .build()).then(d => console.log(d));
-    //
-    //     // projectService.updateProject(2, Builder<ProjectRequestDto>()
-    //     //     .projectName("asd")
-    //     //     .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-    //     //     .projectUrl("asd")
-    //     //     .deployUrl("asd")
-    //     //     .teamId(2)
-    //     //     .build()).then(d => console.log(d));
-    //
-    //     // projectService.submitProject(2).then(d => console.log(d));
-    //     projectService.likeProject(4).then(d => console.log(d));
-    //     projectService.unlikeProject(4).then(d => console.log(d));
-    // }
-// }
 }
 export {
     ProjectService
