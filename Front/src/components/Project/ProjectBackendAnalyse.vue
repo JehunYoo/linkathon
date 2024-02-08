@@ -1,52 +1,56 @@
 <script setup lang="ts">
-import {LighthouseService} from "@/api/LighthouseService.ts";
+
 import {onMounted, Ref, ref} from "vue";
-import ThinDonutChart from "@/components/Chart/ThinDonutChart.vue";
 import {Report} from "@/Interface/frontReport.ts";
 import {Builder} from "builder-pattern";
 import Modal from "@/components/Modal/Modal.vue";
 import BarChart from "@/components/Chart/BarChart.vue";
+import {ProjectService} from "@/api/ProjectService.ts";
+import {PageableBackPerformance} from "@/dto/projectDTO.ts";
 
-const calculateAverageScores = (reports: Report[]) => {
-  const scoreSums = new Map<string, number>();
-  const scoreCounts = new Map<string, number>();
+// const calculateAverageScores = (reports: Report[]) => {
+//   const scoreSums = new Map<string, number>();
+//   const scoreCounts = new Map<string, number>();
+//
+//   reports.forEach((report) => {
+//     Object.keys(report.report).forEach((key) => {
+//       const currentScore = report.report[key].score
+//
+//       if (scoreSums.has(key)) {
+//         scoreSums.set(key, scoreSums.get(key) || currentScore);
+//         scoreCounts.set(key, scoreCounts.get(key) || 1);
+//       } else {
+//         scoreSums.set(key, currentScore);
+//         scoreCounts.set(key, 1);
+//       }
+//     });
+//   });
+//
+//   const averageScores = new Map<string, number>();
+//   scoreSums.forEach((sum, key) => {
+//     averageScores.set(key, Math.round(sum / (scoreCounts.get(key) || 0) * 100));
+//   });
+//
+//   return Array.from(averageScores);
+// };
 
-  reports.forEach((report) => {
-    Object.keys(report.report).forEach((key) => {
-      const currentScore = report.report[key].score
-
-      if (scoreSums.has(key)) {
-        scoreSums.set(key, scoreSums.get(key) || currentScore);
-        scoreCounts.set(key, scoreCounts.get(key) || 1);
-      } else {
-        scoreSums.set(key, currentScore);
-        scoreCounts.set(key, 1);
-      }
-    });
-  });
-
-  const averageScores = new Map<string, number>();
-  scoreSums.forEach((sum, key) => {
-    averageScores.set(key, Math.round(sum / (scoreCounts.get(key) || 0) * 100));
-  });
-
-  return Array.from(averageScores);
-};
-
-const lighthouseService = new LighthouseService();
-let refReport: Ref<Report[]> = ref([]);
+const projectService = new ProjectService();
+let refReport: Ref<PageableBackPerformance> = ref({} as PageableBackPerformance);
 
 onMounted(async () => {
-  await getFrontendReport();
+  await getBackendReport();
+  await projectService.getBackMetricsMessageCounts(1);
 })
 
-const getFrontendReport = async () => {
-  refReport.value = await lighthouseService.getLighthouseReport(1);
+const getBackendReport = async () => {
+  refReport.value = await projectService.getBackMetrics(1);
+  console.log(refReport.value.backMetrics)
 }
 
-const updateFrontendReport = () => {
+const updateBackendReport = () => {
   alert("요청이 완료되었습니다. 대기열에 따라 처리 시간이 변동되며 평균적으로 페이지 1개당 20~30초가 소모됩니다.")
-  lighthouseService.updateLighthouseReport(1);
+
+  projectService.getBackMetrics(1);
 }
 const buildObject = (score: number) => {
   return Builder<PerformanceChartDTO>()
@@ -84,14 +88,15 @@ const detail = ref<number>(-1);
   </Modal>
   <h1>백엔드</h1>
   <section>
-    <h1 v-if="refReport.length===0">분석된 데이터가 없습니다!</h1>
+<!--    <h1 v-if="refReport.backMetrics.length===0">분석된 데이터가 없습니다!</h1>-->
     <div class="chart-container">
-      <template v-for="data in calculateAverageScores(refReport)">
+<!--      <template v-for="data in calculateAverageScores(refReport)">-->
+      <template>
         <div>
-          <div class="chart">
-            <ThinDonutChart :pc="buildObject(data[1])"/>
-          </div>
-          <h2>{{ data[0] }}</h2>
+<!--          <div class="chart">-->
+<!--            <ThinDonutChart :pc="buildObject(data[1])"/>-->
+<!--          </div>-->
+<!--          <h2>{{ data[0] }}</h2>-->
         </div>
       </template>
     </div>
@@ -99,8 +104,8 @@ const detail = ref<number>(-1);
   </section>
 
   <div class="button-container">
-    <div class="button" @click="updateFrontendReport">백엔드 분석 요청</div>
-    <div class="button" @click="modalSwitch()" v-if="refReport.length!==0">분석 상세정보</div>
+    <div class="button" @click="updateBackendReport">백엔드 분석 요청</div>
+<!--    <div class="button" @click="modalSwitch()" v-if="refReport.backMetrics.length!==0">분석 상세정보</div>-->
   </div>
 
 </template>

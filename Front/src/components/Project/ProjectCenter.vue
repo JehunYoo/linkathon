@@ -2,6 +2,8 @@
 
 import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
 import GitAnalyse from "@/components/Project/GitAnalyse.vue";
+import {ProjectService} from "@/api/ProjectService.ts";
+import {onMounted, ref, Ref} from "vue";
 import {PropType} from "vue";
 import {ProjectDetailDto} from "@/dto/projectDTO.ts";
 
@@ -11,9 +13,6 @@ const props = defineProps({
     required: true
   },
 });
-
-import {ProjectService} from "@/api/ProjectService.ts";
-import {onMounted, ref, Ref} from "vue";
 
 const projectService = new ProjectService();
 const gitStatusRef : Ref<GitStatusDTO[]> = ref([]);

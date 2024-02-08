@@ -25,14 +25,15 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final MyAuthenticationSuccessHandler successHandler;
+    private final MyAuthenticationFailureHandler failureHandler;
+    private final CorsFilter corsFilter;
 
-	private final JwtTokenProvider jwtTokenProvider;
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-	private final CorsConfig corsConfig;
-	private final CorsFilter corsFilter;
-	private final CustomOAuth2UserService oAuth2UserService;
-	private final MyAuthenticationSuccessHandler successHandler;
-	private final MyAuthenticationFailureHandler failureHandler;
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {

@@ -1,22 +1,38 @@
 import {ApiService} from "@/api/ApiService.ts";
 import {httpStatusCode} from "@/util/httpStatus.ts";
-import {ClosedProjects, ProjectDetailDto, ProjectInfoDTO, ProjectRequestDto} from "@/dto/projectDTO.ts";
+import {
+    BackPerformanceResponseDto,
+    ClosedProjects, PageableBackPerformance,
+    ProjectDetailDto,
+    ProjectInfoDTO,
+    ProjectRequestDto
+} from "@/dto/projectDTO.ts";
 import {Builder} from "builder-pattern";
+import {AxiosResponse} from "axios";
+import {BackPerformanceMessageResponseDto} from "@/dto/BackPerformanceMessageResponseDto.ts";
 // import store from "@/store";
 // import {CatchError} from "@/util/error.ts";
 
 const apiService = new ApiService();
 
 const url = "/api/projects"
-
+interface pageableData {
+    content: Object,
+    pageable: {
+        pageNumber: number,
+    }
+    totalPages: number,
+}
 class ProjectService {
     async getALlProjects(pageNumber: number | undefined, pageSize: number | undefined): Promise<ClosedProjects> {
         try {
             const response = await apiService.getData(false, `${url}`,
-                {params: {
+                {
+                    params: {
                         page: pageNumber,
                         size: pageSize
-                    }});
+                    }
+                });
             if (response && response.status === httpStatusCode.OK) {
                 return Builder<ClosedProjects>()
                     .closedProjects(response.data.content as ProjectInfoDTO[])
@@ -147,9 +163,56 @@ class ProjectService {
             console.error(error);
         }
     }
-}
 
-class ProjectServiceTest {
+    async getProjectContributions(owner: String, repo: String): Promise<GitStatusDTO[]> {
+        try {
+            const response = await apiService.getData(true, `${url}/contributions/${owner}/${repo}`, null);
+            if (response && response.status === httpStatusCode.OK) {
+                return response.data as GitStatusDTO[];
+            }
+        } catch (error) {
+            alert("조회 실패");
+        }
+        return [] as GitStatusDTO[];
+    }
+
+    async getBackMetrics(projectId : number) : Promise<PageableBackPerformance> {
+        try {
+            const response = await apiService.getData(true, `${url}/${projectId}/back-metrics`, null);
+            if (response && response.status === httpStatusCode.OK) {
+                return this.toPageableBackMetrics(response) as PageableBackPerformance;
+            }
+        } catch (error) {
+            alert("조회 실패");
+        }
+        return {} as PageableBackPerformance;
+    }
+
+    toPageableBackMetrics = (response: AxiosResponse<any, any>): PageableBackPerformance => {
+        const data = response.data as pageableData;
+        return Builder<PageableBackPerformance>()
+            .backMetrics(data.content as BackPerformanceResponseDto[])
+            .pageable(Builder<PageableDto>()
+                .pageNumber(data.pageable.pageNumber)
+                .totalPages(data.totalPages)
+                .build())
+            .build();
+    }
+
+    async getBackMetricsMessageCounts(projectId : number) : Promise<BackPerformanceMessageResponseDto> {
+        try {
+            const response = await apiService.getData(true, `${url}/${projectId}/message-count`, null);
+            if (response && response.status === httpStatusCode.OK) {
+                console.log(response.data);
+                return response.data;
+            }
+        } catch (error) {
+            alert("조회 실패");
+        }
+        return {} as BackPerformanceMessageResponseDto;
+    }
+
+// class ProjectServiceTest {
     // async testAll() {
     //     const projectService: ProjectService = new ProjectService();
     //
@@ -180,8 +243,8 @@ class ProjectServiceTest {
     //     projectService.likeProject(4).then(d => console.log(d));
     //     projectService.unlikeProject(4).then(d => console.log(d));
     // }
+// }
 }
-
 export {
-    ProjectService, ProjectServiceTest
+    ProjectService
 }
