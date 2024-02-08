@@ -21,6 +21,7 @@ public class ProjectContributionService{
 
 	public List<Contribution> getContributionsList(String repoOwner, String repoName) {
 		List<GithubClientResponse> response = projectContributionServiceClient.getContributions(repoOwner,repoName);
+
 		List<Contribution> contributionList = new ArrayList<>();
 		for (GithubClientResponse res : response) {
 			String userName = res.getAuthor().getLogin();

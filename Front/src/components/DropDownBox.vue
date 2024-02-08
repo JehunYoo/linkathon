@@ -1,29 +1,55 @@
 <script lang="ts" setup>
-import {ref} from 'vue';
+import {inject, onMounted, onUnmounted, PropType, ref} from 'vue';
 
-const dummy = ref(["선택", "브론즈", "실버", "골드", "다이아"]);
+const updateSelect: Function = <Function>inject('selectedMenuTier');
+defineProps({
+  menuList: {
+    type: Object as PropType<String[]>
+  }
+})
 const dropdownOpen = ref(false);
-const select = ref(0)
+const select = ref(0);
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
 
 const clickDropdownMenu = (item: number) => {
   select.value = item;
+  updateSelect(item);
+  dropdownOpen.value = false;
 };
+
+// 클릭 이벤트가 다른 곳에서 발생했을 때 dropdown을 닫음
+const handleClickOutside = (event: MouseEvent) => {
+  const dropdownContainer = document.querySelector('.dropdown-container');
+  if (dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+    dropdownOpen.value = false;
+  }
+};
+
+// 컴포넌트가 마운트된 후에 클릭 이벤트 리스너를 추가
+onMounted(() => {
+  window.addEventListener('click', handleClickOutside);
+});
+
+// 컴포넌트가 언마운트될 때 클릭 이벤트 리스너를 제거 (메모리 누수 방지)
+onUnmounted(() => {
+  window.removeEventListener('click', handleClickOutside);
+});
+
 </script>
 
 <template>
   <div class="dropdown-container" @click="toggleDropdown">
-    <div class="dropdown-box">
-      {{ dummy[select] }}
+    <div class="dropdown-box" v-if="menuList">
+      {{ menuList[select] }}
       <svg fill="none" height="6" style="margin-left: 11px" viewBox="0 0 12 6" width="12"
            xmlns="http://www.w3.org/2000/svg">
         <path d="M1 1L6 5L11 1" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
       </svg>
     </div>
     <div v-if="dropdownOpen" class="dropdown-content">
-      <div v-for="(item, index) in dummy" :key="index" @click="clickDropdownMenu(index)">{{ item }}</div>
+      <div v-for="(item, index) in menuList" :key="index" @click="clickDropdownMenu(index)">{{ item }}</div>
     </div>
   </div>
 </template>

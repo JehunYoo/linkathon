@@ -50,3 +50,8 @@ export interface PageableProjects {
     projects: ProjectInfoDTO[];
     pageable: PageableDto;
 }
+
+export interface PageableBackPerformance {
+    backMetrics : BackPerformanceResponseDto[],
+    pageable : PageableDto
+}

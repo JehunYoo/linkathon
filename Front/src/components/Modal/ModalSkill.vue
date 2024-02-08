@@ -1,44 +1,34 @@
 <script lang="ts" setup>
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
+import {PropType} from "vue";
+import {TeamFindSkillDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import {Builder} from "builder-pattern";
 
-const dummySkillList: SkillDTO[] = [];
-const dummySkill: SkillDTO = Builder<SkillDTO>()
-    .skillId(1)
-    .skillName("TypeScript")
-    .skillImgUrl("https://i.postimg.cc/C50Qnxmj/image.png")
-    .skillYear(10)
-    .build()
-for (let i = 0; i < 5; i++) {
-  dummySkillList.push(dummySkill);
-}
-
 defineProps({
-  color: String,
-  fontSize: String,
-  fontWeight: String,
-  marginBottom: String,
-  title: String,
-});
+  skillInfo: {
+    type: Object as PropType<TeamFindSkillDTO[]>,
+    default: Builder<TeamFindSkillDTO[]>().build()
+  },
+  title: String
+})
 </script>
 
 <template>
   <div class="modal-skill-container">
     <div :style="{
-      color:color,
-      fontSize:fontSize,
-      fontWeight:fontWeight,
-      marginBottom:marginBottom
+      color: '#303030',
+      fontSize: '16px',
+      fontWeight: 400,
+      marginBottom: '12px'
     }">
       {{ title }}
     </div>
     <div class="skill-container">
-      <template v-for="skill in dummySkillList">
-        <SkillIcon :skill="skill" font-size="28px" height="48px" radius="10px" width="48px"></SkillIcon>
-      </template>
+      <SkillIcon v-for="skill in skillInfo"
+                 :skill="skill" font-size="28px" height="48px" radius="10px" width="48px">
+      </SkillIcon>
     </div>
   </div>
-
 </template>
 
 <style scoped>

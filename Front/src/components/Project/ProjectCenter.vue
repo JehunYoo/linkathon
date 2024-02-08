@@ -2,6 +2,8 @@
 
 import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
 import GitAnalyse from "@/components/Project/GitAnalyse.vue";
+import {ProjectService} from "@/api/ProjectService.ts";
+import {onMounted, ref, Ref} from "vue";
 import {PropType} from "vue";
 import {ProjectDetailDto} from "@/dto/projectDTO.ts";
 import projectStorage from "@/store/projectStorage.ts";
@@ -25,6 +27,18 @@ const deleteProject = (projectId: number) => {
   router.push('/myPage');
 }
 
+const projectService = new ProjectService();
+const gitStatusRef : Ref<GitStatusDTO[]> = ref([]);
+let totalCommits = 0;
+onMounted(async () => {
+  gitStatusRef.value = await projectService.getProjectContributions("jooyun-1", "Quicklog");
+  console.log(gitStatusRef.value);
+//@ts-nocheck
+  for (let i = 0; i < gitStatusRef.value.length; i++) {
+    totalCommits += gitStatusRef.value[i].commits;
+  }
+})
+
 </script>
 
 <template>
@@ -37,7 +51,7 @@ const deleteProject = (projectId: number) => {
       {{ props.projectDetail.projectDesc }}
     </section>
     <ProjectAnalyse/>
-    <GitAnalyse/>
+    <GitAnalyse v-if="gitStatusRef" :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
   </div>
 
 </template>

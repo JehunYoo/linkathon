@@ -3,11 +3,12 @@ import {inject} from "vue";
 
 const skillCategorySelect: SkillCategorySelect = inject('skillCategorySelect')!;
 const updateCategorySelect: Function = <Function>inject('updateSelectedCategory');
+
 </script>
 
 <template>
   <div>
-    <div class="skill-category-container">
+    <div class="skill-category-container" v-if="skillCategorySelect?.skillCategoryList">
       <div v-for="(skillList, i) in skillCategorySelect?.skillCategoryList"
            :class="{'non-select':skillCategorySelect.selectedCategory !== i, 'select':skillCategorySelect.selectedCategory === i}"
            class="skill-category-box"

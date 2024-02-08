@@ -18,7 +18,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	@Query("SELECT p"
 		+ " FROM Project p JOIN p.team t JOIN UserTeam ut ON t = ut.team"
 		+ " WHERE ut.user.userId = :userId")
-	public List<Project> findByUserId(Long userId);
+	Page<Project> findByUserId(Long userId, Pageable pageable);
+
+	Page<Project> findAllByProjectStatusOrderByRegisteredDateDesc(ProjectStatus projectStatus, Pageable pageable);
 
 	@Query("SELECT p"
 		+ " FROM Project p LEFT JOIN ProjectLike pl ON p = pl.project"
@@ -34,7 +36,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 		+ " FROM Project p JOIN ProjectLike pl ON p = pl.project"
 		+ " WHERE pl.user = :user"
 		+ " ORDER BY p.registeredDate DESC")
-	List<Project> findLikedProjectsByUser(User user);
+	Page<Project> findLikedProjectsByUser(User user, Pageable pageable);
 
 	@Query("SELECT p " +
 		"FROM Project p " +
@@ -46,4 +48,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	"limit 3")
 	public List<Project> findProjectsByHackathonScoreAndWinState(Long hackathonId);
 
+	@Query("SELECT p " +
+		"FROM Project p " +
+		"JOIN Hackathon h ON p.team.hackathon.hackathonId = :hackathonId " +
+		"WHERE p.projectStatus = :status ")
+	Page<Project> findByHackathonIdAndProjectStatus(Long hackathonId, ProjectStatus status, Pageable pageable);
 }

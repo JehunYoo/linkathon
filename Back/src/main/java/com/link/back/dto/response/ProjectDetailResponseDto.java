@@ -2,7 +2,6 @@ package com.link.back.dto.response;
 
 import java.time.LocalDateTime;
 
-import com.link.back.dto.ProjectImageDto;
 import com.link.back.entity.ProjectStatus;
 
 import lombok.Builder;
@@ -22,7 +21,7 @@ public record ProjectDetailResponseDto(
 	String projectUrl,
 	String deployUrl,
 	Boolean winState,
-	String imsSrc,
+	String imgSrc,
 	Integer starCount,
 	Boolean starred
 ) {
