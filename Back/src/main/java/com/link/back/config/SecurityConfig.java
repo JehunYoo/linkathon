@@ -34,13 +34,14 @@ public class SecurityConfig {
 	private final MyAuthenticationSuccessHandler successHandler;
 	private final MyAuthenticationFailureHandler failureHandler;
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
 		return httpSecurity
 			.authorizeHttpRequests((authorize) ->
 				authorize.requestMatchers("/api/users/**").permitAll()
 					.requestMatchers("/oauth2/**").permitAll()
+					.requestMatchers("api/**").permitAll()
 					.requestMatchers("/githubLogin/success").permitAll()
 					.requestMatchers("/error").permitAll()
 					.anyRequest().authenticated()

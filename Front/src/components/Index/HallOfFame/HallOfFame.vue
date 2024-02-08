@@ -4,6 +4,7 @@ import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 import {ref, Ref} from "vue";
 import {Builder} from "builder-pattern";
+import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
 
 const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
     .projectName("프로젝트 주제")

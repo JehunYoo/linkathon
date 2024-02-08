@@ -1,47 +1,66 @@
 <script setup lang="ts">
-import {Builder} from "builder-pattern";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 import Pagination from "@/components/Pagination.vue";
-import {ref, Ref} from "vue";
+import {ref, Ref, watch} from "vue";
+import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
+import {ProjectService} from "@/api/ProjectService.ts";
+import ProjectStore from "@/store/ProjectStore.ts";
+import {useRoute} from "vue-router";
 
-const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
-    .projectName("프로젝트 주제")
-    .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-    .starCount(10)
-    .projectId(1)
-    .starred(true)
-    .imgSrc("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
-    .build();
-const dummy: ProjectInfoDTO[] = [];
-dummy.push(tempDummy);
-dummy.push(tempDummy);
-dummy.push(tempDummy);
-dummy.push(tempDummy);
+const route = useRoute();
 
-const starRef: Ref<Boolean>[] = []
+const projectService: ProjectService = ProjectStore.getters.getProjectService;
 
-for (let i = 0; i < dummy?.length; i++) {
-  starRef.push(ref(dummy[i].starred))
-}
+const projectsRef: Ref<ProjectInfoDTO[]> = ref([]); // 반응형 배열 ref 객체로 선언
+const starRef: Ref<Boolean>[] = [];
 
-const starClick = (v :Ref<Boolean>) => {
+const popularProjectsRef: Ref<ProjectInfoDTO[]> = ref([]);
+const popularStarRef: Ref<Boolean>[] = [];
+const pageableRef: Ref<PageableDto> = ref({pageNumber:1, totalPages:5} as PageableDto);
+
+const bind = async () => {
+  popularProjectsRef.value = await projectService.getPopularProjects();
+  for (let i = 0; i < popularProjectsRef.value?.length; i++) {
+    popularStarRef.push(ref(popularProjectsRef.value[i].starred));
+  }
+
+  const projects = await projectService.getALlProjects(parseInt(route.query.page as string) - 1, 5);
+  projectsRef.value = projects.closedProjects;
+  for (let i = 0; i < projectsRef.value?.length; i++) {
+    starRef.push(ref(projectsRef.value[i].starred));
+  }
+  pageableRef.value = projects.pageable;
+
+};
+
+
+const starClick = async (v: Ref<Boolean>, data: ProjectInfoDTO, projectId: number) => {
+  if (v.value) {
+    await projectService.unlikeProject(projectId);
+    data.starCount--;
+  } else {
+    await projectService.likeProject(projectId);
+    data.starCount++;
+  }
   v.value = !v.value;
+
 }
+
+watch([() => route.query], () => bind());
+bind();
 </script>
 
 <template>
   <h1>인기 프로젝트</h1>
   <div class="project-container">
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="popularProjectsRef" :star-click="starClick" :star-ref="popularStarRef"/>
   </div>
   <h1>공유 프로젝트</h1>
   <div class="project-container">
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="projectsRef" :star-click="starClick" :star-ref="starRef"/>
   </div>
-  <Pagination style="margin-bottom: 60px"/>
+  <!-- TODO: 페이지네이션 적용하기 -->
+  <Pagination :pageable-d-t-o="pageableRef" />
 </template>
 
 <style scoped>
@@ -57,6 +76,6 @@ h1 {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  gap:20px
+  gap: 20px
 }
 </style>
