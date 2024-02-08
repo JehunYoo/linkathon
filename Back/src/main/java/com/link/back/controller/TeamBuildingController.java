@@ -186,10 +186,15 @@ public class TeamBuildingController {
 		return teamBuildingService.findMemberByCond(pageable, userSearchConditionDto);
 	}
 
+	@GetMapping("/leader")
+	@ResponseStatus(OK)
+	public boolean getLeader(@RequestHeader("Authorization") String token) {
+		return teamBuildingService.isLeader(token);
+	}
+
 	@GetMapping("/recruit/team")
 	@ResponseStatus(OK)
 	public RecruitingTeamResponseDto getRecruitingTeam (@RequestHeader("Authorization") String token) {
 		return teamBuildingService.findRecruitingTeam(jwtTokenProvider.getUserId(token));
 	}
-
 }

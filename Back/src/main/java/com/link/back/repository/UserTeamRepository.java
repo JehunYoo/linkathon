@@ -20,6 +20,9 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
 	UserTeam findUserTeamByTeamAndUser(Team team, User user);
 
+	@Query("select ut from UserTeam ut join Team t on ut.team = t where ut.user = :user and ut.role = 'LEADER'")
+	UserTeam findUserTeamIfLeader(@Param("user") User user);
+
 		// todo
 	@Query("select userTeam from UserTeam userTeam "
 		// + " join fetch User user"

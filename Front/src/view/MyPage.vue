@@ -1,21 +1,52 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import MyPageRecruitingTeam from "@/components/MyPage/MyPageRecruitingTeam.vue";
 import MyInfo from "@/components/MyPage/MyInfo.vue";
 import MyPageRecruitTeamInfo from "@/components/MyPage/MyPageRecruitTeamInfo.vue";
 import MyPageMyProject from "@/components/MyPage/MyPageMyProject.vue";
 import MyPageSchedule from "@/components/MyPage/MyPageSchedule.vue";
+import {TeamService} from "@/api/TeamService.ts";
 
 const route = useRoute();
 const mode = ref<number>(0);
-const updatePageFromQuery = () => {
+const refTeamIds = ref<number[]>();
+const refTeamNames = ref<string[]>();
+const refTeamId = ref<number>(0);
+
+onMounted(async () => {
+  refTeamIds.value = (await getTeams()).ids;
+  refTeamNames.value = (await getTeams()).names;
+  refTeamId.value = refTeamIds.value[0];
+})
+
+const updatePageFromQuery = async () => {
   const queryParam = route.query.mode;
   mode.value = parseInt(queryParam as string);
+  refTeamIds.value = (await getTeams()).ids;
+  refTeamNames.value = (await getTeams()).names;
+  refTeamId.value = refTeamIds.value[0];
   if (isNaN(mode.value)) mode.value=0;
 };
 
-watch([() => route.query], updatePageFromQuery, {immediate: true});
+watch([() => route.fullPath], updatePageFromQuery, {immediate: true});
+
+const teamService = new TeamService();
+async function getTeams() {
+  const idsResponseDto = await teamService.getBuildingTeamIds();
+  return idsResponseDto;
+}
+async function acceptSuggestion(teamId: number) {
+  teamService.postSuggestionByUser(teamId);
+}
+async function declineSuggestion(teamId: number) {
+  teamService.deleteSuggestionByUser(teamId);
+}
+
+function updateId(teamId: number) {
+  refTeamId.value = teamId;
+}
+
 </script>
 
 <template>
@@ -27,11 +58,11 @@ watch([() => route.query], updatePageFromQuery, {immediate: true});
           <div class="remove-button">신청 취소</div>
         </div>
       </MyPageRecruitTeamInfo>
-      <MyPageRecruitTeamInfo v-else-if="mode===2">
+      <MyPageRecruitTeamInfo v-else-if="mode===2" :teamId="refTeamId">
         <div class="title-container">
           <h1>권유받은 팀</h1>
-          <div class="accept-button">수락</div>
-          <div class="remove-button">거절</div>
+          <div class="accept-button" @click="acceptSuggestion(refTeamId)">수락</div>
+          <div class="remove-button" @click="declineSuggestion(refTeamId)">거절</div>
         </div>
       </MyPageRecruitTeamInfo>
       <MyPageMyProject v-else-if="mode===3"/>
@@ -76,6 +107,13 @@ watch([() => route.query], updatePageFromQuery, {immediate: true});
         </td>
       </tr>
     </table>
+  </div>
+  <div :class="{'select':mode==2}">
+    <ul>
+      <li v-for="teamId in refTeamIds">
+        <router-link to="/myPage?mode=2" @click="updateId(teamId)">{{ teamId }}</router-link>
+      </li>
+    </ul>
   </div>
 </template>
 

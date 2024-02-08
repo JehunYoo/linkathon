@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-
 import Tier from "@/components/Tier.vue";
-import ModalButton from "@/components/Modal/ModalButton.vue";
 import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
+
 </script>
 
 <template>
@@ -23,8 +22,8 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
           <div class="git-button">
             <ModalGithubButton/>
           </div>
-          <RouterLink class="button-right-container" to="/video">
-            <ModalButton button-text="합류 요청"/>
+          <RouterLink class="button-right-container" to=""> <!-- to 설정 -->
+            <slot></slot>
           </RouterLink>
         </div>
       </div>

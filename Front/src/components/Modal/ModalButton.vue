@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="button">
+  <div class="button" @click="$emit('clickEvent')">
     {{ props.buttonText }}
   </div>
 </template>
