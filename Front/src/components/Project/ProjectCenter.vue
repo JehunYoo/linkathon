@@ -4,6 +4,15 @@ import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
 import GitAnalyse from "@/components/Project/GitAnalyse.vue";
 import {ProjectService} from "@/api/ProjectService.ts";
 import {onMounted, ref, Ref} from "vue";
+import {PropType} from "vue";
+import {ProjectDetailDto} from "@/dto/projectDTO.ts";
+
+const props = defineProps({
+  projectDetail: {
+    type: Object as PropType<ProjectDetailDto>,
+    required: true
+  },
+});
 
 const projectService = new ProjectService();
 const gitStatusRef : Ref<GitStatusDTO[]> = ref([]);
@@ -17,19 +26,9 @@ onMounted(async () => {
   }
 })
 
-import {PropType} from "vue";
-import {ProjectDetailDto} from "@/dto/projectDTO.ts";
-
-const props = defineProps({
-  projectDetail: {
-    type: Object as PropType<ProjectDetailDto>,
-    required: true
-  },
-});
-
 </script>
 
-<template v-if="gitStatusRef">
+<template>
   <div>
     <div class="title-container">
       <h1> {{ props.projectDetail.projectName }} </h1>
@@ -39,7 +38,7 @@ const props = defineProps({
       {{ props.projectDetail.projectDesc }}
     </section>
     <ProjectAnalyse/>
-    <GitAnalyse :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
+    <GitAnalyse v-if="gitStatusRef" :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
   </div>
 
 </template>

@@ -1,6 +1,15 @@
 <script setup lang="ts">
 
 import UserCard from "@/components/User/UserCard.vue";
+import {TeamService} from "@/api/TeamService.ts";
+
+async function getSuggestions() {
+  const teamService = new TeamService();
+  const idResponseDto = await teamService.getActiveTeamId();
+  const teamId = idResponseDto.id;
+  return teamService.getSuggestionListOfTeam(teamId);
+}
+
 </script>
 
 <template>
@@ -31,6 +40,7 @@ import UserCard from "@/components/User/UserCard.vue";
     <div class="fx1">
       <h2>권유한 사용자</h2>
       <div class="list">
+<!--        <template v-for="_ in getSuggestions()">-->
         <template v-for="_ in 6">
           <UserCard :t="true"/>
         </template>
