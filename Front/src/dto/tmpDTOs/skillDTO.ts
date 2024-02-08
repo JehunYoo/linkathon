@@ -17,3 +17,11 @@ export interface SkillResponseDto {
     skillLevel: string;
     skillType: string;
 }
+
+//사용자 정보 추가 등록, 갱신에 사용
+export interface SkillRequestDto {
+    skillId: number;
+    skillName: string;
+    skillImageUrl: string;
+    skillType: string;
+}

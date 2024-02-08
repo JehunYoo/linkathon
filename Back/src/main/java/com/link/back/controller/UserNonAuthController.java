@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,16 +82,16 @@ public class UserNonAuthController {
         return new ResponseEntity<>("이메일 인증이 완료되었습니다.", HttpStatus.ACCEPTED);
     }
 
-    //회원가입 경력인증
+    //경력인증
     @PostMapping("career")
-    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
+    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest, @RequestHeader("Authorization") String token) throws
         UnsupportedEncodingException,
         JsonProcessingException,
         InterruptedException {
 
-        int result = userService.careerValidation(useApiRequest);
+        int result = userService.careerValidation(useApiRequest, token);
 
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //로그인
@@ -184,9 +185,6 @@ public class UserNonAuthController {
 
         String verificationKey = verificationRequest.verificationKey();
         String email = verificationRequest.email();
-
-        System.out.println(verificationKey);
-        System.out.println(email);
 
         userService.compareVerificationKey(verificationKey, email);
 
