@@ -137,6 +137,7 @@ h2 {
 img {
   width: 196px;
   height: 196px;
+  object-fit: cover;
   border-radius: 5px;
 }
 
