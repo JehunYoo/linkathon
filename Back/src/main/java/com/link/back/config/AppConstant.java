@@ -24,9 +24,9 @@ public final class AppConstant {
 	public static final int PROJECT_DEPLOY_LENGTH = 255;
 
 	// ProjectImage
-	public static final int PROJECT_IMAGE_NAME_LENGTH = 30;
+	public static final int PROJECT_IMAGE_NAME_LENGTH = 200;
 	public static final int PROJECT_IMAGE_URL_LENGTH = 255;
-	public static final int PROJECT_ORIGIN_IMAGE_NAME = 30;
+	public static final int PROJECT_ORIGIN_IMAGE_NAME = 200;
 
 	// Hackathon
 	public static final int HACKATHON_NAME_LENGTH = 100;

@@ -11,7 +11,6 @@ public record ProjectRequestDto(
 	String projectName,
 	String projectDesc,
 	String projectUrl,
-	String deployUrl,
-	ProjectImageDto projectImage
+	String deployUrl
 ) {
 }

@@ -2,18 +2,39 @@
 
 import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
-import {ref} from "vue";
+import {HackathonService} from "@/api/HackathonService.ts"
+import {onMounted, PropType, Ref, ref} from "vue";
+import store from "@/store/hackathon.ts";
+import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
 
 const categorySelect = new Set<number>();
 const refSelect = ref(categorySelect);
-const click = (num: number) => {
+const hackathonsRef: Ref<PageableHackathonList> = ref({} as PageableHackathonList);
+const hackathonService : HackathonService = new HackathonService();
+const refSelectName = ref<String>('');
+
+onMounted(() => {
+  click(0);
+})
+
+const click = async (num: number) => {
   if (refSelect.value.has(num))
     refSelect.value.delete(num);
   else
+    refSelect.value.clear();
     refSelect.value.add(num);
+    refSelectName.value = listName[num];
+  hackathonsRef.value = await hackathonService.getHackathonList(listName[num], 0, 6);
+  updateStatusName();
 }
 
-const listName:String[] = ["모집중", "모집전", "진행중", "종료됨"];
+const listName:string[] = ["모집중", "진행중", "완료됨"];
+
+function updateStatusName() {
+  // Vuex Store를 업데이트
+  store.dispatch('updateStatusName', refSelectName.value);
+}
+
 </script>
 
 <template>
@@ -27,12 +48,11 @@ const listName:String[] = ["모집중", "모집전", "진행중", "종료됨"];
     </template>
   </div>
   <div class="container">
-    <template v-for="_ in 6">
-      <HackathonCard/>
+    <template v-for="hackathon in hackathonsRef.hackathons">
+      <HackathonCard :data="hackathon" :name="refSelectName"/>
     </template>
   </div>
-
-  <Pagination style="margin-bottom: 60px"/>
+  <Pagination :pageable-d-t-o="hackathonsRef.pageable" style="margin-bottom: 60px" />
 </template>
 
 <style scoped>

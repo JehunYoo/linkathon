@@ -1,5 +1,140 @@
 <script lang="ts" setup>
 import {ref} from "vue";
+import {UserService} from "@/api/UserService.ts";
+import {Builder} from "builder-pattern";
+import {FindEmailDTO} from "@/dto/FindEmailDTO.ts"
+import {SendEmailRequestDTO} from "@/dto/SendEmailRequestDTO.ts";
+import {VerificationRequestDTO} from "@/dto/VerificationRequestDTO.ts";
+import Store from "@/store/index.ts";
+import router from "@/router";
+
+const userService = new UserService();
+
+//아이디 찾기
+const birth = ref<string>('');
+const name = ref<string>('');
+const phoneNumber = ref<string>('');
+const currentYear = new Date().getFullYear();
+
+//비밀번호 찾기
+const email = ref<string>('');
+const verificationCode = ref<string>('');
+const isValid = ref<boolean>(false);
+const isChecked = ref<boolean>(false);
+
+const findEmail = function () {
+
+  if(!birth.value || birth.value.length != 8){
+    alert("생년월일을 8자리로 정확히 입력해주세요")
+    return;
+  }
+
+  if(!name.value){
+    alert("이름을 입력해주세요")
+    return;
+  }
+
+  if(!phoneNumber.value || phoneNumber.value.length != 11){
+    alert("핸드폰 번호를 제대로 입력해주세요")
+    return;
+
+  }
+
+  const year = parseInt(birth.value.substring(0, 4), 10)
+  const month = parseInt(birth.value.substring(4, 6), 10)
+  const day = parseInt(birth.value.substring(6, 8), 10) + 1
+
+  const firstNumber = phoneNumber.value.substring(0, 3)
+  const secondNumber = phoneNumber.value.substring(3, 7)
+  const lastNumber = phoneNumber.value.substring(7, 11)
+
+  if (!year|| year < 1900 || year > currentYear) {
+    alert("생일(연도)을 정확이 입력해주세요")
+    return;
+  }
+  //월은 1 이상 12 이하
+  if (!month || month < 1 || month > 12) {
+    alert("생일(월)을 정확이 입력해주세요")
+    return;
+  }
+  //일 제한
+  if (!day || day < 1 || day > 31) {
+    alert("생일(일)을 정확이 입력해주세요")
+    return;
+  }
+  //4, 6, 9, 11월은 30일임
+  if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
+    alert("생일(일)을 정확이 입력해주세요")
+    return;
+  }
+  //2월일 때는 연도에 따라서 29일
+  if (month == 2) {
+    const isLeap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+
+    if (day > 29 || (day == 29 && !isLeap)) {
+      alert("생일(일)을 정확이 입력해주세요")
+      return;
+    }
+  }
+  //핸드폰 번호
+  if(firstNumber !== "010" || secondNumber.length != 4 || lastNumber.length != 4){
+    alert("전화번호가 제대로 입력되었는지 확인해주세요")
+    return
+  }
+  else {
+    if(!(/\d/.test(firstNumber)) || !(/\d/.test(secondNumber)) || !(/\d/.test(lastNumber)) ) {
+      alert("전화번호에는 숫자만 입력해주세요")
+      return
+    }
+  }
+
+
+
+  console.log(new Date(year.toString() + "-" + month.toString() + "-" + day.toString()))
+
+  const data = Builder<FindEmailDTO>()
+      .birth(new Date(year.toString() + "-" + month.toString() + "-" + day.toString()))
+      .name(name.value)
+      .phoneNumber(phoneNumber.value)
+      .build();
+
+  userService.findEmail(data);
+
+}
+const sendVerificationCode = async function () {
+
+  const data = Builder<SendEmailRequestDTO>()
+      .email(email.value)
+      .build();
+
+  isValid.value = await userService.sendVerificationCode(data);
+
+}
+
+const comparedVerificationCode = async function () {
+
+  if(!isValid) {
+    alert("인증번호를 발급받으세요.")
+  }
+
+  if(!verificationCode.value) {
+    alert("인증번호를 입력하세요.")
+  }
+
+  const data = Builder<VerificationRequestDTO>()
+      .email(email.value)
+      .verificationKey(verificationCode.value)
+      .build();
+
+  isChecked.value = await userService.comparedVerification(data);
+
+}
+
+const setEmail = function () {
+  Store.commit('setEmail', email.value);
+  router.push('/passwordChange');
+}
+
 
 const mode = ref<Boolean>(true)
 const modeUpdate = (bool: boolean) => {
@@ -18,21 +153,21 @@ const modeUpdate = (bool: boolean) => {
     </div>
   </div>
   <div v-if="mode" class="input-container">
-    <input class="input-text" placeholder="생년월일 입력" type="text">
-    <input class="input-text" placeholder="이름 입력" type="text">
-    <input class="input-text" placeholder="핸드폰 번호 입력" type="text">
-    <input class="register-button" type="button" value="아이디 찾기">
+    <input v-model = "birth" class="input-text" placeholder="생년월일 입력(8자리)" type="text">
+    <input v-model = "name" class="input-text" placeholder="이름 입력" type="text">
+    <input v-model = "phoneNumber" class="input-text" placeholder="핸드폰 번호 입력(숫자만)" type="text">
+    <input @click = "findEmail" class="register-button" type="button" value="아이디 찾기">
   </div>
   <div v-if="!mode" class="input-container">
     <div class="content-detail">
-      <input class="input-text" placeholder="이메일 입력" type="text">
-      <input class="register-button" style="width: 114px;" type="button" value="인증번호 발송">
+      <input v-model = "email" class="input-text" placeholder="이메일 입력" type="text">
+      <input @click = "sendVerificationCode" class="register-button" style="width: 114px;" type="button" value="인증번호 발송">
     </div>
     <div class="content-detail">
-      <input class="input-text" placeholder="인증번호 입력" type="text">
-      <input class="register-button" style="width: 94px" type="button" value="인증">
+      <input v-model="verificationCode" class="input-text" placeholder="인증번호 입력" type="text">
+      <input @click = "comparedVerificationCode" class="register-button" style="width: 94px" type="button" value="인증">
     </div>
-    <router-link class="register-button" to="/passwordChange">비밀번호 찾기</router-link>
+    <input @click = "setEmail" v-if="isChecked" class="register-button" type="button" value="비밀번호 찾기">
   </div>
 </template>
 

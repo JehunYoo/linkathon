@@ -12,6 +12,21 @@ const props = defineProps({
   },
 });
 
+import {ProjectService} from "@/api/ProjectService.ts";
+import {onMounted, ref, Ref} from "vue";
+
+const projectService = new ProjectService();
+const gitStatusRef : Ref<GitStatusDTO[]> = ref([]);
+let totalCommits = 0;
+onMounted(async () => {
+  gitStatusRef.value = await projectService.getProjectContributions("jooyun-1", "Quicklog");
+  console.log(gitStatusRef.value);
+//@ts-nocheck
+  for (let i = 0; i < gitStatusRef.value.length; i++) {
+    totalCommits += gitStatusRef.value[i].commits;
+  }
+})
+
 </script>
 
 <template>
@@ -24,7 +39,7 @@ const props = defineProps({
       {{ props.projectDetail.projectDesc }}
     </section>
     <ProjectAnalyse/>
-    <GitAnalyse/>
+    <GitAnalyse v-if="gitStatusRef" :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
   </div>
 
 </template>

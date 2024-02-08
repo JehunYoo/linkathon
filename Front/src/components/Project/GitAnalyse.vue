@@ -2,17 +2,31 @@
 
 import ThickDonutChart from "@/components/Chart/ThickDonutChart.vue";
 import {Builder} from "builder-pattern";
+import {PropType, ref, Ref} from "vue";
+import {ProjectService} from "@/api/ProjectService.ts";
 
-const dummyChanges = Builder<GitStatusDTO>()
-    .commits(288)
-    .insertions(7721)
-    .deletions(4617)
-    .name("홍길똥").build();
+// const dummy = Builder<PerformanceChartDTO>().actualValue(80)
+//     .centerText("80")
+//     .label("Performance")
+//     .color("#FFAA35").build()
 
-const dummyList: GitStatusDTO[] = [];
-for (let i = 0; i < 5; i++) {
-  dummyList.push(dummyChanges);
-}
+// const dummyChanges = Builder<GitStatusDTO>()
+//     .commits(288)
+//     .insertions(7721)
+//     .deletions(4617)
+//     .name("홍길똥").build();
+
+const props = defineProps({
+  gitStatus : {
+    type : Object as PropType<GitStatusDTO[]>,
+    required : true
+  },
+  totalCommits : {
+    type : Number,
+    required : true
+  }
+});
+console.log("p",props.gitStatus)
 </script>
 
 <template>
@@ -27,17 +41,17 @@ for (let i = 0; i < 5; i++) {
           <th>Deletions</th>
           <th>Changes</th>
         </tr>
-        <tr v-for="data in dummyList" class="sub">
-          <th>{{ data.name }}</th>
+        <tr v-for="data in props.gitStatus" class="sub">
+          <th>{{ data.userName }}</th>
           <th>{{ data.commits }}</th>
           <th>{{ data.insertions }}</th>
           <th>{{ data.deletions }}</th>
-          <th>Changes</th>
+          <th>{{ ((data.commits / props.totalCommits) * 100).toFixed(1) }}%</th>
         </tr>
       </table>
     </div>
     <div class="chart">
-      <ThickDonutChart :pc="dummyList"/>
+      <ThickDonutChart :pc="props.gitStatus" :total="props.totalCommits"/>
     </div>
   </div>
 

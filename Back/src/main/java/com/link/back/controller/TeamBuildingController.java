@@ -5,6 +5,8 @@ import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,9 +27,11 @@ import com.link.back.dto.request.UpdateTeamRequestDto;
 import com.link.back.dto.request.UserSearchConditionDto;
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MemberDetailResponseDto;
+import com.link.back.dto.response.RecruitingTeamResponseDto;
 import com.link.back.dto.response.TeamApplicationResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
 import com.link.back.entity.Field;
+import com.link.back.security.JwtTokenProvider;
 import com.link.back.service.TeamBuildingService;
 
 import jakarta.validation.Valid;
@@ -41,6 +46,7 @@ import lombok.RequiredArgsConstructor;
 public class TeamBuildingController {
 
 	private final TeamBuildingService teamBuildingService;
+	private final JwtTokenProvider jwtTokenProvider;
 
 	// 팀 참가 신청
 	@PostMapping("/{teamId}/members/apply")
@@ -67,8 +73,8 @@ public class TeamBuildingController {
 	// 팀 참가 권유 거절
 	@DeleteMapping("/{teamId}/members/suggest")
 	@ResponseStatus(NO_CONTENT)
-	public void deleteSuggestionByTeam(@PathVariable @Positive Long teamId, @Positive Long userId) {
-		teamBuildingService.refuseOrCancelTeamParticipate(teamId, 11L, SUGGESTED);
+	public void deleteSuggestionByTeam(@PathVariable @Positive Long teamId, @RequestHeader("Authorization") String token) {
+		teamBuildingService.refuseOrCancelTeamParticipate(teamId, jwtTokenProvider.getUserId(token), SUGGESTED);
 	}
 
 	// 팀 참가 신청 수락
@@ -81,15 +87,15 @@ public class TeamBuildingController {
 	// 팀 참가 권유 수락
 	@PostMapping("/{teamId}/members/suggest")
 	@ResponseStatus(OK)
-	public void postSuggestionByUser(@PathVariable @Positive Long teamId, @Positive Long userId) {
-		teamBuildingService.acceptTeamParticipate(teamId, 11L, SUGGESTED);
+	public void postSuggestionByUser(@PathVariable @Positive Long teamId, @RequestHeader("Authorization") String token) {
+		teamBuildingService.acceptTeamParticipate(teamId, jwtTokenProvider.getUserId(token), SUGGESTED);
 	}
 
 	// 팀 참가 신청 취소
 	@DeleteMapping("{teamId}/members/apply")
 	@ResponseStatus(NO_CONTENT)
-	public void deleteTeamParticipate(@PathVariable @Positive Long teamId, @Positive Long userId) {
-		teamBuildingService.refuseOrCancelTeamParticipate(teamId, 11L, SUGGESTED);
+	public void deleteTeamParticipate(@PathVariable @Positive Long teamId, @RequestHeader("Authorization") String token) {
+		teamBuildingService.refuseOrCancelTeamParticipate(teamId, jwtTokenProvider.getUserId(token), SUGGESTED);
 	}
 
 	// 팀 참가 권유 취소
@@ -116,17 +122,17 @@ public class TeamBuildingController {
 	// 팀 참가 신청한 팀 목록 조회
 	@GetMapping("/applying")
 	@ResponseStatus(OK)
-	public TeamApplicationResponseDto getTeamParticipateApplyingList(@Positive Long userId,
+	public TeamApplicationResponseDto getTeamParticipateApplyingList(@RequestHeader("Authorization") String token,
 		@RequestParam(required = false) @Positive Long teamId) {
-		return teamBuildingService.getTeamParticipateList(11L, teamId, APPLIED);
+		return teamBuildingService.getTeamParticipateList(jwtTokenProvider.getUserId(token), teamId, APPLIED);
 	}
 
 	// 팀 참가 권유받은 팀 목록 조회
 	@GetMapping("/suggested")
 	@ResponseStatus(OK)
-	public TeamApplicationResponseDto getTeamParticipateSuggestionList(@Positive Long userId,
+	public TeamApplicationResponseDto getTeamParticipateSuggestionList(@RequestHeader("Authorization") String token,
 		@RequestParam(required = false) @Positive Long teamId) {
-		return teamBuildingService.getTeamParticipateList(8L, teamId, SUGGESTED);
+		return teamBuildingService.getTeamParticipateList(jwtTokenProvider.getUserId(token), teamId, SUGGESTED);
 	}
 
 	// 팀원 탈퇴
@@ -173,10 +179,17 @@ public class TeamBuildingController {
 
 	@GetMapping("/recruit")
 	@ResponseStatus(OK)
-	public List<MemberDetailResponseDto> findMemberByCond(
-		Pageable pageable,
-		@RequestBody(required = false) UserSearchConditionDto userSearchConditionDto) {
+	public Page<MemberDetailResponseDto> findMemberByCond(
+		@RequestParam int size, @RequestParam int page,
+		UserSearchConditionDto userSearchConditionDto) {
+		Pageable pageable = PageRequest.of(page-1, size);
 		return teamBuildingService.findMemberByCond(pageable, userSearchConditionDto);
+	}
+
+	@GetMapping("/recruit/team")
+	@ResponseStatus(OK)
+	public RecruitingTeamResponseDto getRecruitingTeam (@RequestHeader("Authorization") String token) {
+		return teamBuildingService.findRecruitingTeam(jwtTokenProvider.getUserId(token));
 	}
 
 }

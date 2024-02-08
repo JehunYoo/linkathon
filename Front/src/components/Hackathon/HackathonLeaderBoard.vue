@@ -1,6 +1,28 @@
 <script lang="ts" setup>
 
 import Pagination from "@/components/Pagination.vue";
+import {HackathonService} from "@/api/HackathonService.ts";
+import {
+  PageableProceedingHackathons
+} from "@/dto/tmpDTOs/hackathonProceedingProjectResponseDto.ts";
+import {onMounted, Ref, ref} from "vue";
+
+const props = defineProps({
+  id : {
+    type : Number,
+    required : true
+  }
+});
+
+const hackathonService = new HackathonService();
+const pageableRef = ref({});
+
+const hackathonLeaderboard : Ref<PageableProceedingHackathons> = ref({} as PageableProceedingHackathons);
+onMounted(async () => {
+  hackathonLeaderboard.value = await hackathonService.getProceedingLeaderboards(props.id);
+  pageableRef.value = hackathonLeaderboard.value.pageable;
+})
+
 </script>
 
 <template>
@@ -11,27 +33,16 @@ import Pagination from "@/components/Pagination.vue";
       <th>팀명</th>
       <th>팀 멤버</th>
       <th>점수</th>
-      <th>제출 수</th>
-      <th>최종 테스트일</th>
     </tr>
-    <tr class="high-right">
-      <td>1</td>
-      <td>홍길동길동홍</td>
-      <td>주윤, 유제훈, 임종율, 마성진, 조민균, 김지민</td>
-      <td>98점</td>
-      <td>102회</td>
-      <td>2024. 1. 18</td>
-    </tr>
-    <tr v-for="_ in 9">
-      <td>1</td>
-      <td>홍길동길동홍</td>
-      <td>주윤, 유제훈, 임종율, 마성진, 조민균, 김지민</td>
-      <td>98점</td>
-      <td>102회</td>
-      <td>2024. 1. 18</td>
+
+    <tr class="high-right" v-for="(data,i) in hackathonLeaderboard.hackathons">
+      <td>{{i+1}}</td>
+      <td>{{ data.teamName }}</td>
+      <td>{{ data.teamMembers.join(', ') }}</td>
+      <td>{{ data.hackathonScore }}</td>
     </tr>
   </table>
-  <Pagination style="margin-bottom: 60px"/>
+  <Pagination :pageable-d-t-o="hackathonLeaderboard.pageable" style="margin-bottom: 60px"/>
 </template>
 
 <style scoped>

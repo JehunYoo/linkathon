@@ -1,16 +1,24 @@
-interface HackathonInfoDTO {
+
+export interface HackathonInfoDTO {
     hackathonId: number,
-    title:string[],
-    recruitmentStart:Date,
-    recruitmentEnd:Date,
-    flowStart:Date,
-    flowEnd:Date,
-    announce:Date,
-    subject:string,
-    imgSrc:string,
+    hackathonName:string[],
+    registerDate:Date,
+    teamDeadlineDate:Date,
+    startDate:Date,
+    endDate:Date,
+    // announce:Date,
+    hackathonTopic:string,
+    hackathonImageUrl:string,
+    maxTeamMember:number,
+    maxPoint : number
 }
 
-interface HackathonInfoDetailDTO extends HackathonInfoDTO {
+export interface HackathonInfoDetailDTO extends HackathonInfoDTO {
     status: string,
     count: number
+}
+
+export interface PageableHackathonList {
+    hackathons: HackathonInfoDTO[];
+    pageable: PageableDto;
 }

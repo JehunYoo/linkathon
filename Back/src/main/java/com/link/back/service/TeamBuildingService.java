@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.*;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import com.link.back.dto.request.UpdateTeamRequestDto;
 import com.link.back.dto.request.UserSearchConditionDto;
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MemberDetailResponseDto;
+import com.link.back.dto.response.RecruitingTeamResponseDto;
 import com.link.back.dto.response.TeamApplicationResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
 import com.link.back.entity.MemberStatus;
@@ -170,8 +172,16 @@ public class TeamBuildingService {
 		return new MemberDetailResponseDto(user);
 	}
 
-	public List<MemberDetailResponseDto> findMemberByCond(Pageable pageable, UserSearchConditionDto userSearchConditionDto) {
+	public Page<MemberDetailResponseDto> findMemberByCond(Pageable pageable, UserSearchConditionDto userSearchConditionDto) {
 		Page<User> userPage = userRepository.findBySearchCondition(pageable, userSearchConditionDto);
-		return userPage.stream().map(MemberDetailResponseDto::new).collect(toList());
+		List<MemberDetailResponseDto> memberDetailResponseDtos = userPage.stream().map(MemberDetailResponseDto::new).toList();
+
+		return new PageImpl<>(memberDetailResponseDtos, pageable, userPage.getTotalElements());
 	}
+
+	public RecruitingTeamResponseDto findRecruitingTeam(Long userId) {
+		Long teamId = userTeamRepository.findByIdAndStatus(userId).orElseThrow(RuntimeException::new).getTeam().getTeamId();
+		return new RecruitingTeamResponseDto(userTeamRepository.findUserTeamsByTeamId(teamId));
+	}
+
 }
