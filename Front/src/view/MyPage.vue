@@ -6,7 +6,9 @@ import MyInfo from "@/components/MyPage/MyInfo.vue";
 import MyPageRecruitTeamInfo from "@/components/MyPage/MyPageRecruitTeamInfo.vue";
 import MyPageMyProject from "@/components/MyPage/MyPageMyProject.vue";
 import MyPageSchedule from "@/components/MyPage/MyPageSchedule.vue";
+import {UserService} from "@/api/UserService.ts";
 
+const userService = new UserService();
 const route = useRoute();
 const mode = ref<number>(0);
 const updatePageFromQuery = () => {
@@ -14,6 +16,16 @@ const updatePageFromQuery = () => {
   mode.value = parseInt(queryParam as string);
   if (isNaN(mode.value)) mode.value=0;
 };
+
+const fetchData = function (){
+  try {
+    const response = await userService.getUserData(); // 실제 API 엔드포인트에 맞게 수정
+    console.log(response.data); // 가져온 데이터 확인
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
 
 watch([() => route.query], updatePageFromQuery, {immediate: true});
 </script>

@@ -20,9 +20,16 @@ function createLocalAxios(requireAuth: boolean): AxiosInstance {
 
 function authorization(axiosInstance: any) {
     const token = store.getters.getToken;
-    if (token) {
-        axiosInstance.defaults.headers['Authorization'] = `${token}`;
-    } else {
+    console.log(token)
+    if(token) {
+        console.log("bearer", token)
+        if(token.substring(0,6) !== 'Bearer') {
+            axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            axiosInstance.defaults.headers['Authorization'] = `${token}`;
+        }
+    }
+    else {
         throw new Error('Authorization token is missing');
     }
 }
@@ -31,6 +38,7 @@ function tokenInterceptor(axiosInstance: any) {
     axiosInstance.interceptors.response.use(
         async (response: AxiosResponse) => {
             const authToken = response.headers['authorization'];
+            console.log(authToken);
             if (authToken) {
                 await store.dispatch("updateToken", authToken);
             }

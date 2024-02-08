@@ -1,16 +1,21 @@
 <script lang="ts" setup>
 import {ref} from 'vue';
+import Store from "@/store";
 
-const dummy = ref(["선택", "백엔드", "프론트엔드", "인프라", "디자이너"]);
+const dummy = ref(["선택", "프론트엔드", "백엔드", "풀스택", "디자이너", "관리"]);
+const backDummy = ref(["", "FRONTEND", "BACKEND", "FULLSTACK", "DESIGN", "MANAGE"]);
 const dropdownOpen = ref(false);
-const select = ref(0)
+const select = ref(0);
+
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
+  Store.commit('setField', backDummy.value[select.value]);
 };
 
 const clickDropdownMenu = (item: number) => {
   select.value = item;
 };
+
 </script>
 
 <template>

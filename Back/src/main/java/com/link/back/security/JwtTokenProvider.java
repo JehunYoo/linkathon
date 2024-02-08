@@ -104,6 +104,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken.charAt(6)==32?jwtToken.substring(7):jwtToken);
+
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             log.info(e.getMessage());
