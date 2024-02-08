@@ -1,6 +1,6 @@
 import {ApiService} from "@/api/ApiService.ts";
 import {httpStatusCode} from "@/util/httpStatus.ts";
-import {IdResponseDto} from "@/dto/IdDto.ts";
+import {IdResponseDto, IdsResponseDto} from "@/dto/IdDto.ts";
 import {Builder} from "builder-pattern";
 import {CandidatesResponseDto} from "@/dto/tmpDTOs/userDTO.ts";
 import {TeamApplicationResponseDto} from "@/dto/tmpDTOs/teamDTO.ts";
@@ -12,15 +12,28 @@ export class TeamService {
 
     async getActiveTeamId() : Promise<IdResponseDto> {
         try {
-            const response = await apiService.getData(true, `${url}/members`, null);
+            const response = await apiService.getData(true, `${url}/id`, null);
             if (response && response.status === httpStatusCode.OK) {
                 return response.data as IdResponseDto;
             }
         } catch (error) {
-            alert("조회 실패");
+            alert("팀 아이디 조회 실패");
         }
 
         return Builder<IdResponseDto>().build();
+    }
+
+    async getBuildingTeamIds() : Promise<IdsResponseDto> {
+        try {
+            const response = await apiService.getData(true, `${url}/ids`, null);
+            if (response && response.status === httpStatusCode.OK) {
+                return response.data as IdsResponseDto;
+            }
+        } catch (error) {
+            alert("팀 아이디 조회 실패");
+        }
+
+        return Builder<IdsResponseDto>().build();
     }
 
     async postSuggestionByTeam(teamId: number, userId: number) : Promise<void> {
@@ -34,9 +47,9 @@ export class TeamService {
         }
     }
 
-    async deleteSuggestionByTeam(teamId: number) : Promise<void> {
+    async deleteSuggestionByTeam(teamId: number, userId: number) : Promise<void> {
         try {
-            const response = await apiService.deleteData(true, `${url}/${teamId}/members/suggest`, null);
+            const response = await apiService.deleteData(true, `${url}/${teamId}/members/${userId}/suggest`, null);
             if (response && response.status === httpStatusCode.NOCONTENT) {
                 return;
             }
@@ -56,9 +69,9 @@ export class TeamService {
         }
     }
 
-    async deleteSuggestionByUser(teamId: number, userId: number) : Promise<void> {
+    async deleteSuggestionByUser(teamId: number) : Promise<void> {
         try {
-            const response = await apiService.postData(true, `${url}/${teamId}/members/${userId}/suggest`, null);
+            const response = await apiService.postData(true, `${url}/${teamId}/members/suggest`, null);
             if (response && response.status === httpStatusCode.NOCONTENT) {
                 return;
             }
@@ -94,14 +107,27 @@ export class TeamService {
     }
 
 
-    async deleteMember(teamId: number, userId: number) : Promise<void> {
+    async deleteMember(userId: number) : Promise<void> {
         try {
-            const response = await apiService.deleteData(true, `${url}/${teamId}/members/${userId}`, null);
+            const response = await apiService.deleteData(true, `${url}/members/${userId}`, null);
             if (response && response.status === httpStatusCode.NOCONTENT) {
                 return;
             }
         } catch (error) {
             alert("삭제 실패");
         }
+    }
+
+    async isLeader() : Promise<boolean> {
+        try {
+            const response = await apiService.getData(true, `${url}/leader`, null);
+            if (response && response.status == httpStatusCode.OK) {
+                return response.data;
+            }
+        } catch (error) {
+            alert("리더 조회 실패");
+        }
+
+        return false;
     }
 }

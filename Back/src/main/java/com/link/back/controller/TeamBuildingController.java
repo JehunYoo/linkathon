@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,7 +27,6 @@ import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MemberDetailResponseDto;
 import com.link.back.dto.response.TeamApplicationResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
-import com.link.back.entity.Field;
 import com.link.back.service.TeamBuildingService;
 
 import jakarta.validation.Valid;
@@ -67,7 +67,7 @@ public class TeamBuildingController {
 	// 팀 참가 권유 거절
 	@DeleteMapping("/{teamId}/members/suggest")
 	@ResponseStatus(NO_CONTENT)
-	public void deleteSuggestionByTeam(@PathVariable @Positive Long teamId, @Positive Long userId) {
+	public void deleteSuggestionByTeam(@PathVariable @Positive Long teamId, @RequestHeader("Authorization") String token) {
 		teamBuildingService.refuseOrCancelTeamParticipate(teamId, 11L, SUGGESTED);
 	}
 
@@ -179,4 +179,9 @@ public class TeamBuildingController {
 		return teamBuildingService.findMemberByCond(pageable, userSearchConditionDto);
 	}
 
+	@GetMapping("/leader")
+	@ResponseStatus(OK)
+	public boolean getLeader(@RequestHeader("Authorization") String token) {
+		return teamBuildingService.isLeader(token);
+	}
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class IdResponseDto {
-
-	private Long id;
+public class IdsResponseDto {
+	private List<Long> ids;
+	private List<String> names;
 }

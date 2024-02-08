@@ -1,23 +1,8 @@
 <script lang="ts" setup>
-
 import Tier from "@/components/Tier.vue";
-import ModalButton from "@/components/Modal/ModalButton.vue";
 import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
-import {TeamService} from "@/api/TeamService.ts";
 
-const props = defineProps({
-  userId: Number
-});
-
-async function suggestTeam() {
-  const teamService = new TeamService();
-  const team = await teamService.getActiveTeamId();
-  const teamId = team.id;
-  if (props.userId) {
-    teamService.postSuggestionByTeam(teamId, props.userId);
-  }
-}
 </script>
 
 <template>
@@ -37,8 +22,8 @@ async function suggestTeam() {
           <div class="git-button">
             <ModalGithubButton/>
           </div>
-          <RouterLink class="button-right-container" to="/video">
-            <ModalButton button-text="합류 요청" @click-event="suggestTeam"/>
+          <RouterLink class="button-right-container" to=""> <!-- to 설정 -->
+            <slot></slot>
           </RouterLink>
         </div>
       </div>

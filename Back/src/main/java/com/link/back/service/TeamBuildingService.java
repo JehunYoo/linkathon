@@ -29,6 +29,7 @@ import com.link.back.repository.TeamRepository;
 import com.link.back.repository.TeamSkillRepository;
 import com.link.back.repository.UserRepository;
 import com.link.back.repository.UserTeamRepository;
+import com.link.back.security.JwtTokenProvider;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class TeamBuildingService {
 	private final UserTeamRepository userTeamRepository;
 	private final ProjectRepository projectRepository;
 	private final TeamSkillRepository teamSkillRepository;
+	private final JwtTokenProvider jwtTokenProvider;
 	public void teamParticipate(Long teamId, Long userId, MemberStatus status) {
 		Team team = teamRepository.findById(teamId).orElseThrow(RuntimeException::new);
 		User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
@@ -173,5 +175,14 @@ public class TeamBuildingService {
 	public List<MemberDetailResponseDto> findMemberByCond(Pageable pageable, UserSearchConditionDto userSearchConditionDto) {
 		Page<User> userPage = userRepository.findBySearchCondition(pageable, userSearchConditionDto);
 		return userPage.stream().map(MemberDetailResponseDto::new).collect(toList());
+	}
+
+	public boolean isLeader(String token) {
+		Long userId = jwtTokenProvider.getUserId(token);
+		User user = userRepository.findById(userId)
+			.orElseThrow(RuntimeException::new);
+
+		UserTeam leader = userTeamRepository.findUserTeamIfLeader(user);
+		return leader != null;
 	}
 }

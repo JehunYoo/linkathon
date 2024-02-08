@@ -33,6 +33,7 @@ export interface UserSearchConditionDto {
 }
 
 export interface CandidateResponseDto {
+    userId: number;
     name: string;
     rating: number;
     introduce: string;
