@@ -25,35 +25,42 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final CustomOAuth2UserService oAuth2UserService;
-    private final MyAuthenticationSuccessHandler successHandler;
-    private final MyAuthenticationFailureHandler failureHandler;
-    private final CorsFilter corsFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final CorsConfig corsConfig;
+	private final CorsFilter corsFilter;
+	private final CustomOAuth2UserService oAuth2UserService;
+	private final MyAuthenticationSuccessHandler successHandler;
+	private final MyAuthenticationFailureHandler failureHandler;
 
-        return httpSecurity
-                .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("api/users/**").permitAll()
-                                .requestMatchers("/oauth2/**").permitAll()
-                                .requestMatchers("/error").permitAll()
-                                .anyRequest().authenticated()
-                ).csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-               .oauth2Login(oauth2Configurer -> oauth2Configurer
-                   .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
-                   .successHandler(successHandler)
-                   .failureHandler(failureHandler))
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class).build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+		return httpSecurity
+			.authorizeHttpRequests((authorize) ->
+				authorize.requestMatchers("/api/users/**").permitAll()
+					.requestMatchers("/oauth2/**").permitAll()
+					.requestMatchers("/githubLogin/success").permitAll()
+					.requestMatchers("/error").permitAll()
+					.anyRequest().authenticated()
+			)
+			.csrf(AbstractHttpConfigurer::disable)
+			.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.oauth2Login(oauth2Configurer -> oauth2Configurer
+				.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
+				.successHandler(successHandler)
+				// .failureHandler(failureHandler)
+			)
+			// JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
+			.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+			.build();
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

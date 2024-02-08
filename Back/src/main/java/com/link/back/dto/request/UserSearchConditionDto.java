@@ -15,6 +15,6 @@ public class UserSearchConditionDto {
 	private Integer tier;
 	private Integer career;
 	private Boolean gender;
-	private String field;
+	private Field field;
 
 }

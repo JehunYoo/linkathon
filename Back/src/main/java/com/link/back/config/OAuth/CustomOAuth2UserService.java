@@ -25,7 +25,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
    @Override
    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
        //기본 OAuth2UserService 객체 생성 후
        //OAuth2UserService를 사용하여 OAuth2User 정보를 가져온다.
        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();

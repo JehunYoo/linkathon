@@ -9,13 +9,17 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.link.back.dto.response.IdResponseDto;
 import com.link.back.dto.response.IdsResponseDto;
+import com.link.back.dto.request.TeamSearchConditionDto;
+import com.link.back.dto.response.TeamRecruitResponseDto;
 import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
@@ -154,5 +158,11 @@ public class TeamService {
 
 	private void removeMember(Team team, User user) {
 		userTeamRepository.deleteUserTeamByTeamAndUser(team, user);
+	}
+
+	public Page<TeamRecruitResponseDto> findTeamByHackathonAndTeamSearchCond(Long hackathonId, TeamSearchConditionDto teamSearchConditionDto, Pageable pageable) {
+		Page<Team> teamList = teamRepository.findTeamByHackathonAndTeamSearchCond(hackathonId, teamSearchConditionDto, pageable);
+		List<TeamRecruitResponseDto> teamRecruitResponseDtos = teamList.stream().map(TeamRecruitResponseDto::new).toList();
+		return new PageImpl<>(teamRecruitResponseDtos, pageable, teamList.getTotalElements());
 	}
 }

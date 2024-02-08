@@ -12,7 +12,7 @@ import com.link.back.entity.Team;
 import com.link.back.entity.User;
 
 @Repository
-public interface TeamRepository extends JpaRepository<Team, Long> {
+public interface TeamRepository extends JpaRepository<Team, Long>, TeamRepositoryCustom {
 
 	@Query("select t from Team t join fetch UserTeam u on t.teamId = u.team.teamId where u.user = :user and u.memberStatus = :status")
 	List<Team> findTeamByUserAndStatus(@Param("user") User user, @Param("status") MemberStatus status);
