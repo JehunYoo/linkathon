@@ -2,16 +2,21 @@ package com.link.back.service;
 
 // import static com.link.back.common.mapper.ProjectMapper.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.link.back.config.S3Uploader;
+import com.link.back.dto.Image;
 import com.link.back.dto.ProjectImageDto;
 import com.link.back.dto.request.ProjectRequestDto;
 import com.link.back.dto.response.ProjectDetailResponseDto;
@@ -21,12 +26,16 @@ import com.link.back.entity.ProjectImage;
 import com.link.back.entity.ProjectLike;
 import com.link.back.entity.ProjectStatus;
 import com.link.back.entity.Team;
+import com.link.back.redmine.dto.request.CreateProjectRequest;
+import com.link.back.redmine.dto.request.CreateUserRequest;
+import com.link.back.redmine.service.RedmineProjectService;
 import com.link.back.entity.User;
 import com.link.back.repository.ProjectImageRepository;
 import com.link.back.repository.ProjectLikeRepository;
 import com.link.back.repository.ProjectRepository;
 import com.link.back.repository.TeamRepository;
 import com.link.back.repository.UserRepository;
+import com.link.back.repository.UserTeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,23 +48,51 @@ public class ProjectService {
 	private final ProjectRepository projectRepository;
 	private final TeamRepository teamRepository;
 	private final ProjectImageRepository projectImageRepository;
+	private final RedmineProjectService redmineProjectService;
+	private final UserTeamRepository userTeamRepository;
 	private final ProjectLikeRepository projectLikeRepository;
 	private final UserRepository userRepository;
+	private final S3Uploader s3Uploader;
 
-	public void createProject(ProjectRequestDto projectRequestDto) {
+	// TODO: 팀 생성시 프로젝트 자동 생성 되도록
+	@Transactional
+	public void createProject(ProjectRequestDto projectRequestDto, MultipartFile image) {
+		// TODO: 프로젝트 이미지 받아와서 업로드
+		ProjectImage projectImage = uploadImage(image);
 		Team team = teamRepository.getReferenceById(projectRequestDto.teamId());
-		ProjectImage projectImage = null;
-		if (projectRequestDto.projectImage() != null) {
-			projectImage = createProjectImageEntity(projectRequestDto.projectImage());
-			projectImageRepository.save(projectImage);
-		}
 		Project project = createProjectEntity(team, projectImage, projectRequestDto);
-		projectRepository.save(project);
+		Project save = projectRepository.save(project);
+
+		// try {
+		// 	// 레드마인 프로젝트 생성
+		// 	CreateProjectRequest cpr = CreateProjectRequest.builder()
+		// 		.name(projectRequestDto.projectName())
+		// 		.identifier(projectRequestDto.projectName() + save.getProjectId())
+		// 		.build();
+		// 	redmineProjectService.createProject(cpr);
+		//
+		// 	// 레드마인 유저 생성
+		// 	List<String> logins = userTeamRepository.findMembersByTeamId(projectRequestDto.teamId())
+		// 		.stream()
+		// 		.map(userTeam -> {
+		// 			redmineProjectService.createUser(new CreateUserRequest(userTeam.getUser()));
+		// 			return new CreateUserRequest(userTeam.getUser()).getLogin();
+		// 		})
+		// 		.collect(Collectors.toList());
+		//
+		// 	// 레드마인 프로젝트 유저 등록
+		// 	redmineProjectService.addProjectMembers(logins, cpr.getIdentifier());
+		// } catch (RuntimeException re) {
+		// 	if (projectImage != null)
+		// 		s3Uploader.deleteFile(projectImage.getProjectImageName()); // 이미 올라간 S3 이미지 삭제
+		// 	throw re;
+		// }
+
 	}
 
 	public Page<ProjectResponseDto> getAllClosedProjects(Long userId, Pageable pageable) {
 		User user = userId != null ? userRepository.getReferenceById(userId) : null;
-		Page<Project> projectPage = projectRepository.findByProjectStatusOrderByLikesDesc(
+		Page<Project> projectPage = projectRepository.findAllByProjectStatusOrderByRegisteredDateDesc(
 			ProjectStatus.CLOSED,
 			pageable);
 		List<ProjectResponseDto> projectResponseList = projectPage.stream()
@@ -64,48 +101,67 @@ public class ProjectService {
 		return new PageImpl<>(projectResponseList, projectPage.getPageable(), projectPage.getTotalElements());
 	}
 
-	public List<ProjectResponseDto> getPopularProjects(Long userId) {
+	public Page<ProjectResponseDto> getPopularProjects(Long userId, Pageable pageable) {
 		User user = userId != null ? userRepository.getReferenceById(userId) : null;
-		Pageable pageable = PageRequest.of(0, 4); // 상위 4개 프로젝트 조회
-		Page<Project> projects = projectRepository.findByProjectStatusOrderByLikesDesc(ProjectStatus.CLOSED, pageable);
-		return projects.stream().map(p -> toProjectResponseDto(p, user)).toList();
+		Page<Project> projectPage = projectRepository.findByProjectStatusOrderByLikesDesc(ProjectStatus.CLOSED,
+			pageable);
+		return new PageImpl<>(projectPage.stream().map(p -> toProjectResponseDto(p, user)).toList(),
+			projectPage.getPageable(), projectPage.getTotalElements());
 	}
 
-	public List<ProjectResponseDto> getMyProjects(Long userId) {
+	public Page<ProjectResponseDto> getMyProjects(Long userId, Pageable pageable) {
 		User user = userId != null ? userRepository.getReferenceById(userId) : null;
-		return projectRepository.findByUserId(userId)
-			.stream()
-			.map(p -> toProjectResponseDto(p, user))
-			.toList();
+		Page<Project> projectPage = projectRepository.findByUserId(userId, pageable);
+
+		return new PageImpl<>(projectPage.stream().map(p -> toProjectResponseDto(p, user)).toList(),
+			projectPage.getPageable(),
+			projectPage.getTotalElements());
 	}
 
 	public ProjectDetailResponseDto getProjectDetail(Long userId, Long projectId) {
+		// TODO: 진행중인 프로젝트이면 팀원만 조회 허용
 		User user = userId != null ? userRepository.getReferenceById(userId) : null;
 		Project project = projectRepository.findById(projectId).orElseThrow();
 		return toProjectDetailResponseDto(project, user);
 	}
 
-	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto) {
+	@Transactional
+	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto, MultipartFile image) {
+		// TODO: 프로젝트 이미지 받아와서 업로드
 		Project project = projectRepository.findById(projectId).orElseThrow();
-		ProjectImage projectImage = null;
-		if (projectRequestDto.projectImage() != null) {
-			projectImage = createProjectImageEntity(projectRequestDto.projectImage());
-			projectImageRepository.save(projectImage);
+		ProjectImage projectImage = uploadImage(image);
+		if (projectImage == null && project.getProjectImage() != null) { // 기존 이미지 삭제
+			s3Uploader.deleteFile(project.getProjectImage().getProjectImageName());
 		}
 		updateProjectEntity(project, projectImage, projectRequestDto);
-		projectRepository.save(project);
+		try {
+			projectRepository.save(project);
+		} catch (RuntimeException re) { // 저장 실패시 S3에 업로드된 이미지 삭제
+			if (projectImage != null)
+				s3Uploader.deleteFile(projectImage.getProjectImageName()); // 이미 올라간 S3 이미지 삭제
+			throw re;
+		}
 	}
 
+	@Transactional
 	public void deleteProject(Long projectId) {
+		Project project = projectRepository.getReferenceById(projectId);
+		String imageName = null;
+		if (project.getProjectImage() != null)
+			imageName = project.getProjectImage().getProjectImageName();
 		projectRepository.deleteById(projectId);
+		if (imageName != null)
+			s3Uploader.deleteFile(imageName); // S3 이미지 제거
 	}
 
+	@Transactional
 	public void submitProject(Long projectId) {
 		Project project = projectRepository.findById(projectId).orElseThrow();
 		project.updateProjectStatus();
 		projectRepository.save(project);
 	}
 
+	@Transactional
 	public void registerLike(Long userId, Long projectId) {
 		User user = userRepository.getReferenceById(userId);
 		Project project = projectRepository.getReferenceById(projectId);
@@ -121,6 +177,7 @@ public class ProjectService {
 		}
 	}
 
+	@Transactional
 	public void unregisterLike(Long userId, Long projectId) {
 		User user = userRepository.getReferenceById(userId);
 		Project project = projectRepository.getReferenceById(projectId);
@@ -132,11 +189,13 @@ public class ProjectService {
 		}
 	}
 
-	public List<ProjectResponseDto> getLikedProjects(Long userId) {
+	public Page<ProjectResponseDto> getLikedProjects(Long userId, Pageable pageable) {
 		User user = userRepository.getReferenceById(userId);
-		List<Project> projects = projectRepository.findLikedProjectsByUser(user);
-		return projects.stream().map(p -> toProjectResponseDto(p, user)).toList();
+		Page<Project> projectPage = projectRepository.findLikedProjectsByUser(user, pageable);
+		return new PageImpl<>(projectPage.stream().map(p -> toProjectResponseDto(p, user)).toList(),
+			projectPage.getPageable(), projectPage.getTotalElements());
 	}
+
 
 	private ProjectResponseDto toProjectResponseDto(Project project, User user) {
 		return ProjectResponseDto.builder()
@@ -164,7 +223,7 @@ public class ProjectService {
 			.projectUrl(project.getProjectUrl())
 			.deployUrl(project.getDeployUrl())
 			.winState(project.getWinState())
-			.imsSrc(project.getProjectImage() == null ? null : project.getProjectImage().getProjectImageUrl())
+			.imgSrc(project.getProjectImage() != null ? project.getProjectImage().getProjectImageUrl() : null)
 			.starCount(projectLikeRepository.countByProject(project))
 			.starred(projectLikeRepository.findByProjectAndUser(project, user).isPresent())
 			.build();
@@ -202,12 +261,17 @@ public class ProjectService {
 		);
 	}
 
-	private ProjectImage createProjectImageEntity(ProjectImageDto projectImageDto) {
-		return ProjectImage.builder()
-			.projectImageName(projectImageDto.projectImgName())
-			.projectImageUrl(projectImageDto.projectImgUrl())
-			.projectOriginImageName(projectImageDto.projectOriginImgName())
-			.build();
+	private ProjectImage uploadImage(MultipartFile image) {
+		ProjectImage projectImage = null;
+		if (image != null) {
+			try {
+				Image img = s3Uploader.upload(image, "static");
+				projectImage = ProjectImage.create(img.getImageName(), img.getImageUrl(), img.getOriginName());
+				projectImageRepository.save(projectImage);
+			} catch (IOException e) {
+				throw new RuntimeException("S3 이미지 업로드 실패"); // FIXME: 예외 클래스 필요
+			}
+		}
+		return projectImage;
 	}
-
 }

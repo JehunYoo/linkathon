@@ -1,15 +1,18 @@
 package com.link.back.repository;
 
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.link.back.entity.User;
 
 import feign.Param;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 
 	@Query("select user from User user"
@@ -22,9 +25,9 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	Optional<User> findByEmail(String email);
 	Optional<User> findByUserId(Long userId);
 
-	User findByNameAndBirthAndPhoneNumber(String name, LocalDate birth, String phoneNumber);
+	Optional<User> findByNameAndBirthAndPhoneNumber(String name, LocalDate birth, String phoneNumber);
 
-
+	Optional<User> findByName(String name);
 	/**
 	 * 소셜 타입과 소셜의 식별값으로 회원 찾는 메소드
 	 * 정보 제공을 동의한 순간 DB에 저장해야하지만, 아직 추가 정보(사는 도시, 나이 등)를 입력받지 않았으므로

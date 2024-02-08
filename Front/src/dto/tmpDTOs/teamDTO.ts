@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {HackathonInfoResponseDto} from "@/dto/hackathonInfoDTO.ts";
 import {SkillResponseDto} from "@/dto/skillDTO.ts";
 

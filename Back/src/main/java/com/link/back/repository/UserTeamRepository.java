@@ -1,6 +1,7 @@
 package com.link.back.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,9 @@ import com.link.back.entity.UserTeam;
 public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
 	UserTeam findUserTeamByTeamAndUser(Team team, User user);
+
+	@Query("select ut from UserTeam ut join Team t on ut.team = t where ut.user = :user and ut.role = 'LEADER'")
+	UserTeam findUserTeamIfLeader(@Param("user") User user);
 
 		// todo
 	@Query("select userTeam from UserTeam userTeam "
@@ -65,6 +69,9 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
 	List<UserTeam> findUserTeamByTeamAndMemberStatus(Team team, MemberStatus memberStatus);
 
+	@Query("select u from UserTeam u where u.user.userId = :userId and u.memberStatus = 'JOINED'")
+	Optional<UserTeam> findByIdAndStatus(Long userId);
+
 	// todo
 	// @Query("select ut from UserTeam ut join fetch ut.user u join fetch u.userImage ui "
 	// 	+ "where ut.team = :team and ut.memberStatus = :memberStatus")
@@ -73,5 +80,8 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 	// @Query("select ut from UserTeam ut join fetch ut.user u join fetch u.userImage ui "
 	// 	+ "where ut.team = :team")
 	// List<UserTeam> findMembers(@Param("team") Team team);
+
+	@Query("select u from UserTeam u where u.team.teamId = :teamId")
+	List<UserTeam> findUserTeamsByTeamId(Long teamId);
 
 }

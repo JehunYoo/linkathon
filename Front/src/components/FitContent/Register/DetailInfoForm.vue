@@ -1,7 +1,48 @@
 <script lang="ts" setup>
-
+import {UserService} from "@/api/UserService.ts";
 import FitDropDown from "@/components/FitContent/FitDropDown.vue";
 import SkillSelectV from "@/components/SkillSelector.vue";
+import {computed, ref} from "vue";
+import Store from "@/store";
+import {Builder} from "builder-pattern";
+import {UserImageDTO} from "@/dto/UserImageDTO.ts";
+import {AddUserInfoDTO} from "@/dto/AddUserInfoDTO.ts";
+import router from "@/router";
+
+const userService = new UserService();
+
+const skills = computed(() => Store.state.skillSelectList);
+const referenceUrl = ref<string>('');
+const field = computed(() => String(Store.state.field));
+const career = ref<number>(0);
+const registered = ref<boolean>(false);
+const introduce = ref<string>('');
+const image = Builder<UserImageDTO>()
+    .userImageId(1)
+    .userImageName('user_image1.jpg')
+    .userImageUrl('http://example.com/images/user_image1.jpg')
+    .userOriginImageName('user_image_origin1.jpg')
+    .build();
+
+const dropdownOpen = ref<boolean>(false);
+const telecom = ref<number>(0);
+
+const addUserInfo = function () {
+  const data = Builder<AddUserInfoDTO>()
+      .userSkills(skills.value)
+      .field(field.value)
+      .career(career.value)
+      .referenceUrl(referenceUrl.value)
+      .introduce(introduce.value)
+      .registered(registered.value)
+      .userImage(image)
+      .build();
+
+  userService.addUserInfo(data);
+
+  router.push("/myPage");
+}
+
 </script>
 
 <template>
@@ -13,7 +54,7 @@ import SkillSelectV from "@/components/SkillSelector.vue";
     </div>
     <div>
       <h2>깃허브 링크</h2>
-      <input class="text-input" type="text">
+      <input v-model = "referenceUrl" class="text-input" type="text">
     </div>
     <div>
       <h2>분야</h2>
@@ -23,10 +64,10 @@ import SkillSelectV from "@/components/SkillSelector.vue";
       <h2>관련 경력</h2>
       <div class="detail-content-container">
         <div class="text-input" style="width: 100%; display: flex;">
-          <input placeholder="기술명을 입력해주세요" style="border: none; font-size: 16px; width: 100%" type="text">
-          <div class="year" style="width: 40px">년차</div>
+          <input style="border: none; font-size: 16px; width: 100%" type="text">
+          <div class="year" style="width: 60px">{{career}} 년차</div>
         </div>
-        <div class="button pp">경력인증</div>
+        <div @click="validCareer" class="button pp">경력인증</div>
       </div>
     </div>
     <div>
@@ -42,13 +83,20 @@ import SkillSelectV from "@/components/SkillSelector.vue";
         <h3>등록하신 정보가 팀원 구하기 페이지에 등록됩니다.</h3>
       </div>
       <div class="detail-content-container" style="margin-bottom: 7px">
-        <input type="radio">네 등록할래요
-        <input type="radio">다음에 등록할게요.
+        <input v-model="registered" name = "registered" type="radio" value="true">네 등록할래요
+        <input v-model="registered" name = "registered" type="radio" value="false">다음에 등록할게요.
       </div>
     </div>
+    <div class="detail-content-container" style="margin-bottom: 7px">
+      <h2>자기소개</h2>
+    </div>
+    <div class="detail-content-container" style="margin-bottom: 7px">
+      <input v-model="introduce" class="introduce-container" type="text">
+    </div>
+
     <div class="detail-content-container">
       <router-link class="button wt" to="/">다음에 하기</router-link>
-      <div class="button pp">등록하기</div>
+      <div @click = "addUserInfo" class="button pp">등록하기</div>
     </div>
   </div>
 </template>
@@ -149,5 +197,18 @@ h2 {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+.introduce-container {
+  width: 100%;
+  height: 120px; /* 더 큰 높이로 조정합니다. */
+  border-radius: 5px;
+  border: 1px solid #303030;
+  padding: 10px;
+  color: #2b2b2b;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  overflow-wrap: break-word;
 }
 </style>

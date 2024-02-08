@@ -2,6 +2,39 @@
 
 import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
+import {HackathonService} from "@/api/HackathonService.ts"
+import {onMounted, PropType, Ref, ref} from "vue";
+import store from "@/store/hackathon.ts";
+import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
+
+const categorySelect = new Set<number>();
+const refSelect = ref(categorySelect);
+const hackathonsRef: Ref<PageableHackathonList> = ref({} as PageableHackathonList);
+const hackathonService : HackathonService = new HackathonService();
+const refSelectName = ref<String>('');
+
+onMounted(() => {
+  click(0);
+})
+
+const click = async (num: number) => {
+  if (refSelect.value.has(num))
+    refSelect.value.delete(num);
+  else
+    refSelect.value.clear();
+    refSelect.value.add(num);
+    refSelectName.value = listName[num];
+  hackathonsRef.value = await hackathonService.getHackathonList(listName[num], 0, 6);
+  updateStatusName();
+}
+
+const listName:string[] = ["모집중", "진행중", "완료됨"];
+
+function updateStatusName() {
+  // Vuex Store를 업데이트
+  store.dispatch('updateStatusName', refSelectName.value);
+}
+
 </script>
 
 <template>
@@ -10,21 +43,24 @@ import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
   <div class="button">해커톤 참여방법 알아보기</div>
   <hr>
   <div class="category-button-container">
-    <div class="category-button">모집중</div>
-    <div class="category-button">모집전</div>
-    <div class="category-button">진행중</div>
-    <div class="category-button">종료됨</div>
-  </div>
-  <div class="container">
-    <template v-for="_ in 6">
-      <HackathonCard/>
+    <template v-for="(name, i) in listName">
+      <div class="category-button" :class="{'select':refSelect.has(i)}" @click="click(i)">{{name}}</div>
     </template>
   </div>
-
-  <Pagination style="margin-bottom: 60px"/>
+  <div class="container">
+    <template v-for="hackathon in hackathonsRef.hackathons">
+      <HackathonCard :data="hackathon" :name="refSelectName"/>
+    </template>
+  </div>
+  <Pagination :pageable-d-t-o="hackathonsRef.pageable" style="margin-bottom: 60px" />
 </template>
 
 <style scoped>
+.select {
+  background: #7d3bff;
+  color: white;
+}
+
 .container {
   margin-top: 12px;
   display: flex;
@@ -45,6 +81,7 @@ import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
   border: 1px solid #606060;
   padding: 8px 12px;
   width: max-content;
+  transition: color 0.3s ease;
 }
 
 hr {

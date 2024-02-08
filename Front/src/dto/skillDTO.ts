@@ -3,4 +3,5 @@ interface SkillDTO {
     skillName:string,
     skillImageUrl:string,
     skillYear:number
+    skillType:string
 }

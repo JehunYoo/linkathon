@@ -37,6 +37,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 
+    implementation group: 'io.codef.api', name: 'easycodef-java', version: '1.0.5'
+
     implementation 'com.auth0:java-jwt:4.4.0'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
@@ -44,6 +46,7 @@ dependencies {
 
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.0")
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
@@ -59,7 +62,7 @@ dependencies {
 
 //tasks.named('test') {
 //    useJUnitPlatform()
-
+//
 //}
 
 

@@ -61,24 +61,6 @@ const dummy: HackathonTeamInfoDetailDTO = Builder<HackathonTeamInfoDetailDTO>()
   background: white;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background:#A679FF;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #7D3CFF;
-}
-
 .user-card-container {
   max-width: 658px;
   display: flex;

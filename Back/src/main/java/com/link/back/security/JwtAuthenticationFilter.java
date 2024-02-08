@@ -34,6 +34,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         // 헤더에서 JWT 를 받아옵니다. -> access토큰을 체크
         String accessToken = jwtTokenProvider.resolveAccessToken(httpRequest);
+
+        System.out.println(accessToken);
+
         String refreshToken = "";
         //쿠키 가져오기
         Cookie [] cookies = httpRequest.getCookies();
@@ -42,31 +45,32 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             for (Cookie cookie : cookies) {
                  if(cookie.getName().equals("refreshToken")){
                      refreshToken = cookie.getValue();
-                     System.out.println(refreshToken);
                  }
             }
         }
 
-        // 유효한 토큰인지 확인합니다.
+        // 유효한 토큰의 유무를 확인합니다.
         if (accessToken != null) {
-            // 어세스 토큰이 유효한 상황
+            // 어세스 토큰이 존재하는 상황
+            // 만료됐는지 확인
+            System.out.println("accessToken");
             if (jwtTokenProvider.validateToken(accessToken)) {
                 this.setAuthentication(accessToken);
             }
-            // 어세스 토큰이 만료된 상황 | 리프레시 토큰 또한 존재하는 상황
-            else if (!jwtTokenProvider.validateToken(accessToken) && !refreshToken.isEmpty()) {
-                // 재발급 후, 컨텍스트에 다시 넣기
-                /// 리프레시 토큰 검증
+            // 어세스 토큰이 만료된 상황 동시에 리프레시 토큰은 존재하는 상황
+            else if (!jwtTokenProvider.validateToken(accessToken) && !(refreshToken.isEmpty())) {
+                /// 리프레시 토큰 만료시간 검증
+                System.out.println("refreshToken");
                 boolean validateRefreshToken = jwtTokenProvider.validateToken(refreshToken);
                 /// 리프레시 토큰 저장소 존재유무 확인
                 boolean isRefreshToken = jwtTokenProvider.existsRefreshToken(refreshToken);
-
+                //둘 다 만족할 때
                 if (validateRefreshToken && isRefreshToken) {
                     /// 리프레시 토큰으로 userId 정보 가져오기
                     Long userId = jwtTokenProvider.getUserId(refreshToken);
                     JwtToken jwtToken = jwtTokenProvider.generateToken(userId);
 
-                    // 헤더에 어세스 토큰 추가
+                    // 응답 헤더에 어세스 토큰 추가
                     jwtTokenProvider.setHeaderAccessToken(httpResponse, jwtToken.getAccessToken());
 
                     // 컨텍스트에 넣기

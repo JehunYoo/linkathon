@@ -7,6 +7,7 @@ import ModalMember from "@/components/Modal/ModalMember.vue";
 import {Builder} from "builder-pattern";
 import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import ModalButton from "@/components/Modal/ModalButton.vue";
+import {TeamService} from "@/api/TeamService.ts";
 
 const clickedModal = ref<Number>();
 const handleModalClose = (num: number) => {
@@ -30,6 +31,13 @@ watch(() => props.refUser, (newVal) => {
 });
 
 
+
+async function suggestTeam(userId: number) {
+  const teamService = new TeamService();
+  const team = await teamService.getActiveTeamId();
+  const teamId = team.id;
+  teamService.postSuggestionByTeam(teamId, userId);
+}
 </script>
 
 <template>
@@ -37,9 +45,8 @@ watch(() => props.refUser, (newVal) => {
     <template v-if="refUser?.content">
       <template v-for="(data, i) in refUser?.content">
         <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
-          <ModalMember :userInfo="data">
-            <ModalButton button-text="합류 요청"/>
-            <ModalButton button-text="합류 요청"/>
+          <ModalMember :userInfo="data" :user-id="i">
+            <ModalButton button-text="합류 요청" @click-event="suggestTeam(i)"/>
           </ModalMember>
         </Modal>
         <UserCard @click="handleModalClose(i+1)" :userInfo="data"/>

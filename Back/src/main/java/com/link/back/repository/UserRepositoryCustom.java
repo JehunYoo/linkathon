@@ -10,4 +10,5 @@ import com.link.back.entity.User;
 
 public interface UserRepositoryCustom {
 	Page<User> findBySearchCondition(Pageable pageable, UserSearchConditionDto userSearchConditionDto);
+
 }

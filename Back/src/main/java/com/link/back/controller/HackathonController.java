@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.link.back.dto.request.HackathonRequest;
+import com.link.back.dto.response.HackathonProceedingProjectResponseDto;
 import com.link.back.dto.response.HackathonResponseDto;
 import com.link.back.dto.response.HackathonsResponseDto;
 import com.link.back.dto.response.WinnerProjectResponseDto;
-import com.link.back.entity.Hackathon;
+import com.link.back.entity.ProjectStatus;
 import com.link.back.service.HackathonService;
 
 import io.lettuce.core.dynamic.annotation.Param;
@@ -58,6 +59,19 @@ public class HackathonController {
 		List<WinnerProjectResponseDto> winnerProjectResponseDtoList = hackathonService.getWinnerProjects(hackathonId);
 		return new ResponseEntity<>(winnerProjectResponseDtoList,HttpStatus.OK);
 	}
+
+
+	// TODO: API 개발
+	// 	- 팀명, 팀 멤버, 해커톤 점수, (제출 수), (최종 테스트일): 페이지네이션 적용, 프로젝트 진행중
+	@GetMapping("/{hackathonId}/proceeding")
+	public ResponseEntity<Page<HackathonProceedingProjectResponseDto>> getWinnerProjects(
+		@PathVariable Long hackathonId,
+		Pageable pageable) {
+		Page<HackathonProceedingProjectResponseDto> projects =
+			hackathonService.getProceedingProjects(hackathonId, pageable);
+		return new ResponseEntity<>(projects,HttpStatus.OK);
+	}
+
 	@PutMapping("/{hackathonId}")
 	public ResponseEntity<Void> updateHackathonInfo(@PathVariable Long hackathonId, @RequestBody HackathonRequest hackathonRequest) {
 		hackathonService.updateHackathon(hackathonId,hackathonRequest);

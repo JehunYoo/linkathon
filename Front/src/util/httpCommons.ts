@@ -13,8 +13,8 @@ function createLocalAxios(requireAuth: boolean): AxiosInstance {
     });
     if (requireAuth) {
         authorization(local);
+        tokenInterceptor(local);
     }
-    tokenInterceptor(local);
     return local;
 }
 
@@ -47,6 +47,7 @@ function tokenInterceptor(axiosInstance: any) {
     axiosInstance.interceptors.response.use(
         async (response: AxiosResponse) => {
             const authToken = response.headers['authorization'];
+            console.log(authToken);
             if (authToken) {
                 await store.dispatch("updateToken", authToken);
             }

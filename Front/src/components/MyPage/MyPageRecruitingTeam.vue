@@ -21,6 +21,15 @@ onMounted(async () => {
   console.log(refTeam.value)
 })
 
+import {TeamService} from "@/api/TeamService.ts";
+
+async function getSuggestions() {
+  const teamService = new TeamService();
+  const idResponseDto = await teamService.getActiveTeamId();
+  const teamId = idResponseDto.id;
+  return teamService.getSuggestionListOfTeam(teamId);
+}
+
 </script>
 
 <template>
