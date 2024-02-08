@@ -16,6 +16,7 @@ import Exit from "@/view/Exit.vue";
 import EditInfo from "@/view/EditInfo.vue";
 import Refresh from "@/view/Refresh.vue";
 import Dragable from "@/view/Dragable.vue";
+import Test from "@/view/Test.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -41,7 +42,7 @@ const routes = [
     {path: '/exit', component: Exit},
     {path: '/editInfo', component: EditInfo},
     {path: '/refresh', component: Refresh},
-    {path: '/test', component: Dragable}
+    {path: '/test', component:Test}
 ];
 
 const router = createRouter({
