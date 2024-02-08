@@ -27,7 +27,14 @@ const routes = [
     {path: '/detailInfo', component: DetailInfo},
     {path: '/video', component: Video},
     {path: '/sharedProject', component: SharedProject},
-    {path: '/projectDetail', component: ProjectDetail},
+    {
+        path: '/projectDetail', component: ProjectDetail, name: 'projectDetail',
+        children: [{
+            path: ':id',
+            component: ProjectDetail,
+            name: 'projectDetailById',
+        },]
+    },
     {path: '/hackathonList', component: HackathonList},
     {path: '/hackathonDetail', component: HackathonDetail},
     {path: '/myPage', component: MyPage},
@@ -41,7 +48,7 @@ const router = createRouter({
     history: createWebHistory('/'),
     routes,
     scrollBehavior() {
-        return { top: 0 };
+        return {top: 0};
     },
 });
 

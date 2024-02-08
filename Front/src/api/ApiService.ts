@@ -26,6 +26,11 @@ class ApiService {
         return await localAxios.post(url, data);
     }
 
+    async postMultipartData(requireAuth: boolean, url: string, data: FormData) {
+        const localAxios = createLocalAxios(requireAuth, true);
+        return await localAxios.postForm(url, data);
+    }
+
     async deleteData(requireAuth: boolean, url: string, data: any) {
         const localAxios = createLocalAxios(requireAuth);
         return await localAxios.delete(url, data);

@@ -6,13 +6,26 @@ import {ProjectService} from "@/api/ProjectService.ts";
 import {onMounted, ref, Ref} from "vue";
 import {PropType} from "vue";
 import {ProjectDetailDto} from "@/dto/projectDTO.ts";
+import projectStorage from "@/store/projectStorage.ts";
+import router from "@/router";
 
 const props = defineProps({
   projectDetail: {
     type: Object as PropType<ProjectDetailDto>,
     required: true
   },
+  editable: {
+    type: Boolean,
+    default: true
+  },
 });
+
+const projectService = projectStorage.getters.getProjectService;
+
+const deleteProject = (projectId: number) => {
+  projectService.deleteProject(projectId);
+  router.push('/myPage');
+}
 
 const projectService = new ProjectService();
 const gitStatusRef : Ref<GitStatusDTO[]> = ref([]);
@@ -32,7 +45,7 @@ onMounted(async () => {
   <div>
     <div class="title-container">
       <h1> {{ props.projectDetail.projectName }} </h1>
-      <div class="remove-button">프로젝트 삭제</div>
+      <div v-if="editable" class="remove-button" @click="deleteProject(props.projectDetail?.projectId)">프로젝트 삭제</div>
     </div>
     <section>
       {{ props.projectDetail.projectDesc }}

@@ -5,16 +5,22 @@ import {Builder} from "builder-pattern";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
 import ProjectTeam from "@/components/Project/ProjectTeam.vue";
 import ProjectLink from "@/components/Project/ProjectLink.vue";
-import {Ref, ref} from "vue";
+import {onMounted, Ref, ref, watch} from "vue";
 import {ProjectDetailDto, ProjectRequestDto} from "@/dto/projectDTO.ts";
-import ProjectStore from "@/store/ProjectStore.ts";
+import ProjectStore from "@/store/projectStorage.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
+import {useRoute} from "vue-router";
+import router from "@/router";
 
+const route = useRoute();
+
+
+// TODO: 팀 아이디로 스킬셋 목록 가져오는 요청 필요
 const dummySkillList: SkillDTO[] = [];
 const dummySkill: SkillDTO = Builder<SkillDTO>()
     .skillId(1)
     .skillName("JavaScript")
-    .skillImageUrl("https://images.velog.io/images/mokyoungg/post/6659a8e8-5234-49e5-b3da-a3816c08bfdc/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%A1%9C%EA%B3%A0.svg").build();
+    .skillImgUrl("https://images.velog.io/images/mokyoungg/post/6659a8e8-5234-49e5-b3da-a3816c08bfdc/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%A1%9C%EA%B3%A0.svg").build();
 
 for (let i = 0; i < 4; i++) {
   dummySkillList.push(dummySkill);
@@ -35,33 +41,44 @@ dummyList.push(Builder<SkillCategory>()
     .build())
 
 const projectService: ProjectService = ProjectStore.getters.getProjectService;
-const projectDetail: Ref<ProjectDetailDto> = ref(Builder<ProjectDetailDto>().build()) // 임시 데이터
+const projectDetail: Ref<ProjectDetailDto> = ref({} as ProjectDetailDto);
 
 const projectRequestDto: ProjectRequestDto = Builder<ProjectRequestDto>()
     .build();
 
+const projectImg = ref();
+
 const updateProject = (key: string, url: string) => {
-  console.log(key, url);
   if (key === 'projectUrl')
     projectRequestDto.projectUrl = projectDetail.value.projectUrl = url;
-  else if (key === 'deployUrl'){
+  else if (key === 'deployUrl') {
     projectRequestDto.deployUrl = projectDetail.value.deployUrl = url;
   }
-  projectService.updateProject(projectDetail.value.projectId, projectRequestDto);
+  projectService.updateProject(projectDetail.value.projectId, projectRequestDto, null);
 }
 
-const bind = async () => {
-  // TODO: 프로젝트 번호를 상위에서 받아오기
-  const dummyProjectId = 1;
-  projectDetail.value = await projectService.getProjectDetail(dummyProjectId);
+const init = async () => {
+  try {
+    projectDetail.value = await projectService.getProjectDetail(parseInt(route.params.id as string));
+  } catch (error) {
+    alert("잘못된 링크입니다!!");
+    await router.push('/');
+  }
   projectRequestDto.projectName = projectDetail.value.projectName;
   projectRequestDto.teamId = projectDetail.value.teamId;
   projectRequestDto.projectDesc = projectDetail.value.projectDesc;
   projectRequestDto.projectUrl = projectDetail.value.projectUrl;
-  projectRequestDto.deployUrl = projectDetail.value.deployUrl;
-};
+  projectRequestDto.deployUrl = projectDetail.value.deployUrl
+}
 
-bind();
+// FIXME: 내 프로젝트가 하나도 없을 경우 처리 필요
+
+onMounted(() => init);
+watch(() => route.path, () => init());
+
+// TODO: 해당 팀을 소유한 리더인지 확인 필요
+const isLeader = ref(false);
+
 </script>
 
 
@@ -69,11 +86,11 @@ bind();
   <div class="detail-container">
     <div class="side-container">
       <img class="project-image"
-           src="https://d34u8crftukxnk.cloudfront.net/slackpress/prod/sites/6/Project-management-steps2.ko-KR.png"
-           alt="">
-      <ProjectLink :project-detail="projectDetail" :update-project="updateProject"/>
-    </div>
-    <project-center :project-detail="projectDetail"/>
+           :src="projectDetail.imgSrc"
+           ref="projectImg">
+      <ProjectLink :project-detail="projectDetail" :update-project="updateProject" :editable="isLeader"/>
+    </div>ㅡ
+    <project-center :project-detail="projectDetail" :editable="isLeader"/>
     <div class="side-container">
       <div>
         <h1>기술스택</h1>
@@ -86,6 +103,7 @@ bind();
           </div>
         </div>
       </div>
+      <!-- TODO: 프로젝트 팀 아이디 넘겨서 팀 목록 호출하기 -->
       <ProjectTeam/>
     </div>
   </div>

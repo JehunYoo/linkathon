@@ -46,11 +46,12 @@ export interface BackPerformanceResponseDto {
     vulnerabilities: number;
 }
 
+export interface PageableProjects {
+    projects: ProjectInfoDTO[];
+    pageable: PageableDto;
+}
+
 export interface PageableBackPerformance {
     backMetrics : BackPerformanceResponseDto[],
     pageable : PageableDto
-}
-export interface ClosedProjects {
-    closedProjects: ProjectInfoDTO[];
-    pageable: PageableDto;
 }

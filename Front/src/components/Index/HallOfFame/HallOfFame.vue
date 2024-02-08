@@ -3,39 +3,26 @@
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
 import {ref, Ref} from "vue";
-import {Builder} from "builder-pattern";
 import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
+import {ProjectService} from "@/api/ProjectService.ts";
+import ProjectStore from "@/store/projectStorage.ts";
 
-const tempDummy: ProjectInfoDTO = Builder<ProjectInfoDTO>()
-    .projectName("프로젝트 주제")
-    .projectDesc("프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로젝트 설명프로")
-    .starCount(10)
-    .projectId(1)
-    .starred(true)
-    .imgSrc("https://yt3.googleusercontent.com/v1IJmuo9h3-2-CADo_MyPuVbcLEmZkNVr0oko3WKnUvyF0ffYbNjAVYB7RC6tXDG422BiER69Uw=s900-c-k-c0x00ffffff-no-rj")
-    .build();
-const dummy: ProjectInfoDTO[] = [];
-dummy.push(tempDummy);
-dummy.push(tempDummy);
-dummy.push(tempDummy);
-dummy.push(tempDummy);
+const projectService: ProjectService = ProjectStore.getters.getProjectService;
 
-const starRef: Ref<Boolean>[] = []
+const popularProjectsRef: Ref<ProjectInfoDTO[]> = ref([]);
 
-for (let i = 0; i < dummy?.length; i++) {
-  starRef.push(ref(dummy[i].starred))
-}
+const bind = async () => {
+  popularProjectsRef.value = (await projectService.getPopularProjects(0, 4)).projects;
+};
 
-const starClick = (v :Ref<Boolean>) => {
-  v.value = !v.value;
-}
+bind();
 
 </script>
 
 <template>
   <IndexSubMenu style="margin-top: 48px" title="명예의 전당"/>
   <div class="fame-container">
-    <ProjectCard :data-list="dummy" :star-click="starClick" :star-ref="starRef"/>
+    <ProjectCard :data-list="popularProjectsRef"/>
   </div>
 </template>
 
