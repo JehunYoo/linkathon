@@ -6,7 +6,6 @@ export interface HackathonInfoDTO {
     teamDeadlineDate:Date,
     startDate:Date,
     endDate:Date,
-    // announce:Date,
     hackathonTopic:string,
     hackathonImageUrl:string,
     maxTeamMember:number,

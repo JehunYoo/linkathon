@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 
-import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/PaginationV2.vue";
 import {HackathonService} from "@/api/HackathonService.ts";
 import {
   PageableProceedingHackathons
 } from "@/dto/tmpDTOs/hackathonProceedingProjectResponseDto.ts";
 import {onMounted, Ref, ref} from "vue";
+import PaginationV1 from "@/components/PaginationV1.vue";
 
 const props = defineProps({
   id : {
@@ -42,7 +43,7 @@ onMounted(async () => {
       <td>{{ data.hackathonScore }}</td>
     </tr>
   </table>
-  <Pagination :pageable-d-t-o="hackathonLeaderboard.pageable" style="margin-bottom: 60px"/>
+  <PaginationV1 :pageable-d-t-o="hackathonLeaderboard.pageable" style="margin-bottom: 60px"/>
 </template>
 
 <style scoped>
