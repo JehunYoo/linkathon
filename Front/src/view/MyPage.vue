@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {ref, watch} from "vue";
+import {onMounted, Ref, ref, watch} from "vue";
 import MyPageRecruitingTeam from "@/components/MyPage/MyPageRecruitingTeam.vue";
 import MyInfo from "@/components/MyPage/MyInfo.vue";
 import MyPageRecruitTeamInfo from "@/components/MyPage/MyPageRecruitTeamInfo.vue";
@@ -13,6 +13,7 @@ const updatePageFromQuery = () => {
   const queryParam = route.query.mode;
   mode.value = parseInt(queryParam as string);
 };
+
 
 watch([() => route.query], updatePageFromQuery, {immediate: true});
 </script>

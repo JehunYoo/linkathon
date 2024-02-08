@@ -18,12 +18,27 @@ function createLocalAxios(requireAuth: boolean): AxiosInstance {
     return local;
 }
 
+// function authorization(axiosInstance: any) {
+//     const token = store.getters.getToken;
+//     if (token) {
+//         axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
+//     } else {
+//         throw new Error('Authorization token is missing');
+//     }
+// }
+
 function authorization(axiosInstance: any) {
-    // const token = localStorage.getItem("accessToken");
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzA2NTE0NjIyfQ.RqrwRJ8AuxTnR84MpvOD6Ix9dFU9iH_YD77vdFv5zsE';
-    if (token) {
-        axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
-    } else {
+    const token = store.getters.getToken;
+    console.log(token)
+    if(token) {
+        console.log("bearer", token)
+        if(token.substring(0,6) !== 'Bearer') {
+            axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            axiosInstance.defaults.headers['Authorization'] = `${token}`;
+        }
+    }
+    else {
         throw new Error('Authorization token is missing');
     }
 }
