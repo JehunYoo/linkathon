@@ -2,6 +2,7 @@
 import {Builder} from "builder-pattern";
 import UserCard from "@/components/User/UserCard.vue";
 import ModalEffect from "@/components/Modal/ModalEffect.vue";
+import {HackathonTeamInfoDetailDTO} from "@/dto/hackathonTeamInfoDTO.ts";
 
 const dummy: HackathonTeamInfoDetailDTO = Builder<HackathonTeamInfoDetailDTO>()
     .maxPoint(7)

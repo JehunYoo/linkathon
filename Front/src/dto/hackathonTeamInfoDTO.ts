@@ -1,4 +1,4 @@
-interface HackathonTeamInfoDTO {
+export interface HackathonTeamInfoDTO {
     hackathonName:string,
     projectId: number,
     teamName: string,
@@ -12,6 +12,6 @@ interface HackathonTeamInfoDTO {
     skillList: SkillDTO[],
 }
 
-interface HackathonTeamInfoDetailDTO extends HackathonTeamInfoDTO {
+export interface HackathonTeamInfoDetailDTO extends HackathonTeamInfoDTO {
 
 }

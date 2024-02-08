@@ -1,6 +1,26 @@
 <script setup lang="ts">
 
 import UserCard from "@/components/User/UserCard.vue";
+import {onMounted, Ref, ref} from "vue";
+import {RecruitTeamDTO} from "@/dto/tmpDTOs/RecruitTeamDTO.ts";
+import ModalMember from "@/components/Modal/ModalMember.vue";
+import ModalButton from "@/components/Modal/ModalButton.vue";
+import Modal from "@/components/Modal/Modal.vue";
+import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+
+const clickedModal = ref<Number>();
+
+const handleModalClose = (num: number) => {
+  clickedModal.value = num;
+}
+const teamBuildingService = new TeamBuildingService();
+const refTeam: Ref<RecruitTeamDTO | undefined> = ref();
+
+onMounted(async () => {
+  refTeam.value = await teamBuildingService.getRecruitTeam();
+  console.log(refTeam.value)
+})
+
 import {TeamService} from "@/api/TeamService.ts";
 
 async function getSuggestions() {
@@ -17,15 +37,23 @@ async function getSuggestions() {
     <h1>모집중인 팀</h1>
     <div class="remove-button">프로젝트 삭제</div>
   </div>
-  <h2>프로젝트 이름</h2>
-  <h3>프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.</h3>
+
+<!--  <h2>{{ refTeam.teamName }}</h2>-->
+<!--  <h3>{{ refTeam.teamDesc }}</h3>-->
 
   <div class="content">
     <div class="fx1">
       <h2>현재 팀원</h2>
       <div class="list">
         <template v-for="_ in 6">
-          <UserCard :t="true"/>
+          <template v-for="(data, i) in refTeam?.members['JOINED']">
+            <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
+              <ModalMember :userInfo="data">
+                <ModalButton button-text="추방하기"/>
+              </ModalMember>
+            </Modal>
+            <UserCard @click="handleModalClose(i+1)" :userInfo="data" :t="true"/>
+          </template>
         </template>
       </div>
     </div>
@@ -33,16 +61,31 @@ async function getSuggestions() {
       <h2>신청한 사용자</h2>
       <div class="list">
         <template v-for="_ in 6">
-          <UserCard :t="true"/>
+          <template v-for="(data, i) in refTeam?.members['SUGGESTED']">
+            <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
+              <ModalMember :userInfo="data">
+                <ModalButton button-text="면접 예약"/>
+                <ModalButton button-text="신청 수락"/>
+              </ModalMember>
+            </Modal>
+            <UserCard @click="handleModalClose(i+1)" :userInfo="data" :t="true"/>
+          </template>
         </template>
       </div>
     </div>
     <div class="fx1">
       <h2>권유한 사용자</h2>
       <div class="list">
-<!--        <template v-for="_ in getSuggestions()">-->
         <template v-for="_ in 6">
-          <UserCard :t="true"/>
+          <template v-for="(data, i) in refTeam?.members['APPLIED']">
+            <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
+              <ModalMember :userInfo="data">
+                <ModalButton button-text="면접 예약"/>
+                <ModalButton button-text="권유 취소"/>
+              </ModalMember>
+            </Modal>
+            <UserCard @click="handleModalClose(i+1)" :userInfo="data" :t="true"/>
+          </template>
         </template>
       </div>
     </div>

@@ -18,6 +18,15 @@ function createLocalAxios(requireAuth: boolean): AxiosInstance {
     return local;
 }
 
+// function authorization(axiosInstance: any) {
+//     const token = store.getters.getToken;
+//     if (token) {
+//         axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`;
+//     } else {
+//         throw new Error('Authorization token is missing');
+//     }
+// }
+
 function authorization(axiosInstance: any) {
     const token = store.getters.getToken;
     console.log(token)

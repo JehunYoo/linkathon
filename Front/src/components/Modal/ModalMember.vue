@@ -1,29 +1,55 @@
 <script lang="ts" setup>
+
 import Tier from "@/components/Tier.vue";
+import ModalButton from "@/components/Modal/ModalButton.vue";
 import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
+import {PropType} from "vue";
+import {TeamFindSkillDTO, TeamMemberFindUserDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
+import {Builder} from "builder-pattern";
 
+const props = defineProps({
+  userInfo: {
+    type: Object as PropType<TeamMemberFindUserDTO>,
+    default: Builder<TeamMemberFindUserDTO>().build()
+  }
+});
+import {computed} from 'vue';
+
+// Computed property to group skills by skillType
+const groupedSkills = computed(() => {
+  const groupedSkills: Record<string, { skillType: string; skills: TeamFindSkillDTO[] }> = {};
+  props.userInfo.skillSets.forEach((skill) => {
+    if (!groupedSkills[skill.skillType]) {
+      groupedSkills[skill.skillType] = {skillType: skill.skillType, skills: []};
+    }
+    groupedSkills[skill.skillType].skills.push(skill);
+
+  });
+
+  return Object.values(groupedSkills);
+});
 </script>
 
 <template>
   <div class="member-modal-container">
-    <img class="profile" alt="" src="https://thumb.mtstarnews.com/06/2023/06/2023060322064338985_2.jpg/dims/optimize">
+    <img class="profile" alt="" :src="userInfo.profileImageURL">
     <div class="member-info-container">
       <div class="member-info">
-        <div class="member-name">카리나</div>
-        <div class="member-workflow">3년차 백엔드 개발자</div>
-        <Tier :rating="200" font-size="24px" height="28px" radius="10px" width="48px"/>
+        <div class="member-name">{{ userInfo.name }}</div>
+        <div class="member-workflow">{{ userInfo.career }}년차 {{ userInfo.field }}</div>
+        <Tier :rating="userInfo.rating" font-size="24px" height="28px" radius="10px" width="48px"/>
       </div>
       <div class="member-introduce">
-        안녕하세요. 백엔드 개발자입니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다.
+        {{ userInfo.introduce }}
       </div>
       <div class="button-wrapper">
         <div class="button-container">
-          <div class="git-button">
+          <a :href="userInfo.referenceUrl" target="_blank" class="git-button">
             <ModalGithubButton/>
-          </div>
-          <RouterLink class="button-right-container" to=""> <!-- to 설정 -->
-            <slot></slot>
+          </a>
+          <RouterLink class="button-right-container" to="/video">
+            <slot/>
           </RouterLink>
         </div>
       </div>
@@ -31,16 +57,11 @@ import ModalSkill from "@/components/Modal/ModalSkill.vue";
   </div>
   <h2 style="padding-left: 23px">기술 스택</h2>
   <div class="member-skill-container">
-    <div class="skill-list-container">
-      <ModalSkill color="#303030" font-size="16px" font-weight="400" margin-bottom="12px" title="백엔드"/>
-      <ModalSkill color="#303030" font-size="16px" font-weight="400" margin-bottom="12px" style="justify-content: end"
-                  title="프론트엔드"/>
-    </div>
-    <div class="skill-list-container">
-      <ModalSkill color="#303030" font-size="16px" font-weight="400" margin-bottom="12px" title="데이터베이스"/>
-      <ModalSkill color="#303030" font-size="16px" font-weight="400" margin-bottom="12px" style="justify-content: end"
-                  title="인프라"/>
-    </div>
+    <template v-for="skillGroup in groupedSkills" :key="skillGroup.skillType">
+      <div class="skill-list-container">
+        <ModalSkill :skillInfo="skillGroup.skills" :title="skillGroup.skillType"/>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -78,6 +99,7 @@ h2 {
   .git-button {
     display: none;
   }
+
   .profile {
     object-fit: cover;
     width: 150px;

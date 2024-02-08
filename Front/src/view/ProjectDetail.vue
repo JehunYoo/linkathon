@@ -14,7 +14,7 @@ const dummySkillList: SkillDTO[] = [];
 const dummySkill: SkillDTO = Builder<SkillDTO>()
     .skillId(1)
     .skillName("JavaScript")
-    .skillImgUrl("https://images.velog.io/images/mokyoungg/post/6659a8e8-5234-49e5-b3da-a3816c08bfdc/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%A1%9C%EA%B3%A0.svg").build();
+    .skillImageUrl("https://images.velog.io/images/mokyoungg/post/6659a8e8-5234-49e5-b3da-a3816c08bfdc/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%A1%9C%EA%B3%A0.svg").build();
 
 for (let i = 0; i < 4; i++) {
   dummySkillList.push(dummySkill);

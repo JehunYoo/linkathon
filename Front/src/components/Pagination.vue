@@ -11,14 +11,12 @@ const props = defineProps({
   },
   pageableDTO: {
     type:Object as PropType<PageableDto>,
-    default: ref({pageNumber:1, totalPages:5}),
+    default: ref({pageNumber:1, totalPages:5})
   }
 });
 
-const pageableDTO = ref(props.pageableDTO);
+const pageableDTO = ref<PageableDto>(props.pageableDTO);
 const updatePageFromQuery = () => {
-  pageableDTO.value = props.pageableDTO;
-
   const queryParam = props.pageName ? route.query[props.pageName] : route.query.page;
   const queryPageNum = parseInt(queryParam as string);
 
@@ -29,7 +27,8 @@ const updatePageFromQuery = () => {
   }
 };
 
-watch([() => props.pageName, () => props.pageableDTO], updatePageFromQuery, { immediate: true });
+watch([() => route.query, () => props.pageName], updatePageFromQuery, { immediate: true });
+
 
 const movePage = (num: number) => {
   const newPageNumber = pageableDTO.value.pageNumber + num;
@@ -45,6 +44,8 @@ const moveNumberPage = (num: number) => {
   }
 }
 
+
+
 </script>
 
 <template>
@@ -55,13 +56,17 @@ const moveNumberPage = (num: number) => {
         <path d="M2 18L10 10L2 2" stroke="#A9A9A9" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
       </g>
     </svg>
-    <div v-for="n in pageableDTO.totalPages" v-show="(pageableDTO.pageNumber === 1 && n <= 3) ||
+
+    <template v-for="n in pageableDTO.totalPages">
+      <div  v-if="(pageableDTO.pageNumber === 1 && n <= 3) ||
              (pageableDTO.pageNumber === pageableDTO.totalPages && n >= pageableDTO.totalPages - 2) ||
              (n === pageableDTO.pageNumber || n === pageableDTO.pageNumber - 1 || n === pageableDTO.pageNumber + 1)"
-         :key="n"
-         :class="n !== pageableDTO.pageNumber ? 'non-select' : 'select'" @click="moveNumberPage(n)">
-      {{ n }}
-    </div>
+            :key="n"
+            :class="n !== pageableDTO.pageNumber ? 'non-select' : 'select'" @click="moveNumberPage(n)">
+        {{ n }}
+      </div>
+    </template>
+
 
     <svg v-if="pageableDTO.pageNumber < pageableDTO.totalPages" fill="none" height="20"
          viewBox="0 0 12 20" width="12" xmlns="http://www.w3.org/2000/svg" @click="movePage(1)">

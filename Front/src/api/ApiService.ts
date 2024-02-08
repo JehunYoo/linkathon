@@ -1,9 +1,24 @@
 import {createLocalAxios} from "@/util/httpCommons.ts";
 
 class ApiService {
-    async getData(requireAuth: boolean, url: string, data: any) {
+    async getData(requireAuth: boolean, url: string, params?: Record<string, any>) {
         const localAxios = createLocalAxios(requireAuth);
-        return await localAxios.get(url, data);
+        return await localAxios.get(url, {params});
+    }
+
+    async getDataForTeamFind(requireAuth: boolean, url: string, params?: {
+        params: {
+            skillIds?: number[];
+            tier?: number;
+            career?: number;
+            gender?: boolean;
+            field?: string;
+            page?: number;
+            size?: number
+        } | undefined
+    }) {
+        const localAxios = createLocalAxios(requireAuth);
+        return await localAxios.get(url, {params});
     }
 
     async postData(requireAuth: boolean, url: string, data: any) {
