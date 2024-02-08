@@ -1,9 +1,9 @@
 import {createLocalAxios} from "@/util/httpCommons.ts";
 
 class ApiService {
-    async getData(requireAuth: boolean, url: string, params?: Record<string, any>) {
+    async getData(requireAuth: boolean, url: string, data?:any) {
         const localAxios = createLocalAxios(requireAuth);
-        return await localAxios.get(url, {params});
+        return await localAxios.get(url, data);
     }
 
     async getDataForTeamFind(requireAuth: boolean, url: string, params?: {

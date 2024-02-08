@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 
-import Pagination from "@/components/Pagination.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
 import {HackathonService} from "@/api/HackathonService.ts"
 import {onMounted, Ref, ref} from "vue";
 import store from "@/store/hackathon.ts";
 import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
+import PaginationV1 from "@/components/PaginationV1.vue";
 
 const categorySelect = new Set<number>();
 const refSelect = ref(categorySelect);
@@ -52,7 +52,7 @@ function updateStatusName() {
       <HackathonCard :data="hackathon" :name="refSelectName"/>
     </template>
   </div>
-  <Pagination :pageable-d-t-o="hackathonsRef.pageable" style="margin-bottom: 60px" />
+  <PaginationV1 :pageable-d-t-o="hackathonsRef.pageable" style="margin-bottom: 60px" />
 </template>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import SkillCategory from "@/components/Skill/SkillCategory.vue";
-import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/PaginationV2.vue";
 import RecruitingTeamCard from "@/components/RecruitingTeam/RecruitingTeamCard.vue";
 import SkillCategoryList from "@/components/Skill/SkillCategoryList.vue";
 import {Builder} from "builder-pattern";
