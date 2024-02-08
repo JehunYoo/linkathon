@@ -22,7 +22,7 @@ public class RecruitingTeamResponseDto {
 
 	private final String teamName;
 	private final String teamDesc;
-	private final Map<String, List<MemberResponseDto>> members;
+	private final Map<String, List<RecruitTeamMemberResponseDto>> members;
 
 	public RecruitingTeamResponseDto(List<UserTeam> userTeamList) {
 		Team team = userTeamList.get(0).getTeam();
@@ -32,7 +32,7 @@ public class RecruitingTeamResponseDto {
 			.collect(groupingBy(
 				userTeam -> userTeam.getMemberStatus().name(),
 				HashMap::new,
-				mapping(MemberResponseDto::new, toList())
+				mapping(RecruitTeamMemberResponseDto::new, toList())
 			));
 	}
 
