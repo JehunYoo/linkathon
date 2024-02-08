@@ -1,11 +1,16 @@
 import axios, {AxiosError, AxiosInstance, AxiosResponse} from "axios";
 import store from "@/store";
 
-const {VITE_VUE_API_URL} = import.meta.env;
+const {VITE_VUE_API_URL, VITE_VUE_API_LIVE_URL} = import.meta.env;
 
 function createLocalAxios(requireAuth: boolean, isFormData?: boolean): AxiosInstance {
+    const {DEV} = import.meta.env;
+    let URL = "";
+    if (DEV) URL = VITE_VUE_API_URL;
+    else URL = VITE_VUE_API_LIVE_URL
+
     const local: any = axios.create({
-        baseURL: VITE_VUE_API_URL,
+        baseURL: URL,
         withCredentials: true,
         headers: {
             "Content-Type": !isFormData ? "application/json;charset=utf-8" : 'multipart/form-data',
