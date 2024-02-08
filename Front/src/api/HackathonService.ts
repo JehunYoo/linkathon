@@ -32,6 +32,7 @@ class HackathonService {
             });
 
         if (response && response.status === httpStatusCode.OK) {
+            console.log(response.data)
             return this.toPageableHackathonsList(response) as PageableHackathonList;
         }
         return {} as PageableHackathonList;
@@ -39,7 +40,7 @@ class HackathonService {
 
     @CatchError
     async getHackathonDetail(hackathonId: number): Promise<HackathonInfoDTO> {
-        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}`);
+        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}`,undefined);
         if (response && response.status === httpStatusCode.OK) {
             return response.data as HackathonInfoDTO;
         }
@@ -49,7 +50,7 @@ class HackathonService {
 
     @CatchError
     async getWinnerProjects(hackathonId: number): Promise<WinnerProjectResponseDto[]> {
-        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/winners`)
+        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/winners`,undefined)
         if (response && response.status === httpStatusCode.OK) {
             console.log(response.data)
             return response.data as WinnerProjectResponseDto[];
@@ -59,7 +60,7 @@ class HackathonService {
 
     @CatchError
     async getProceedingLeaderboards(hackathonId: number): Promise<PageableProceedingHackathons> {
-        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/proceeding`)
+        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/proceeding`,undefined)
         if (response && response.status === httpStatusCode.OK) {
             console.log("r", response.data)
             return this.toPageableHackathons(response) as PageableProceedingHackathons;

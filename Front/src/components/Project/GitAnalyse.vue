@@ -39,7 +39,9 @@ const props = defineProps({
       </table>
     </div>
     <div class="chart">
-      <ThickDonutChart :pc="props.gitStatus" :total="props.totalCommits"/>
+      <template v-if="props.gitStatus">
+        <ThickDonutChart :pc="props.gitStatus" :total="props.totalCommits"/>
+      </template>
     </div>
   </div>
 
