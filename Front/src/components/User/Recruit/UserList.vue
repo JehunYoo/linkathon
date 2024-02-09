@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import UserCard from "@/components/User/UserCard.vue";
-import Pagination from "@/components/Pagination.vue";
+import Pagination from "@/components/PaginationV2.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import {PropType, ref, watch} from "vue";
 import ModalMember from "@/components/Modal/ModalMember.vue";
 import {Builder} from "builder-pattern";
 import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import ModalButton from "@/components/Modal/ModalButton.vue";
+import {TeamService} from "@/api/TeamService.ts";
+import PaginationV2 from "@/components/PaginationV2.vue";
 import ModalInterview from "@/components/Modal/ModalInterview.vue";
 
 const clickedModal = ref<Number>();
@@ -40,13 +42,6 @@ function suggestInterview(userId:number, modal:number) {
   handleModalClose(0);
   interviewModalClose(modal);
 }
-//
-// async function suggestTeam(userId: number) {
-//   const teamService = new TeamService();
-//   const team = await teamService.getActiveTeamId();
-//   const teamId = team.id;
-//   teamService.postSuggestionByTeam(teamId, userId);
-// }
 </script>
 
 <template>
@@ -65,7 +60,7 @@ function suggestInterview(userId:number, modal:number) {
       </template>
     </template>
   </div>
-  <Pagination style="margin-bottom: 60px" :pageableDTO="pageableDto" />
+  <PaginationV2 style="margin-bottom: 60px" :pageableDTO="pageableDto" />
 </template>
 
 <style scoped>

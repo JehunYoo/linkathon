@@ -73,7 +73,7 @@ const init = async () => {
 
 // FIXME: 내 프로젝트가 하나도 없을 경우 처리 필요
 
-onMounted(() => init);
+onMounted(() => init());
 watch(() => route.path, () => init());
 
 // TODO: 해당 팀을 소유한 리더인지 확인 필요
