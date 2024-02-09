@@ -7,12 +7,18 @@ import ModalMember from "@/components/Modal/ModalMember.vue";
 import {Builder} from "builder-pattern";
 import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import ModalButton from "@/components/Modal/ModalButton.vue";
-import {TeamService} from "@/api/TeamService.ts";
+import ModalInterview from "@/components/Modal/ModalInterview.vue";
 
 const clickedModal = ref<Number>();
 const handleModalClose = (num: number) => {
   clickedModal.value = num;
 }
+
+const interviewModal = ref<Number>();
+const interviewModalClose = (num:number) => {
+  interviewModal.value = num;
+}
+
 const props = defineProps({
   refUser: {
     type: Object as PropType<TeamMemberFindDTO>,
@@ -30,23 +36,29 @@ watch(() => props.refUser, (newVal) => {
   pageableDto.value.totalPages = newVal.totalPages;
 });
 
-
-
-async function suggestTeam(userId: number) {
-  const teamService = new TeamService();
-  const team = await teamService.getActiveTeamId();
-  const teamId = team.id;
-  teamService.postSuggestionByTeam(teamId, userId);
+function suggestInterview(userId:number, modal:number) {
+  handleModalClose(0);
+  interviewModalClose(modal);
 }
+//
+// async function suggestTeam(userId: number) {
+//   const teamService = new TeamService();
+//   const team = await teamService.getActiveTeamId();
+//   const teamId = team.id;
+//   teamService.postSuggestionByTeam(teamId, userId);
+// }
 </script>
 
 <template>
   <div class="user-card-container">
     <template v-if="refUser?.content">
       <template v-for="(data, i) in refUser?.content">
+        <Modal v-if="interviewModal===i+1" @closeModal="interviewModalClose">
+          <ModalInterview/>
+        </Modal>
         <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
-          <ModalMember :userInfo="data" :user-id="i">
-            <ModalButton button-text="합류 요청" @click-event="suggestTeam(i)"/>
+          <ModalMember :userInfo="data" :user-id="data.userId">
+            <ModalButton button-text="합류 요청" @click="suggestInterview(data.userId, i+1)"/>
           </ModalMember>
         </Modal>
         <UserCard @click="handleModalClose(i+1)" :userInfo="data"/>

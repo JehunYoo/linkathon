@@ -15,7 +15,6 @@ import MyPage from "@/view/MyPage.vue";
 import Exit from "@/view/Exit.vue";
 import EditInfo from "@/view/EditInfo.vue";
 import Refresh from "@/view/Refresh.vue";
-import Dragable from "@/view/Dragable.vue";
 import Test from "@/view/Test.vue";
 
 const routes = [

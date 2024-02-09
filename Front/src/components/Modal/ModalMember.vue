@@ -47,9 +47,9 @@ const groupedSkills = computed(() => {
           <a :href="userInfo.referenceUrl" target="_blank" class="git-button">
             <ModalGithubButton/>
           </a>
-          <RouterLink class="button-right-container" to="/video">
+          <div class="button-right-container">
             <slot/>
-          </RouterLink>
+          </div>
         </div>
       </div>
     </div>
@@ -69,6 +69,8 @@ const groupedSkills = computed(() => {
   display: flex;
   gap: 26px;
   margin-bottom: 16px;
+  min-width: max-content;
+  flex: 1;
 }
 
 h2 {
@@ -84,6 +86,8 @@ h2 {
   overflow: scroll;
   margin-bottom: 23px;
   padding: 0 24px 0px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 * {
