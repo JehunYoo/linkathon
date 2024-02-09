@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
+import ModalGithubButton from "@/components/Modal/ModalGithubButton.vue";
 import Tier from "@/components/Tier.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
 </script>
