@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
-import Pagination from "@/components/Pagination.vue";
 import {ref, Ref, watch} from "vue";
 import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
 import ProjectStore from "@/store/projectStorage.ts";
 import {useRoute} from "vue-router";
+import PaginationV1 from "@/components/PaginationV1.vue";
 
 const route = useRoute();
 const projectService: ProjectService = ProjectStore.getters.getProjectService;
@@ -34,7 +34,7 @@ bind();
   <div class="project-container">
     <ProjectCard :data-list="projectsRef" />
   </div>
-  <Pagination :pageable-d-t-o="pageableRef"/>
+  <PaginationV1 :pageable-d-t-o="pageableRef"/>
 </template>
 
 <style scoped>

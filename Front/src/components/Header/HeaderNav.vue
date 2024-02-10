@@ -36,8 +36,8 @@ const logout = () => {
     <div class="header-nav">
       <router-link class="logo" to="/">LINK.</router-link>
       <div class="left-menu-container">
-        <router-link class="header-nav-menu-hover" to="/recruit">팀원</router-link>
-        <router-link to="/projectDetail" class="header-nav-menu-hover">프로젝트</router-link>
+        <router-link class="header-nav-menu-hover" to="/recruit">팀원구하기</router-link>
+        <router-link to="/projectDetail" class="header-nav-menu-hover">내 프로젝트</router-link>
         <router-link class="header-nav-menu-hover" to="/hackathonList">해커톤</router-link>
         <router-link class="header-nav-menu-hover" to="/sharedProject">공유 프로젝트</router-link>
       </div>

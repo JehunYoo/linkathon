@@ -62,6 +62,7 @@ img {
 }
 
 .hover-container:hover img {
+  background: rgba(30,30,30, 0.7);
   filter: brightness(0.7);
 }
 
