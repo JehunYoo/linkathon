@@ -1,13 +1,183 @@
 <script setup lang="ts">
 import sample1 from "@/assets/another.png";
 import sample2 from "@/assets/my.png";
+import {OpenVidu, Publisher, Session, StreamManager} from "openvidu-browser";
+import {OpenViduService} from "@/api/OpenViduService.ts";
+import {onMounted, Ref, ref} from "vue";
+import {onBeforeRouteLeave} from "vue-router";
+
+const {reservationId} = defineProps({
+  reservationId: {
+    required: true,
+    type: Number
+  }
+});
+
+class OVManager {
+
+  OpenVidu: OpenVidu | undefined
+  session: Session | undefined
+  mainStreamManager: StreamManager | undefined
+  publisher: Publisher | undefined
+  subscribers: Array<StreamManager>
+  openViduService: OpenViduService
+
+  // // Join form
+  // mySessionId: "SessionA",
+  // myUserName: "Participant" + Math.floor(Math.random() * 100),
+
+  constructor() {
+    this.OpenVidu = undefined;
+    this.session = undefined;
+    this.mainStreamManager = undefined;
+    this.publisher = undefined;
+    this.subscribers = [];
+    this.openViduService = new OpenViduService();
+  }
+
+  joinSession(myVideoEleRef: Ref<HTMLVideoElement>, guestVideoEleRef: Ref<HTMLVideoElement>) {
+
+    this.OpenVidu = new OpenVidu();
+
+    // --- 2) Init a session ---
+    this.session = this.OpenVidu.initSession();
+
+    // --- 3) Specify the actions when events take place in the session ---
+
+    // On every new Stream received...
+    this.session.on("streamCreated", ({ stream }) => {
+      if (!this.session) return;
+      const subscriber = this.session.subscribe(stream, undefined);
+      this.subscribers.push(subscriber);
+      subscriber.addVideoElement(guestVideoEleRef.value);
+    });
+
+    // On every Stream destroyed...
+    this.session.on("streamDestroyed", ({ stream }) => {
+      const index = this.subscribers.indexOf(stream.streamManager, 0);
+      if (index >= 0) {
+        this.subscribers[index].removeAllVideos();
+        this.subscribers.splice(index, 1);
+      }
+    });
+
+    // On every asynchronous exception...
+    this.session.on("exception", ( exception ) => {
+      console.warn(exception);
+    });
+
+    // --- 4) Connect to the session with a valid user token ---
+
+    // FIXME: 세션 아이디 임시 설정
+    const mySessionId = 'asd1';
+
+    // Get a token from the OpenVidu deployment
+    this.openViduService.getToken(mySessionId).then((token) => {
+
+      // First param is the token. Second param can be retrieved by every user on event
+      // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
+      if (!this.session) {
+        console.warn("세션이 아직 생성되지 않았습니다.")
+        return;
+      }
+      this.session.connect(token, { clientData: "USER" + Math.floor(Math.random() * 1000) })
+          .then(() => {
+
+            if (!this.OpenVidu || !this.session)
+              return Promise.reject();
+
+            // --- 5) Get your own camera stream with the desired properties ---
+
+            // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
+            // element: we will manage it on our own) and with the desired properties
+            let publisher = this.OpenVidu.initPublisher(undefined, {
+              audioSource: undefined, // The source of audio. If undefined default microphone
+              videoSource: undefined, // The source of video. If undefined default webcam
+              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              resolution: "640x480", // The resolution of your video
+              frameRate: 30, // The frame rate of your video
+              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+              mirror: false, // Whether to mirror your local video or not
+            });
+
+            // Set the main video in the page to display our webcam and store our Publisher
+            this.mainStreamManager = publisher;
+            this.publisher = publisher;
+
+            // --- 6) Publish your stream ---
+            this.session.publish(this.publisher);
+
+            // --- 6) Publish your stream ---
+            this.publisher.addVideoElement(myVideoEleRef.value);
+
+          })
+          .catch((error) => {
+            console.log("There was an error connecting to the session:", error.code, error.message);
+          });
+    });
+
+    window.addEventListener("beforeunload", this.leaveSession);
+  }
+
+  leaveSession() {
+    // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
+    if (this.session) this.session.disconnect();
+
+    // Empty all properties...
+    this.session = undefined;
+    this.mainStreamManager = undefined;
+    this.publisher = undefined;
+    this.subscribers = [];
+    this.OpenVidu = undefined;
+
+    // Remove beforeunload listener
+    window.removeEventListener("beforeunload", this.leaveSession);
+  }
+
+  updateMainVideoStreamManager(stream: StreamManager) {
+    if (this.mainStreamManager === stream) return;
+    this.mainStreamManager = stream;
+  }
+
+  // updateVideoStream(myVideoEleRef: Ref<HTMLVideoElement>, guestVideoEleRef: Ref<HTMLVideoElement>) {
+  //   if (this.mainStreamManager?.targetElement !== myVideoEleRef.value)
+  //     this.mainStreamManager?.addVideoElement(myVideoEleRef.value);
+  //   this.
+  // }
+
+}
+
+const myVideoEleRef = ref();
+const guestVideoEleRef = ref();
+const ovManager = new OVManager();
+
+onMounted(() => {
+  ovManager.joinSession(myVideoEleRef, guestVideoEleRef);
+});
+
+onBeforeRouteLeave((to) => {
+  try {
+    if (to.path !== "/login" && !confirm("이 페이지를 떠나면 화상 대화가 종료됩니다."))
+      return false;
+    ovManager.leaveSession();
+    return true;
+  } catch (e) {
+    // 정상적으로 종료되지 못해도 원하는 페이지 이동
+    return true;
+  }
+});
+
+
 </script>
 
 <template>
   <div class="video-play-container">
-    <img :src="sample1" alt="" class="video">
+<!--    <img :src="sample1" alt="" class="video">-->
+    <video ref="guestVideoEleRef" :poster="sample1"  class="video"></video>
     <div class="myVideo-container">
-      <img :src="sample2" alt="" class="myVideo" style="max-height: 200px">
+<!--      <img :src="sample2" alt="" class="myVideo" style="max-height: 200px">-->
+      <video ref="myVideoEleRef" :poster="sample2" class="myVideo" style="max-height: 200px"></video>
     </div>
     <div class="button-container">
       <div class="video-button">
@@ -145,6 +315,12 @@ import sample2 from "@/assets/my.png";
 }
 
 img {
+  height: 100%;
+  max-height: 600px;
+  object-fit: cover;
+}
+
+video {
   height: 100%;
   max-height: 600px;
   object-fit: cover;

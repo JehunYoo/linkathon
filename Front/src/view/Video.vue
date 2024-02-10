@@ -3,6 +3,15 @@
 import VideoPlayer from "@/components/Video/VideoPlayer.vue";
 import VideoInfo from "@/components/Video/VideoInfo.vue";
 import ModalEffect from "@/components/Modal/ModalEffect.vue";
+
+const props = defineProps({
+  reservationId: {
+    // required: true,
+    default: 1, // FIXME: 테스트용 예약 아이디
+    type: Number
+  }
+});
+
 </script>
 
 <template>
@@ -10,7 +19,7 @@ import ModalEffect from "@/components/Modal/ModalEffect.vue";
     <ModalEffect text="홍길동님과의 화상 채팅"/>
     <div class="video-container">
       <div class="video-sector">
-        <VideoPlayer/>
+        <VideoPlayer :reservation-id="props.reservationId"/>
       </div>
       <div class="introduce-container">
         <VideoInfo/>
@@ -24,6 +33,7 @@ import ModalEffect from "@/components/Modal/ModalEffect.vue";
   .video-container {
     flex-direction: column;
   }
+
   .introduce-container {
     margin-top: 30px;
     margin-bottom: 20px;
