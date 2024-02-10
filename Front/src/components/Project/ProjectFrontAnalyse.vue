@@ -7,7 +7,12 @@ import {Builder} from "builder-pattern";
 import Modal from "@/components/Modal/Modal.vue";
 import RadarChart from "@/components/Chart/RadarChart.vue";
 import {round} from "@kurkle/color";
-
+defineProps({
+  editable: {
+    type: Boolean,
+    default: true
+  },
+});
 const calculateAverageScores = (reports: Report[]) => {
   const scoreSums = new Map<string, number>();
   const scoreCounts = new Map<string, number>();
@@ -155,7 +160,7 @@ const detailOpen = (num: number) => {
   </Modal>
   <h1>프론트 엔드</h1>
   <section>
-    <h1 v-if="refReport.length===0">분석된 데이터가 없습니다!</h1>
+    <h1 v-if="refReport.length===0" style="margin-bottom: 0">분석된 데이터가 없습니다!</h1>
     <div class="chart-container">
       <template v-for="data in calculateAverageScores(refReport)">
         <div>
@@ -166,11 +171,11 @@ const detailOpen = (num: number) => {
         </div>
       </template>
     </div>
-    <h2>* 구글 검색엔진에 노출이 잘 될 수 있도록하는 지표입니다.</h2>
+    <h2>* 웹 성능 최적화를 위한 분석 결과입니다.</h2>
   </section>
 
   <div class="button-container">
-    <div class="button" @click="updateFrontendReport">프론트 분석 요청</div>
+    <div class="button" @click="updateFrontendReport" v-if="editable">프론트 분석 요청</div>
     <div class="button" @click="modalSwitch()" v-if="refReport.length!==0">분석 상세정보</div>
   </div>
 
@@ -222,7 +227,8 @@ section {
   border: 1px solid #7D3BFF;
   background: #FFF;
   justify-content: center;
-  height: calc(100% - 100px);
+  min-height: calc(100% - 100px);
+  max-height: max-content;
 }
 
 .modal-text {

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-
-import Pagination from "@/components/PaginationV2.vue";
 import {HackathonService} from "@/api/HackathonService.ts";
 import {
   PageableProceedingHackathons

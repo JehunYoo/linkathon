@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ProjectCard from "@/components/ProjectCard/ProjectCard.vue";
-import Pagination from "@/components/PaginationV2.vue";
 import {ref, Ref, watch} from "vue";
 import {ProjectInfoDTO} from "@/dto/projectDTO.ts";
 import {ProjectService} from "@/api/ProjectService.ts";

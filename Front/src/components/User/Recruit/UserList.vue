@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import UserCard from "@/components/User/UserCard.vue";
-import Pagination from "@/components/PaginationV2.vue";
 import Modal from "@/components/Modal/Modal.vue";
 import {PropType, ref, watch} from "vue";
 import ModalMember from "@/components/Modal/ModalMember.vue";
 import {Builder} from "builder-pattern";
 import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import ModalButton from "@/components/Modal/ModalButton.vue";
-import {TeamService} from "@/api/TeamService.ts";
 import PaginationV2 from "@/components/PaginationV2.vue";
 import ModalInterview from "@/components/Modal/ModalInterview.vue";
 
@@ -38,7 +36,7 @@ watch(() => props.refUser, (newVal) => {
   pageableDto.value.totalPages = newVal.totalPages;
 });
 
-function suggestInterview(userId:number, modal:number) {
+function suggestInterview(modal:number) {
   handleModalClose(0);
   interviewModalClose(modal);
 }
@@ -53,7 +51,7 @@ function suggestInterview(userId:number, modal:number) {
         </Modal>
         <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
           <ModalMember :userInfo="data" :user-id="data.userId">
-            <ModalButton button-text="합류 요청" @click="suggestInterview(data.userId, i+1)"/>
+            <ModalButton button-text="합류 요청" @click="suggestInterview(i+1)"/>
           </ModalMember>
         </Modal>
         <UserCard @click="handleModalClose(i+1)" :userInfo="data"/>

@@ -89,7 +89,7 @@ const isLeader = ref(false);
            :src="projectDetail.imgSrc"
            ref="projectImg">
       <ProjectLink :project-detail="projectDetail" :update-project="updateProject" :editable="isLeader"/>
-    </div>ㅡ
+    </div>
     <project-center :project-detail="projectDetail" :editable="isLeader"/>
     <div class="side-container">
       <div>
