@@ -46,9 +46,9 @@ function tokenInterceptor(axiosInstance: any) {
             }
             return response;
         },
-        (error: AxiosError) => {
-            return Promise.reject(error);
-        }
+         async (error: AxiosError) => {
+             return Promise.reject(error);
+         }
     );
 }
 export {createLocalAxios};

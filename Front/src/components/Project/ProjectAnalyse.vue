@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import ProjectFrontAnalyse from "@/components/Project/ProjectFrontAnalyse.vue";
 import ProjectBackendAnalyse from "@/components/Project/ProjectBackendAnalyse.vue";
+defineProps({
+  editable: {
+    type: Boolean,
+    default: true
+  },
+});
 </script>
 
 <template>
   <div class="chart-list">
     <div class="container">
-      <ProjectFrontAnalyse/>
+      <ProjectFrontAnalyse :editable="editable"/>
     </div>
     <div class="container">
-      <ProjectBackendAnalyse/>
+      <ProjectBackendAnalyse :editable="editable"/>
     </div>
   </div>
 </template>

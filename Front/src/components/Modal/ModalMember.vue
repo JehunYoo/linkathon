@@ -87,15 +87,10 @@ h2 {
   margin-bottom: 23px;
   padding: 0 24px 0px;
   display: flex;
+  max-width: 100%;
   flex-wrap: wrap;
-}
-
-* {
-  -ms-overflow-style: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
+  overflow-x: hidden;
+  gap: 16px;
 }
 
 @media screen and (max-width: 458px) {
@@ -181,7 +176,7 @@ img {
   font-style: normal;
   font-weight: 400;
   max-height: 80px;
-  overflow: scroll;
+  height: max-content;
 }
 
 .button-wrapper {
