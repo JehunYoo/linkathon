@@ -1,33 +1,33 @@
-import {ApiService} from "@/api/ApiService.ts";
 import {CatchError} from "@/util/error.ts";
-
-const url = "/api";
+import {ReservationService} from "@/api/ReservationService.ts";
 
 class OpenViduService {
 
-    apiService: ApiService;
+    // apiService: ApiService;
+    reservationService: ReservationService;
 
     constructor() {
-        this.apiService = new ApiService();
+        // this.apiService = new ApiService();
+        this.reservationService = new ReservationService();
     }
 
     @CatchError
-    async getToken(mySessionId: string) {
-        const sessionId = await this.createSession(mySessionId);
-        return await this.createToken(sessionId);
+    async getToken(reservationId: number) {
+        await this.reservationService.createOpenViduSession(reservationId);
+        return await this.reservationService.createOpenViduToken(reservationId);
     }
 
-    @CatchError
-    async createSession(sessionId: string) {
-        const response = await this.apiService.postData(true, url + '/sessions', { customSessionId: sessionId });
-        return response.data; // The sessionId
-    }
-
-    @CatchError
-    async createToken(sessionId: string) {
-        const response = await this.apiService.postData(true, url + '/sessions/' + sessionId + '/connections', {});
-        return response.data; // The token
-    }
+    // @CatchError
+    // async createSession(sessionId: string) {
+    //     const response = await this.apiService.postData(true, url + '/sessions', { customSessionId: sessionId });
+    //     return response.data; // The sessionId
+    // }
+    //
+    // @CatchError
+    // async createToken(sessionId: string) {
+    //     const response = await this.apiService.postData(true, url + '/sessions/' + sessionId + '/connections', {});
+    //     return response.data; // The token
+    // }
 
 }
 
