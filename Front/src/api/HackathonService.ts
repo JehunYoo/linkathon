@@ -23,7 +23,7 @@ interface pageableData {
 class HackathonService {
     @CatchError
     async getHackathonList(hackathonStatus: string, page: number, size: number): Promise<PageableHackathonList> {
-        const response = await apiService.getData(true, `${url}/hackathons`, {
+        const response = await apiService.getData(false, `${url}/hackathons`, {
             params: {
                     page: page,
                     size: size,
@@ -40,7 +40,7 @@ class HackathonService {
 
     @CatchError
     async getHackathonDetail(hackathonId: number): Promise<HackathonInfoDTO> {
-        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}`,undefined);
+        const response = await apiService.getData(false, `${url}/hackathons/${hackathonId}`,undefined);
         if (response && response.status === httpStatusCode.OK) {
             return response.data as HackathonInfoDTO;
         }
@@ -50,9 +50,8 @@ class HackathonService {
 
     @CatchError
     async getWinnerProjects(hackathonId: number): Promise<WinnerProjectResponseDto[]> {
-        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/winners`,undefined)
+        const response = await apiService.getData(false, `${url}/hackathons/${hackathonId}/winners`,undefined)
         if (response && response.status === httpStatusCode.OK) {
-            console.log(response.data)
             return response.data as WinnerProjectResponseDto[];
         }
         return [] as WinnerProjectResponseDto[];

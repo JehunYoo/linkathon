@@ -11,6 +11,7 @@ import router from "@/router";
 
 const userService = new UserService();
 
+const email = computed(() => String(Store.state.email));
 const skills = computed(() => Store.state.skillSelectList);
 const referenceUrl = ref<string>('');
 const field = computed(() => String(Store.state.field));
@@ -18,7 +19,7 @@ const career = ref<number>(0);
 const registered = ref<boolean>(false);
 const introduce = ref<string>('');
 const image = Builder<UserImageDTO>()
-    .userImageId(1)
+    .userImageId(111)
     .userImageName('user_image1.jpg')
     .userImageUrl('http://example.com/images/user_image1.jpg')
     .userOriginImageName('user_image_origin1.jpg')
@@ -26,6 +27,7 @@ const image = Builder<UserImageDTO>()
 
 const addUserInfo = function () {
   const data = Builder<AddUserInfoDTO>()
+      .email(email.value)
       .userSkills(skills.value)
       .field(field.value)
       .career(career.value)
@@ -37,7 +39,6 @@ const addUserInfo = function () {
 
   userService.addUserInfo(data);
 
-  router.push("/myPage");
 }
 
 </script>
@@ -56,16 +57,6 @@ const addUserInfo = function () {
     <div>
       <h2>분야</h2>
       <FitDropDown/>
-    </div>
-    <div>
-      <h2>관련 경력</h2>
-      <div class="detail-content-container">
-        <div class="text-input" style="width: 100%; display: flex;">
-          <input style="border: none; font-size: 16px; width: 100%" type="text">
-          <div class="year" style="width: 60px">{{career}} 년차</div>
-        </div>
-        <div class="button pp">경력인증</div>
-      </div>
     </div>
     <div>
       <h2>프로필 이미지</h2>
@@ -92,7 +83,6 @@ const addUserInfo = function () {
     </div>
 
     <div class="detail-content-container">
-      <router-link class="button wt" to="/">다음에 하기</router-link>
       <div @click = "addUserInfo" class="button pp">등록하기</div>
     </div>
   </div>

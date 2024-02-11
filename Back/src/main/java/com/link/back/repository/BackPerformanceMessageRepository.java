@@ -21,8 +21,8 @@ public interface BackPerformanceMessageRepository extends JpaRepository<BackPerf
 		"SUM(CASE WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(message, ' ', 1), ':', -1) = 'Move' THEN 1 ELSE 0 END) AS MoveCount, " +
 		"SUM(CASE WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(message, ' ', 1), ':', -1) = 'Replace' THEN 1 ELSE 0 END) AS ReplaceCount, " +
 		"SUM(CASE WHEN SUBSTRING_INDEX(SUBSTRING_INDEX(message, ' ', 1), ':', -1) NOT IN ('Add', 'Make', 'Remove', 'Complete', 'Change', 'Merge', 'Refactor', 'Move', 'Replace') THEN 1 ELSE 0 END) AS EtcCount " +
-		"FROM back_performance_message " +
-		"WHERE back_performance_id = :backperformanceId", nativeQuery = true)
-	public Map<String,Integer> countBackPerformanceMessageByMessageStartsWith(Long backperformanceId);
+		"FROM back_performance_message bpm JOIN back_performance bp ON bpm.back_performance_id = bp.back_performance_id " +
+		"WHERE bp.project_id = :projectId", nativeQuery = true)
+	public Map<String,Integer> countBackPerformanceMessageByMessageStartsWith(Long projectId);
 
 }

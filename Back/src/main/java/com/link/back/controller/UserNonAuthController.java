@@ -2,6 +2,7 @@ package com.link.back.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -21,13 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.link.back.dto.JwtToken;
 import com.link.back.dto.LoginRequest;
+import com.link.back.dto.RankingDTO;
 import com.link.back.dto.RefreshToken;
 import com.link.back.dto.UserSignUpDto;
+import com.link.back.dto.request.AdditionalUserInfoRequest;
 import com.link.back.dto.request.SendEmailRequest;
 import com.link.back.dto.request.UseApiRequest;
 import com.link.back.dto.request.UserFindEmailRequest;
 import com.link.back.dto.request.UserPasswordResetRequest;
 import com.link.back.dto.request.VerificationRequest;
+import com.link.back.entity.User;
 import com.link.back.repository.RefreshTokenRepository;
 import com.link.back.service.UserService;
 
@@ -51,6 +55,7 @@ public class UserNonAuthController {
     }
 
     //회원 가입
+    //커리어 정보 추가
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Valid @RequestBody UserSignUpDto userSignUpDto) throws Exception {
 
@@ -84,12 +89,12 @@ public class UserNonAuthController {
 
     //경력인증
     @PostMapping("career")
-    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest, @RequestHeader("Authorization") String token) throws
+    public ResponseEntity<Integer> validCareer(@Valid @RequestBody UseApiRequest useApiRequest) throws
         UnsupportedEncodingException,
         JsonProcessingException,
         InterruptedException {
 
-        int result = userService.careerValidation(useApiRequest, token);
+        int result = userService.careerValidation(useApiRequest);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -225,6 +230,22 @@ public class UserNonAuthController {
             .build();
     }
 
+    //최상의 rating user 5명의 정보를 출력
+    @GetMapping("/ranking")
+    public ResponseEntity<List<RankingDTO>> getRanker(){
+        List<RankingDTO> rankers = userService.getTopFive();
 
+        return new ResponseEntity<>(rankers, HttpStatus.OK);
+    }
 
+    //추가정보 입력(email을 넘겨받아서 할거임 그래서 열로 와야함)
+    //회원 추가 정보 입력
+    @PostMapping("/addtionalinfo")
+    public ResponseEntity<String> addInfo(@Valid @RequestBody AdditionalUserInfoRequest additionalUserInfoRequest){
+
+        System.out.println(additionalUserInfoRequest.toString());
+        userService.updateAdditionalInfo(additionalUserInfoRequest);
+
+        return new ResponseEntity<>("추가정보입력이 완료되었습니다.", HttpStatus.OK);
+    }
 }

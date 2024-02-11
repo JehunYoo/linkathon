@@ -1,7 +1,7 @@
 <script setup lang="ts">
 //@ts-nocheck
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
-import {PropType} from "vue";
+import {PropType, watchEffect} from "vue";
 import {WinnerProjectResponseDto} from "@/dto/tmpDTOs/hackathonDTO.ts";
 
 const props = defineProps({
@@ -14,14 +14,16 @@ const props = defineProps({
     required : true
   }
 });
-console.log("cc",props.data?.winnerProjectInfoDto)
+watchEffect(() => {
+  if (props.data?.winnerProjectInfoDto == undefined && props.data.length == 0) {
+    return;
+  }
+});
 </script>
 
-<template>
+<template v-if="props.data?.winnerProjectInfoDto">
   <div class="container">
-    <img
-        src="https://post-phinf.pstatic.net/MjAxOTA5MjNfMjQx/MDAxNTY5MjI0NzIzMzY4.J7AkYT8wZ9wSOklBQbkrHAnfKbKHEGzwDmesytQpLpMg.9bJo6BvINkAC0vtz6RS1Os_9TJ8mS1SYU_r64BMv22Ig.JPEG/TJA.jpg?type=w800_q75"
-        alt=""/>
+    <img :src="props.data?.winnerProjectInfoDto?.imgSrc" alt=""/>
     <h1>프로젝트 설명</h1>
     <section>
       {{props.data.winnerProjectInfoDto?.projectDesc}}
@@ -33,11 +35,10 @@ console.log("cc",props.data?.winnerProjectInfoDto)
 
     </div>
     <h1>기술 스택</h1>
-    {{props.data.teamResponseDto}}
-    {{props.data.teamResponseDto?.teamSkills}}
     <div class="skill-container">
       <div v-for="skill in props.data?.teamResponseDto?.teamSkills">
-        <SkillIcon :skill="skill" width="52px" height="52px" radius="10px"/>
+        <img :src="skill.skillImageUrl" alt="" width="52px" height="52px" radius="10px"/>
+<!--        <SkillIcon :skill="skill" width="52px" height="52px" radius="10px"/>-->
       </div>
     </div>
   </div>

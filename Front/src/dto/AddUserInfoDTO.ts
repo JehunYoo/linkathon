@@ -4,6 +4,7 @@ import {UserImageDTO} from "@/dto/UserImageDTO.ts";
 
 export interface AddUserInfoDTO {
 
+    email: string;
     introduce: string;
     userSkills: UserSkillDTO[];
     referenceUrl: string;

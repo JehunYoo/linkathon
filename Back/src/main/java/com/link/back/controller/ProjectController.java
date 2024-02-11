@@ -66,19 +66,18 @@ public class ProjectController {
 
 	@GetMapping("/{project_id}/back-metrics")
 	public ResponseEntity<Page<BackPerformanceResponseDto>> getBackPerformances(@PathVariable Long project_id,
-		@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "1") int size) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("backPerformanceId").descending());
 		return new ResponseEntity<>(backPerformanceService.getBackPerformanceResponses(project_id, pageable),
 			HttpStatus.OK);
 	}
 
-	@GetMapping("/{backperformanceId}/message-count")
-	public ResponseEntity<BackPerformanceMessageResponseDto> getMessageCount(@PathVariable Long backperformanceId) {
-		BackPerformanceMessageResponseDto backPerformanceMessageResponseDto = backPerformanceService.getMessageCount(
-			backperformanceId);
-		return new ResponseEntity<>(backPerformanceMessageResponseDto, HttpStatus.OK);
+	@GetMapping("/{projectId}/message-count")
+	public ResponseEntity<BackPerformanceMessageResponseDto> getMessageCount(@PathVariable Long projectId){
+		BackPerformanceMessageResponseDto backPerformanceMessageResponseDto = backPerformanceService.getMessageCount(projectId);
+		return new ResponseEntity<>(backPerformanceMessageResponseDto,HttpStatus.OK);
 	}
-
 	@GetMapping("/contributions/{owner}/{repo}")
 	public ResponseEntity<List<Contribution>> getContributions(@PathVariable String owner, @PathVariable String repo) {
 		List<Contribution> contributions = projectContributionService.getContributionsList(owner, repo);

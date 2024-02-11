@@ -2,6 +2,7 @@ package com.link.back.security;
 
 import com.link.back.dto.JwtToken;
 import com.link.back.dto.RefreshToken;
+import com.link.back.exception.AuthorizationException;
 import com.link.back.repository.RefreshTokenRepository;
 import com.link.back.repository.UserRepository;
 import io.jsonwebtoken.*;
@@ -104,11 +105,10 @@ public class JwtTokenProvider {
     public boolean validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken.charAt(6)==32?jwtToken.substring(7):jwtToken);
-
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             log.info(e.getMessage());
-            return false;
+            throw new AuthorizationException();
         }
     }
 
