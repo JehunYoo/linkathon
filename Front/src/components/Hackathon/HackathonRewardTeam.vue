@@ -33,8 +33,6 @@ console.log("cc",props.data?.winnerProjectInfoDto)
 
     </div>
     <h1>기술 스택</h1>
-    {{props.data.teamResponseDto}}
-    {{props.data.teamResponseDto?.teamSkills}}
     <div class="skill-container">
       <div v-for="skill in props.data?.teamResponseDto?.teamSkills">
         <SkillIcon :skill="skill" width="52px" height="52px" radius="10px"/>
@@ -49,7 +47,7 @@ console.log("cc",props.data?.winnerProjectInfoDto)
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  justify-content: center;
+  justify-content: left;
 }
 
 .member-img-container {
@@ -60,7 +58,7 @@ console.log("cc",props.data?.winnerProjectInfoDto)
 }
 
 .member-img {
-  max-width: 110px;
+  width: 110px;
   height: 110px;
   object-fit: cover;
   border: 1px solid #303030;
@@ -92,9 +90,13 @@ h1 {
   background: #FFF;
   padding: 24px;
   margin-bottom: 60px;
+  flex: 1;
 }
 
 img {
+  object-fit: cover;
+  height: 250px;
+  width: 100%;
   max-width: 379px;
   border-radius: 5px;
 }
