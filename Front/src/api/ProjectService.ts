@@ -2,18 +2,16 @@ import {ApiService} from "@/api/ApiService.ts";
 import {httpStatusCode} from "@/util/httpStatus.ts";
 import {
     BackPerformanceResponseDto,
-    PageableBackPerformance, PageableProjects,
+    PageableBackPerformance,
+    PageableProjects,
     ProjectDetailDto,
     ProjectInfoDTO,
     ProjectRequestDto
 } from "@/dto/projectDTO.ts";
 import {Builder} from "builder-pattern";
-import projectStorage from "@/store/projectStorage.ts";
 import {AxiosResponse} from "axios";
 import {BackPerformanceMessageResponseDto} from "@/dto/BackPerformanceMessageResponseDto.ts";
 import {CatchError} from "@/util/error.ts";
-// import store from "@/store";
-// import {CatchError} from "@/util/error.ts";
 
 const apiService = new ApiService();
 
@@ -38,18 +36,6 @@ class ProjectService {
                 .totalPages(data.totalPages)
                 .build())
             .build();
-    }
-
-    async starClick (data: ProjectInfoDTO, projectId: number)  {
-        if (data.starred) {
-            await projectStorage.getters.getProjectService.unlikeProject(projectId);
-            data.starCount--;
-            data.starred = false;
-        } else {
-            await projectStorage.getters.getProjectService.likeProject(projectId);
-            data.starCount++;
-            data.starred = true;
-        }
     }
 
     // 전송 관련 메서드들

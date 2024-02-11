@@ -3,9 +3,7 @@ package com.link.back.dto.response;
 import static java.util.stream.Collectors.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.link.back.entity.MemberStatus;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
 
@@ -31,8 +29,13 @@ public class TeamMemberResponseDto {
 		this.name = user.getName();
 		this.rating = user.getRating();
 		this.introduce = user.getIntroduce();
-		this.userImageUrl = user.getUserImage().getUserImageUrl();
-		this.userOriginImageName = user.getUserImage().getUserOriginImageName();
+		if (user.getUserImage() != null) {
+			this.userImageUrl = user.getUserImage().getUserImageUrl();
+			this.userOriginImageName = user.getUserImage().getUserOriginImageName();
+		} else {
+			this.userImageUrl = null;
+			this.userOriginImageName = null;
+		}
 		this.role = userTeam.getRole().name();
 		this.skillSets = user.getUserSkills().stream()
 			.map(SkillResponseDto::new).collect(toList());
