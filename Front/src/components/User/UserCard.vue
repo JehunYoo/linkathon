@@ -15,12 +15,11 @@ const props = defineProps({
     default: Builder<TeamMemberFindUserDTO>().build()
   }
 });
-
 const shortEncoding = (text: string, cut: number): string => {
-  if (text.length >= cut)
-    return text.substring(0, cut) + "...";
-  else
-    return text
+    if (text.length >= cut)
+      return text.substring(0, cut) + "...";
+    else
+      return text
 }
 </script>
 
@@ -33,7 +32,9 @@ const shortEncoding = (text: string, cut: number): string => {
         <Tier :rating="userInfo.rating" font-size="14px" height="16px" style="margin-left: 8px" width="28px"></Tier>
       </div>
       <div class="introduce-text">
-        {{ shortEncoding(userInfo.introduce,40) }}
+        <template v-if="userInfo.introduce">
+        {{ shortEncoding(userInfo.introduce, 40) }}
+        </template>
       </div>
       <div style="display: flex; gap:4px; flex: 1">
         <template v-for="data in userInfo.skillSets.slice(0,8)">

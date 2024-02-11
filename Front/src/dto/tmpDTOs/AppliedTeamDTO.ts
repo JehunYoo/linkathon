@@ -5,6 +5,7 @@ export interface AppliedTeamDTO {
     teamName:string,
     teamDesc:string,
     hackathonInfoResponseDto:HackathonInfoDTO,
+    leader:TeamMemberFindUserDTO,
     members:TeamMemberFindUserDTO[],
     teams:teamListDTO[]
 }

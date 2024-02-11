@@ -41,6 +41,11 @@ class TeamBuildingService {
     }
 
     @CatchError
+    async getSuggestedTeam(): Promise<AppliedTeamDTO | undefined> {
+        return (await apiService.getData(true, `${url}/teams/suggested`)).data as AppliedTeamDTO;
+    }
+
+    @CatchError
     async getRecruitTeam(): Promise<RecruitTeamDTO | undefined> {
         return (await apiService.getData(true, `${url}/teams/recruit/team`)).data as RecruitTeamDTO;
     }
