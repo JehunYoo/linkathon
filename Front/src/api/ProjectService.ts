@@ -56,13 +56,21 @@ class ProjectService {
 
     async getALlProjects(pageNumber: number | undefined, pageSize: number | undefined): Promise<PageableProjects> {
         try {
-            const response = await apiService.getData(false, `${url}`,
-                {params: {
-                        page: pageNumber,
-                        size: pageSize
-                    }});
-            if (response && response.status === httpStatusCode.OK) {
-                return this.toPageableProjects(response);
+            const newUrl = `${url}`;
+            const params = {
+                page: pageNumber,
+                size: pageSize
+            }
+            try {
+                const response = await apiService.getData(true, newUrl, {params});
+                if (response && response.status === httpStatusCode.OK) {
+                    return this.toPageableProjects(response);
+                }
+            } catch (error) {
+                const response = await apiService.getData(false, newUrl, {params});
+                if (response && response.status === httpStatusCode.OK) {
+                    return this.toPageableProjects(response);
+                }
             }
         } catch (error) {
             console.error(error);
@@ -84,12 +92,21 @@ class ProjectService {
 
     async getPopularProjects(pageNumber: number | undefined, pageSize: number | undefined): Promise<PageableProjects> {
         try {
-            const response = await apiService.getData(false, `${url}/popular`, {params: {
-                    page: pageNumber,
-                    size: pageSize
-                }});
-            if (response && response.status === httpStatusCode.OK) {
-                return this.toPageableProjects(response);
+            const newUrl = `${url}/popular`;
+            const params = {
+                page: pageNumber,
+                size: pageSize
+            }
+            try {
+                const response = await apiService.getData(true, newUrl, {params});
+                if (response && response.status === httpStatusCode.OK) {
+                    return this.toPageableProjects(response);
+                }
+            } catch (error) {
+                const response = await apiService.getData(false, newUrl, {params});
+                if (response && response.status === httpStatusCode.OK) {
+                    return this.toPageableProjects(response);
+                }
             }
         } catch (error) {
             console.error(error);
