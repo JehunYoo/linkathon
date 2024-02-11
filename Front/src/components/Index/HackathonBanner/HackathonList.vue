@@ -1,26 +1,19 @@
 <script lang="ts" setup>
 import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
-import {PropType, ref, Ref} from "vue";
-import {HackathonService} from "@/api/HackathonService.ts";
-import {onMounted} from "vue/dist/vue";
+import {PropType} from "vue";
+import {useRouter} from "vue-router";
 
-// const dummy: HackathonInfoDTO[] = [];
-// dummy.push(
-//     Builder<HackathonInfoDTO>()
-//         .hackathonName(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
-//         .registerDate(new Date(2024, 0, 1))
-//         .teamDeadlineDate(new Date(2024, 0, 15))
-//         .startDate(new Date(2024, 1, 1))
-//         .endDate(new Date(2024, 1, 15))
-//         .hackathonTopic("교육 기술")
-//         .hackathonImageUrl("https://images.unsplash.com/photo-1528301721190-186c3bd85418?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D")
-//         .build(),
 const props = defineProps({
   ht : {
     type : Object as PropType<PageableHackathonList>,
     require : true
   }
 })
+
+// const goToHackathonDetail = (hackathonId : number) => {
+//   const router = useRouter();
+//   router.push(`/hackathonDetail?id=${hackathonId}`);
+// }
 console.log(props.ht?.hackathons)
 </script>
 
@@ -32,10 +25,9 @@ console.log(props.ht?.hackathons)
           {{ data.hackathonName }}
         </div>
       </div>
-      <div class="img-container">
-
+      <RouterLink :to="`/hackathonDetail?id=${data.hackathonId}`" class="img-container">
         <img :src="data.hackathonImageUrl" alt="">
-      </div>
+      </RouterLink>
       <div class="title-container">
         <div class="title">
           {{ data.hackathonTopic }}
