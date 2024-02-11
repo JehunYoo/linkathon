@@ -2,8 +2,13 @@
 //@ts-nocheck
 import UserCard from "@/components/User/UserCard.vue";
 import HackathonCard from "@/components/Hackathon/HackathonCard.vue";
-import {onMounted, watch} from "vue";
+import {onMounted, watch, Ref, ref} from "vue";
 import {TeamService} from "@/api/TeamService.ts";
+import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
+import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+
+const teamBuildingService = new TeamBuildingService();
+const refTeam: Ref<AppliedTeamDTO | undefined> = ref();
 
 const props = defineProps({
   teamId: {
@@ -11,22 +16,24 @@ const props = defineProps({
     default:0
   }
 })
-function getTeamInfo() {
-  const teamService = new TeamService();
-}
+// function getTeamInfo() {
+//   const teamService = new TeamService();
+// }
 
-onMounted(() => {
-  getTeamInfo()
+onMounted(async () => {
+  refTeam.value = await teamBuildingService.getAppliedTeam();
+  console.log(refTeam.value);
+  // getTeamInfo()
 })
-watch(() => props.teamId, getTeamInfo, { immediate: true });
+// watch(() => props.teamId, getTeamInfo, { immediate: true });
 </script>
 
 <template>
-  <slot/>
-  <h1>팀이름 - {{ teamId }}</h1>
-  <h2>프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.프로젝트 설명입니다.</h2>
+<!--  <slot/>-->
+  <h1>{{ refTeam?.teamName }}</h1>
+  <h2>{{ refTeam?.teamDesc }}</h2>
   <h1>해커톤 정보</h1>
-  <HackathonCard/>
+  <HackathonCard :data="refTeam?.hackathonInfoResponseDto" :name="refTeam?.hackathonInfoResponseDto.hackathonName" />
   <h1>팀장</h1>
   <div class="user-card-container">
     <div class="user-card">
@@ -35,8 +42,8 @@ watch(() => props.teamId, getTeamInfo, { immediate: true });
   </div>
   <h1>현재 팀원</h1>
   <div class="user-card-container">
-    <div v-for="_ in 5" class="user-card">
-      <UserCard/>
+    <div v-for="(data, i) in refTeam?.members" class="user-card">
+      <UserCard :userInfo="data"/>
     </div>
   </div>
 </template>

@@ -12,7 +12,7 @@ const props = defineProps({
     required : true
   }
 });
-
+console.log(props.data)
 function formatDate(date: Date) {
   const format_date = new Date(date);
   const month = format_date.getMonth() + 1;
