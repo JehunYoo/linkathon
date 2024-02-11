@@ -14,7 +14,6 @@ const props = defineProps({
     required : true
   }
 });
-console.log("cc",props.data?.winnerProjectInfoDto)
 </script>
 
 <template>
