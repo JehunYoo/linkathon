@@ -41,7 +41,7 @@ public class UserAuthController {
 
         UserInfoResponsse result = userService.getInfo(token);
 
-        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //회원 탈퇴
@@ -62,12 +62,5 @@ public class UserAuthController {
         return new ResponseEntity<>("갱신되었습니다.", HttpStatus.OK);
     }
 
-    //회원 추가 정보 입력
-    @PostMapping("/users/addtionalinfo")
-    public ResponseEntity<String> addInfo(@RequestHeader("Authorization") String token, @Valid @RequestBody AdditionalUserInfoRequest additionalUserInfoRequest){
-        userService.updateAdditionalInfo(token, additionalUserInfoRequest);
-
-        return new ResponseEntity<>("추가정보입력이 완료되었습니다.", HttpStatus.OK);
-    }
 
 }

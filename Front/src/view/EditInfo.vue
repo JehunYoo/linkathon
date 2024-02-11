@@ -47,7 +47,6 @@ const setTelecom = (index: number) => {
   telecom.value = index;
 };
 
-// 통신사 옵션 배열에 객체를 사용하여 이름과 인덱스를 매핑합니다.
 const telecomOptions = ref([
   'SKT' ,
    'KT' ,

@@ -7,6 +7,7 @@ export interface GetUserDataDTO{
     name: string;
     referenceUrl: string;
     field: string;
+    career: number;
     userSkills: UserSkillDTO[];
     introduce: string;
     registered: Boolean;

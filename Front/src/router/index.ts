@@ -24,7 +24,7 @@ const routes = [
     {path: '/login', component: Login},
     {path: '/findAccount', component: FindAccount},
     {path: '/passwordChange', component: PasswordChange, props: true},
-    {path: '/detailInfo', component: DetailInfo},
+    {path: '/detailInfo', component: DetailInfo, meta:{ dataToSend: null }},
     {path: '/video', component: Video},
     {path: '/sharedProject', component: SharedProject},
     {

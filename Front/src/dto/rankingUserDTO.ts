@@ -1,7 +1,7 @@
-interface RankingUserDTO {
+export interface RankingUserDTO {
     userId:number,
     userImgUrl:string,
-    userName:string,
+    name:string,
     introduce:string,
     referenceUrl:string,
     rating:number,
