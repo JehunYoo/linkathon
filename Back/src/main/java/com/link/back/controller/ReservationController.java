@@ -61,7 +61,7 @@ public class ReservationController {
 		@RequestBody @NotNull ReservationRequest reservationRequest) {
 
 		Long myUserId = this.getUserIdFromToken(token);
-		if (!reservationService.checkReservation(myUserId, reservationId))
+		if (!reservationService.checkReservation(reservationId, myUserId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		reservationService.updateMyReservation(reservationId, myUserId, reservationRequest);
@@ -73,7 +73,7 @@ public class ReservationController {
 		@RequestHeader(value = "Authorization", required = true) String token) {
 
 		Long myUserId = this.getUserIdFromToken(token);
-		if (!reservationService.checkReservation(myUserId, reservationId))
+		if (!reservationService.checkReservation(reservationId, myUserId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		reservationService.deleteReservation(reservationId);
@@ -89,7 +89,7 @@ public class ReservationController {
 		OpenViduHttpException {
 
 		Long myUserId = this.getUserIdFromToken(token);
-		if (!reservationService.checkReservation(myUserId, reservationId))
+		if (!reservationService.checkReservation(reservationId, myUserId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID 정보로 세션 ID 생성
@@ -108,7 +108,7 @@ public class ReservationController {
 		OpenViduHttpException {
 
 		Long myUserId = this.getUserIdFromToken(token);
-		if (!reservationService.checkReservation(myUserId, reservationId))
+		if (!reservationService.checkReservation(reservationId, myUserId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID로 세션 ID 생성
