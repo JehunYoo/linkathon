@@ -49,6 +49,7 @@ onMounted(async () => {
     </div>
     <div class="fx1">
       <h2>신청한 사용자</h2>
+
       <div class="list">
         <template v-if="refTeam?.members['SUGGESTED']">
           <template v-for="(data, i) in refTeam?.members['SUGGESTED']">

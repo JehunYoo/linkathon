@@ -3,16 +3,16 @@ import {PropType} from "vue";
 import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
 
 const props = defineProps({
-  data : {
-    type : Object as PropType<HackathonInfoDTO>,
-    required: true
+  data: {
+    type: Object as PropType<HackathonInfoDTO>,
+    // required: true
   },
-  name : {
-    type : String,
-    required : true
+  name: {
+    type: String,
+    // required : true
   }
 });
-console.log(props.data)
+
 function formatDate(date: Date) {
   const format_date = new Date(date);
   const month = format_date.getMonth() + 1;
@@ -23,55 +23,57 @@ function formatDate(date: Date) {
 </script>
 
 <template>
-  <RouterLink :to="`/hackathonDetail?id=${props.data.hackathonId}`" class="card-container">
-    <img :src="props.data?.hackathonImageUrl" alt="" class="img">
-    <div style="width: 100%">
-      <div style="display: flex; width: 100%; gap: 10px">
-        <div style="flex: 8">
-          <h1>
-            {{props.data.hackathonName}}
-          </h1>
+  <template v-if="props.data">
+    <RouterLink :to="`/hackathonDetail?id=${props.data.hackathonId}`" class="card-container">
+      <img :src="props.data?.hackathonImageUrl" alt="" class="img">
+      <div style="width: 100%">
+        <div style="display: flex; width: 100%; gap: 10px">
+          <div style="flex: 8">
+            <h1>
+              {{ props.data.hackathonName }}
+            </h1>
+          </div>
+          <div class="status">
+            {{ props.name }}
+          </div>
         </div>
-        <div class="status">
-          {{ props.name}}
+
+        <h2>
+          {{ props.data.hackathonTopic }}
+        </h2>
+        <div style="display: flex; gap: 10px; flex-direction: row">
+          <div class="text-container">
+            <div>
+              <h4>
+                모집기간
+              </h4>
+              <h3>
+                {{ formatDate(props.data.registerDate) }}~{{ formatDate(props.data.teamDeadlineDate) }}
+              </h3>
+            </div>
+            <div>
+              <h4>
+                진행기간
+              </h4>
+              <h3>
+                {{ formatDate(props.data.startDate) }}~{{ formatDate(props.data.endDate) }}
+              </h3>
+            </div>
+            <div>
+              <h4>
+                결과발표
+              </h4>
+              <h3>
+                {{ formatDate(props.data.endDate) }}
+              </h3>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <h2>
-        {{ props.data.hackathonTopic }}
-      </h2>
-      <div style="display: flex; gap: 10px; flex-direction: row">
-        <div class="text-container">
-          <div>
-            <h4>
-              모집기간
-            </h4>
-            <h3>
-              {{ formatDate(props.data.registerDate) }}~{{ formatDate(props.data.teamDeadlineDate) }}
-            </h3>
-          </div>
-          <div>
-            <h4>
-              진행기간
-            </h4>
-            <h3>
-              {{ formatDate(props.data.startDate) }}~{{ formatDate(props.data.endDate) }}
-            </h3>
-          </div>
-          <div>
-            <h4>
-              결과발표
-            </h4>
-            <h3>
-              {{ formatDate(props.data.endDate) }}
-            </h3>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </RouterLink>
+    </RouterLink>
+  </template>
 </template>
 
 <style scoped>

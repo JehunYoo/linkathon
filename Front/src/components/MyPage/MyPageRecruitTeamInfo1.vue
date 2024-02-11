@@ -20,7 +20,7 @@ const props = defineProps({
 // }
 
 onMounted(async () => {
-  refTeam.value = await teamBuildingService.getAppliedTeam();
+  refTeam.value = await teamBuildingService.getSuggestedTeam();
   console.log(refTeam.value);
   // getTeamInfo()
 })

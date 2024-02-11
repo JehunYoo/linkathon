@@ -22,6 +22,7 @@ public class TeamMemberResponseDto {
 	private final String introduce;
 	private final String userImageUrl;
 	private final String userOriginImageName;
+	private final String role;
 	private final List<SkillResponseDto> skillSets;
 
 	public TeamMemberResponseDto(UserTeam userTeam) {
@@ -32,6 +33,7 @@ public class TeamMemberResponseDto {
 		this.introduce = user.getIntroduce();
 		this.userImageUrl = user.getUserImage().getUserImageUrl();
 		this.userOriginImageName = user.getUserImage().getUserOriginImageName();
+		this.role = userTeam.getRole().name();
 		this.skillSets = user.getUserSkills().stream()
 			.map(SkillResponseDto::new).collect(toList());
 	}

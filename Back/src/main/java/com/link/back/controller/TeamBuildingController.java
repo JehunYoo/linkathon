@@ -27,6 +27,7 @@ import com.link.back.dto.request.UpdateTeamRequestDto;
 import com.link.back.dto.request.UserSearchConditionDto;
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MemberDetailResponseDto;
+import com.link.back.dto.response.MypageConditionDto;
 import com.link.back.dto.response.RecruitingTeamResponseDto;
 import com.link.back.dto.response.TeamApplicationResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
@@ -197,4 +198,11 @@ public class TeamBuildingController {
 	public RecruitingTeamResponseDto getRecruitingTeam (@RequestHeader("Authorization") String token) {
 		return teamBuildingService.findRecruitingTeam(jwtTokenProvider.getUserId(token));
 	}
+
+	@GetMapping("/mypage/condition")
+	@ResponseStatus(OK)
+	public MypageConditionDto findMypageCondition(@RequestHeader("Authorization") String token) {
+		return teamBuildingService.findMypageCondition(jwtTokenProvider.getUserId(token));
+	}
+
 }
