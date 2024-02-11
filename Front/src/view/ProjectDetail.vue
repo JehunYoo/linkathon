@@ -24,8 +24,6 @@ interface TeamRefs {
 
 const route = useRoute();
 
-// TODO 작성중
-
 const teamBuildingService: TeamBuildingService = new TeamBuildingService();
 const teamRefs: TeamRefs = {
   skillsRef: ref([]),
@@ -45,36 +43,6 @@ const initTeamRefs = async (teamId: number) => {
     m.get(t)?.push(teamSkillDto);
   });
 }
-
-
-// // TODO: 팀 아이디로 스킬셋 목록 가져오는 요청 필요
-// const dummySkillList: SkillDTO[] = [];
-// const dummySkill: SkillDTO = Builder<SkillDTO>()
-//     .skillId(1)
-//     .skillName("JavaScript")
-//     .skillImgUrl("https://images.velog.io/images/mokyoungg/post/6659a8e8-5234-49e5-b3da-a3816c08bfdc/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%EB%A1%9C%EA%B3%A0.svg").build();
-//
-// for (let i = 0; i < 4; i++) {
-//   dummySkillList.push(dummySkill);
-// }
-//
-// // TODO: 팀 아이디로 스킬 카테고리와 셋 가져오기
-// const dummy: SkillCategory = Builder<SkillCategory>()
-//     .categoryName("백엔드")
-//     .skillList(dummySkillList)
-//     .build();
-//
-// const dummyList: SkillCategory[] = [];
-// for (let i = 0; i < 3; i++) {
-//   dummyList.push(dummy);
-// }
-// dummyList.push(Builder<SkillCategory>()
-//     .categoryName("프론트엔드")
-//     .skillList(dummySkillList)
-//     .build())
-
-// ================
-
 
 const projectService: ProjectService = ProjectStore.getters.getProjectService;
 const projectDetail: Ref<ProjectDetailDto> = ref({} as ProjectDetailDto);

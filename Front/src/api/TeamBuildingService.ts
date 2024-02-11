@@ -5,6 +5,7 @@ import {SkillCategoryResponseDto} from "@/dto/tmpDTOs/SkillTypeDTO.ts";
 import {RecruitTeamDTO} from "@/dto/tmpDTOs/RecruitTeamDTO.ts";
 import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
 import {TeamResponseDto} from "@/dto/tmpDTOs/teamDTO.ts";
+import {MemberDetailResponseDto} from "@/dto/tmpDTOs/memberDTO.ts";
 
 const apiService = new ApiService();
 
@@ -64,6 +65,11 @@ class TeamBuildingService {
         return response.data;
     }
 
+    @CatchError
+    async getMemberDetailByUserId(userId: number): Promise<MemberDetailResponseDto> {
+        const response = await apiService.getData(false, `${url}/teams/recruit/detail/${userId}`);
+        return response.data;
+    }
 }
 
 export {
