@@ -17,7 +17,6 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
-// @CrossOrigin(origins = "*")
 @RestController
 public class OpenViduController {
 	private final OpenVidu openVidu; // 오픈 비두 객체
@@ -31,7 +30,8 @@ public class OpenViduController {
 	 * @return The Session ID
 	 */
 	@PostMapping("/api/sessions")
-	public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params) throws
+	public ResponseEntity<String> initializeSession(
+		@RequestBody(required = false) Map<String, Object> params) throws
 		OpenViduJavaClientException,
 		OpenViduHttpException {
 		SessionProperties properties = SessionProperties.fromJson(params).build();
@@ -45,7 +45,8 @@ public class OpenViduController {
 	 * @return The Token associated to the Connection
 	 */
 	@PostMapping("/api/sessions/{sessionId}/connections")
-	public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
+	public ResponseEntity<String> createConnection(
+		@PathVariable("sessionId") String sessionId,
 		@RequestBody(required = false) Map<String, Object> params) throws
 		OpenViduJavaClientException,
 		OpenViduHttpException {

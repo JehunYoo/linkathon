@@ -2,6 +2,7 @@ package com.link.back.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -52,8 +53,8 @@ public class ReservationService {
 
 	public void updateMyReservation(Long reservationId, Long myUserId, ReservationRequest reservationRequest) {
 		User user = userRepository.getReferenceById(myUserId);
-		if (isNotMyReservation(reservationId, myUserId)) // 자신의 예약인지 확인
-			throw new RuntimeException();
+		// if (isUsersReservation(reservationId, myUserId)) // 자신의 예약인지 확인
+		// 	throw new RuntimeException();
 		if (isOverlappedReservation(user, reservationRequest.reservationDateTime())) // 겹치는 예약 시간 확인
 			throw new RuntimeException();
 		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
@@ -61,22 +62,16 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}
 
-	public void deleteMyReservation(Long myUserId, Long reservationId) {
-		if (isNotMyReservation(reservationId, myUserId)) // 자신의 예약인지 확인
-			throw new RuntimeException();
+	public void deleteReservation(Long reservationId) {
 		reservationRepository.deleteById(reservationId);
 	}
 
-	public boolean isNotMyReservation(Long reservationId, Long userId) {
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
-		System.out.println(reservation.isMyReservation(userId));
-		System.out.println(userId);
-		System.out.println(reservation.getLeader());
-		System.out.println(reservation.getMember());
-		return !reservation.isMyReservation(userId);
+	public boolean checkReservation(Long reservationId, Long userId) {
+		Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+		return reservation.filter(value -> !value.isMyReservation(userId)).isPresent();
 	}
 
-	public boolean isOverlappedReservation(User user, LocalDateTime reservationDateTime) {
+	private boolean isOverlappedReservation(User user, LocalDateTime reservationDateTime) {
 		List<Reservation> reservations = reservationRepository.findByLeaderOrMember(user, user);
 		for (Reservation r : reservations) {
 			if (r.getReservationDateTime().equals(reservationDateTime))
