@@ -1,4 +1,3 @@
-import {CatchError} from "@/util/error.ts";
 import {ReservationService} from "@/api/ReservationService.ts";
 
 class OpenViduService {
@@ -11,7 +10,6 @@ class OpenViduService {
         this.reservationService = new ReservationService();
     }
 
-    @CatchError
     async getToken(reservationId: number) {
         await this.reservationService.createOpenViduSession(reservationId);
         return await this.reservationService.createOpenViduToken(reservationId);

@@ -65,7 +65,7 @@ class ReservationService {
         try {
             const response = await apiService.postData(true, newUrl, {});
             if (response && response.status === httpStatusCode.OK) {
-                return;
+                return response.data;
             }
         } catch (error) {
             // 예외 상황
