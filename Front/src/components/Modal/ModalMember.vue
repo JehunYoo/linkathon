@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import Tier from "@/components/Tier.vue";
-import ModalGithubButton from "@/components/Modal/ModealGithubButton.vue";
+import ModalGithubButton from "@/components/Modal/ModalGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
 import {PropType} from "vue";
 import {TeamFindSkillDTO, TeamMemberFindUserDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
@@ -47,9 +47,9 @@ const groupedSkills = computed(() => {
           <a :href="userInfo.referenceUrl" target="_blank" class="git-button">
             <ModalGithubButton/>
           </a>
-          <RouterLink class="button-right-container" to="/video">
+          <div class="button-right-container">
             <slot/>
-          </RouterLink>
+          </div>
         </div>
       </div>
     </div>
@@ -69,6 +69,8 @@ const groupedSkills = computed(() => {
   display: flex;
   gap: 26px;
   margin-bottom: 16px;
+  min-width: max-content;
+  flex: 1;
 }
 
 h2 {
@@ -84,14 +86,11 @@ h2 {
   overflow: scroll;
   margin-bottom: 23px;
   padding: 0 24px 0px;
-}
-
-* {
-  -ms-overflow-style: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  gap: 16px;
 }
 
 @media screen and (max-width: 458px) {
@@ -177,7 +176,7 @@ img {
   font-style: normal;
   font-weight: 400;
   max-height: 80px;
-  overflow: scroll;
+  height: max-content;
 }
 
 .button-wrapper {

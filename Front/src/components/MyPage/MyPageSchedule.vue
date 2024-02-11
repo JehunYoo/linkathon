@@ -1,11 +1,19 @@
 <script setup lang="ts">
-
-import UserCard from "@/components/User/UserCard.vue";
 import {ref} from "vue";
+import UserCard from "@/components/User/UserCard.vue";
 
 const as = ref<Boolean>(false);
 const clicked = (bool: boolean) => {
   as.value = bool;
+}
+const selectedTime = ref(new Set<Number>());
+
+const selectTime = (num: number) => {
+  if (selectedTime.value.has(num)) {
+    selectedTime.value.delete(num)
+  } else {
+    selectedTime.value.add(num)
+  }
 }
 </script>
 
@@ -20,10 +28,14 @@ const clicked = (bool: boolean) => {
     <div class="edit">수정하기</div>
   </div>
   <div class="time-container" v-if="!as">
-    <div class="time-button" v-for="i in 12">{{ i - 1 }}:00</div>
+    <div class="time-button" v-for="i in 12" @click="selectTime(i-1)" :class="selectedTime.has(i-1)?
+        'select-time':'non-select-time'">{{ i - 1 }}:00
+    </div>
   </div>
   <div class="time-container" v-if="as">
-    <div class="time-button" v-for="i in 12">{{ i + 11 }}:00</div>
+    <div class="time-button" v-for="i in 12" @click="selectTime(i+11)" :class="selectedTime.has(i+11)?
+        'select-time':'non-select-time'">{{ i + 11 }}:00
+    </div>
   </div>
   <h2>미팅 스케줄</h2>
   <h3>2024.01.19</h3>
@@ -78,12 +90,21 @@ const clicked = (bool: boolean) => {
   margin-bottom: 20px;
 }
 
+.select-time {
+  background: #7d3bff;
+  color: white;
+}
+
+.non-select-time {
+  color: #303030;
+}
+
 .time-button {
   width: 70px;
   height: 40px;
   border-radius: 10px;
   border: 1px solid #DEDEDE;
-  color: #303030;
+  transition: color 0.3s ease;
   text-align: center;
   font-size: 16px;
   font-style: normal;

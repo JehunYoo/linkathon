@@ -1,3 +1,6 @@
+import router from "@/router";
+import {AxiosError} from "axios/index";
+
 const {DEV} = import.meta.env;
 
 /**
@@ -11,10 +14,17 @@ function CatchError(_: any, propertyName: string, descriptor: TypedPropertyDescr
     descriptor.value = async function (...args: any[]) {
         try {
             return await method.apply(this, args);
-        } catch (error) {
+        } catch (error: any) {
+            if (isAxiosError(error) && error.response && (error.response.status === 401)) {
+                await router.push('/login');
+            }
             if (DEV) console.log(`Error in ${propertyName}:`, error);
         }
     };
+}
+
+function isAxiosError(error: any): error is AxiosError {
+    return error.isAxiosError === true;
 }
 
 export {CatchError};

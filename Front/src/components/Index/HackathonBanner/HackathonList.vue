@@ -1,30 +1,39 @@
 <script lang="ts" setup>
-import {Builder} from "builder-pattern";
-import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
+import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
+import {PropType, ref, Ref} from "vue";
+import {HackathonService} from "@/api/HackathonService.ts";
+import {onMounted} from "vue/dist/vue";
 
-const dummy: HackathonInfoDTO[] = [];
-dummy.push(
-    Builder<HackathonInfoDTO>()
-        .hackathonName(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
-        .registerDate(new Date(2024, 0, 1))
-        .teamDeadlineDate(new Date(2024, 0, 15))
-        .startDate(new Date(2024, 1, 1))
-        .endDate(new Date(2024, 1, 15))
-        .hackathonTopic("교육 기술")
-        .hackathonImageUrl("https://images.unsplash.com/photo-1528301721190-186c3bd85418?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D")
-        .build(),
-);
+// const dummy: HackathonInfoDTO[] = [];
+// dummy.push(
+//     Builder<HackathonInfoDTO>()
+//         .hackathonName(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
+//         .registerDate(new Date(2024, 0, 1))
+//         .teamDeadlineDate(new Date(2024, 0, 15))
+//         .startDate(new Date(2024, 1, 1))
+//         .endDate(new Date(2024, 1, 15))
+//         .hackathonTopic("교육 기술")
+//         .hackathonImageUrl("https://images.unsplash.com/photo-1528301721190-186c3bd85418?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D")
+//         .build(),
+const props = defineProps({
+  ht : {
+    type : Object as PropType<PageableHackathonList>,
+    require : true
+  }
+})
+console.log(props.ht?.hackathons)
 </script>
 
 <template>
   <div class="hackathon-banner-list">
-    <div v-for="data in dummy" class="hackathon-banner-list-container">
+    <div v-for="data in props.ht?.hackathons" class="hackathon-banner-list-container">
       <div class="list-title-container">
-        <div v-for="title in data.hackathonName" class="list-title">
-          {{ title }}
+        <div  class="list-title">
+          {{ data.hackathonName }}
         </div>
       </div>
       <div class="img-container">
+
         <img :src="data.hackathonImageUrl" alt="">
       </div>
       <div class="title-container">

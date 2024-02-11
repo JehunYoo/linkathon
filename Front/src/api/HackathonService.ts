@@ -23,7 +23,7 @@ interface pageableData {
 class HackathonService {
     @CatchError
     async getHackathonList(hackathonStatus: string, page: number, size: number): Promise<PageableHackathonList> {
-        const response = await apiService.getData(true, `${url}/hackathons`, {
+        const response = await apiService.getData(false, `${url}/hackathons`, {
             params: {
                     page: page,
                     size: size,

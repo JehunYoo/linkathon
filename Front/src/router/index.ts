@@ -15,6 +15,7 @@ import MyPage from "@/view/MyPage.vue";
 import Exit from "@/view/Exit.vue";
 import EditInfo from "@/view/EditInfo.vue";
 import Refresh from "@/view/Refresh.vue";
+import Test from "@/view/Test.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -23,7 +24,7 @@ const routes = [
     {path: '/login', component: Login},
     {path: '/findAccount', component: FindAccount},
     {path: '/passwordChange', component: PasswordChange, props: true},
-    {path: '/detailInfo', component: DetailInfo},
+    {path: '/detailInfo', component: DetailInfo, meta:{ dataToSend: null }},
     {path: '/video', component: Video},
     {path: '/sharedProject', component: SharedProject},
     {
@@ -40,6 +41,7 @@ const routes = [
     {path: '/exit', component: Exit},
     {path: '/editInfo', component: EditInfo},
     {path: '/refresh', component: Refresh},
+    {path: '/test', component:Test}
 ];
 
 const router = createRouter({
