@@ -26,7 +26,7 @@ const field = ref<string>('');
 onMounted(async () => {
   refSkillCategory.value = await teamBuildingService.getAllSkillType();
   refUser.value = await teamBuildingService.getAllTeamFindMember({
-    page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page), size: 4
+    page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page), size: 16
   });
   if (refSkillCategory.value) {
     const skillTypeResponseDtoMap = refSkillCategory.value;
@@ -71,7 +71,7 @@ const selectedMenuTier = async (item: number) => {
     career: career.value != 0 ? (career.value - 1) : undefined,
     field: field.value,
     page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page),
-    size: 4
+    size: 16
   });
   await router.push("/recruit?page=1")
 }
@@ -83,7 +83,7 @@ const selectedMenuCareer = async (item: number) => {
     career: career.value != 0 ? (career.value - 1) : undefined,
     field: field.value,
     page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page),
-    size: 4
+    size: 16
   });
   await router.push("/recruit?page=1")
 }
@@ -102,7 +102,7 @@ const selectedMenuGender = async (item: number) => {
     gender: gender.value,
     field: field.value,
     page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page),
-    size: 4
+    size: 16
   });
   await router.push("/recruit?page=1")
 }
@@ -128,7 +128,7 @@ const selectedMenuField = async (item: number) => {
     gender: gender.value,
     field: field.value,
     page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page),
-    size: 4
+    size: 16
   });
   await router.push("/recruit?page=1")
 }
@@ -147,7 +147,7 @@ const updateSelectSkillId = async (skillId: number) => {
     gender: gender.value,
     field: field.value,
     page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page),
-    size: 4
+    size: 16
   });
   await router.push("/recruit?page=1");
 };
@@ -162,7 +162,7 @@ watch(
           career: career.value != 0 ? (career.value - 1) : undefined,
           gender: gender.value,
           field: field.value,
-          page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page), size: 4
+          page: isNaN(parseInt(<string>route.query.page)) ? 1 : parseInt(<string>route.query.page), size: 16
         })
       }
     }
