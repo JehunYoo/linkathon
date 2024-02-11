@@ -10,7 +10,6 @@ const hackathonsRef: Ref<PageableHackathonList> = ref({} as PageableHackathonLis
 const hackathonService : HackathonService = new HackathonService();
 onMounted(async () => {
   hackathonsRef.value = await hackathonService.getHackathonList("모집중", 0, 1);
-  console.log(hackathonsRef.value);
 });
 
 </script>
@@ -18,7 +17,9 @@ onMounted(async () => {
 <template>
   <div class="recruiting-container">
     <IndexSubMenu title="모집중인 해커톤"/>
-    <HackathonBannerList :ht="hackathonsRef"/>
+    <template v-if="hackathonsRef">
+      <HackathonBannerList :ht="hackathonsRef"/>
+    </template>
   </div>
 </template>
 

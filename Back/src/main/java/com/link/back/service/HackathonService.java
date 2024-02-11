@@ -152,6 +152,7 @@ public class HackathonService {
 			.endDate(hackathon.getEndDate())
 			.teamDeadlineDate(hackathon.getTeamDeadlineDate())
 			.maxPoint(hackathon.getMaxPoint())
+			.hackathonImageUrl(hackathon.getHackathonImage().getHackathonImageUrl())
 			.build();
 	}
 
