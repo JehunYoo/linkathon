@@ -76,4 +76,3 @@ tasks.withType(JavaCompile).configureEach {
 clean {
     delete file(querydslSrcDir)
 }
-

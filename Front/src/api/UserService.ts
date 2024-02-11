@@ -9,9 +9,10 @@ import {VerificationRequestDTO} from "@/dto/VerificationRequestDTO.ts";
 import {ChangePasswordDTO} from "@/dto/ChangePasswordDTO.ts";
 import {EditValidCareerDTO} from "@/dto/EditValidCareerDTO.ts";
 import {UpdateUserDTO} from "@/dto/UpdateUserDTO.ts";
-import {AddValidCareerDTO} from "@/dto/AddValidCareerDTO.ts";
 import {AddUserInfoDTO} from "@/dto/AddUserInfoDTO.ts";
 import {GetUserDataDTO} from "@/dto/GetUserDataDTO.ts";
+import Store from "@/store";
+import {RankingUserDTO} from "@/dto/rankingUserDTO.ts";
 
 const apiService = new ApiService();
 
@@ -59,7 +60,6 @@ class UserService {
                 const authToken = response.headers['authorization'];
                 if (authToken) {
                     await store.dispatch("updateToken", authToken);
-                    alert("로그인 성공");
                     await router.push('/')
                 } else {
                     alert("로그인 실패");
@@ -74,10 +74,16 @@ class UserService {
     @CatchError
     async sign(user: UserSignUpDto): Promise<void> {
         const response = await apiService.postData(false, `${nonAuthUrl}/signup`, user);
+
         if (response && response.status === httpStatusCode.CREATE) {
-            alert("가입 성공");
-            await router.push('/')
+            Store.commit('setEmail', user.email);
+            await router.push('/detailInfo');
         }
+
+        else {
+            alert("회원가입 실패")
+        }
+
     }
 
     //이메일 인증인데 변경예정
@@ -86,7 +92,7 @@ class UserService {
         const resposne = await apiService.postData(false, `${nonAuthUrl}/signup/email`, email);
 
         if (resposne && resposne.status === httpStatusCode.OK) {
-            alert("인증 성공");
+            alert("인증 완료");
             return true;
         } else {
 
@@ -106,7 +112,6 @@ class UserService {
             return response.data;
 
         } catch (error) {
-            console.error("Error during findEmail:", error);
             return "일치하는 계정이 없습니다.";
         }
     }
@@ -123,7 +128,7 @@ class UserService {
             //올 일이 없을텐데 그냥 오류떠서 추가함
             else return false;
         } catch (error) {
-            console.error("Error during do not Exist Email:", error);
+            console.log("Error during do not Exist Email:", error);
             alert("일치하는 계정이 없습니다.")
             return false;
         }
@@ -182,11 +187,11 @@ class UserService {
         }
     }
 
-    //경력인증 API
+    //경력인증 API(이거 하나호 다 쓸거임)
     async validCareer(data: EditValidCareerDTO): Promise<number> {
 
         try {
-            const response = await apiService.postData(true, `${nonAuthUrl}/career`, data)
+            const response = await apiService.postData(false, `${nonAuthUrl}/career`, data)
             const responseData = response.data;
 
             if (response && response.status === httpStatusCode.OK) {
@@ -195,27 +200,12 @@ class UserService {
             }else {return -1;}
         }
         catch (error) {
+            console.log(error)
             alert("작업 중 문제가 발생했습니다.")
             return -1;
         }
     }
 
-    async addValidCareer(data: AddValidCareerDTO): Promise<number> {
-
-        try {
-            const response = await apiService.postData(true, `${nonAuthUrl}/career`, data)
-            const responseData = response.data;
-
-            if (response && response.status === httpStatusCode.OK) {
-                alert("경력인증이 완료되었습니다.")
-                return responseData;
-            }else {return -1;}
-        }
-        catch (error) {
-            alert("작업 중 문제가 발생했습니다.")
-            return -1;
-        }
-    }
     async updateUser(data: UpdateUserDTO): Promise<boolean> {
 
         try {
@@ -238,9 +228,10 @@ class UserService {
 
     async addUserInfo(data: AddUserInfoDTO) {
         try {
-            const response = await apiService.postData(true, `${authUrl}/users/addtionalinfo`, data)
+            const response = await apiService.postData(false , `${nonAuthUrl}/addtionalinfo`, data)
             if (response && response.status === httpStatusCode.OK) {
                 alert("추가 정보가 등록되었습니다.")
+                await router.push('/');
                 return;
             }
             else {
@@ -256,21 +247,27 @@ class UserService {
 
     }
 
-    async getUserData() {
+    async getUserData() :Promise<GetUserDataDTO | undefined> {
         try {
-            const response = await apiService.getData(true, `${authUrl}/users`);
+            const response = await apiService.getData(true, `${authUrl}/users`, );
             if (response && response.status === httpStatusCode.OK) {
-                alert("추가 정보가 등록되었습니다.")
                 return response.data as Promise<GetUserDataDTO>;
             }
             else {
                 alert("작업중 문제가 발생했습니다.")
+                throw new Error("null Exception")
             }
         }
         catch (error){
             console.log(error)
             alert("작업중 문제가 발생했습니다.")
         }
+    }
+
+    @CatchError
+    async getTopFive() :Promise<RankingUserDTO[]> {
+        const response = await apiService.getData(false, `${nonAuthUrl}/ranking`, );
+        return response.data;
     }
 
 }

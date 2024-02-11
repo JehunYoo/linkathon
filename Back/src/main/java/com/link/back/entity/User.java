@@ -118,17 +118,18 @@ public class User implements UserDetails {
 	}
 
 
-
+	// rating 시작을 일단 0으로
 	@Builder
 	public User(String email, String password, String name, boolean gender, LocalDate birth, String phoneNumber,
-		int rating) {
+		int career) {
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.gender = gender;
 		this.birth = birth;
 		this.phoneNumber = phoneNumber;
-		this.rating = rating;
+		this.career = career;
+		this.rating = 0;
 	}
 
 	public void updateUser(User user, UserImage userImage, List<UserSkill> userSkills,  UserUpdateInfoRequest userUpdateInfoRequest){
@@ -152,25 +153,17 @@ public class User implements UserDetails {
 		this.joinState = user.joinState;
 	}
 
-	public void addUserInfo (User user, UserImage userImage, List<UserSkill> userSkills,  AdditionalUserInfoRequest additionalUserInfoRequest){
-		this.email = user.getEmail();
-		this.password = new BCryptPasswordEncoder().encode(user.getPassword());
-		this.phoneNumber = user.getPhoneNumber();
-		this.rating = user.rating;
-		this.name = user.getName();
-		this.birth = user.getBirth();
-		this.gender = user.isGender();
+	public void addUserInfo (UserImage userImage, List<UserSkill> userSkills,  AdditionalUserInfoRequest additionalUserInfoRequest){
+
 		this.userSkills = userSkills;
 		this.registeredDate = additionalUserInfoRequest.isRegistered()? LocalDate.now():null;
-		this.deployUrl = user.deployUrl;
 		this.introduce = additionalUserInfoRequest.getIntroduce();
 		//dto 만들기
 		this.userImage = userImage;
 		this.referenceUrl = additionalUserInfoRequest.getReferenceUrl();
-		this.field = additionalUserInfoRequest.getField();
 		this.career = additionalUserInfoRequest.getCareer();
+		this.field = additionalUserInfoRequest.getField();
 		this.registered = additionalUserInfoRequest.isRegistered();
-		this.joinState = user.joinState;
 	}
 
 	@Override

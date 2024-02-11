@@ -1,5 +1,6 @@
 package com.link.back.service;
 
+import java.awt.print.Pageable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.link.back.dto.JwtToken;
 import com.link.back.dto.LoginRequest;
+import com.link.back.dto.RankingDTO;
 import com.link.back.dto.UserSignUpDto;
 import com.link.back.dto.VerificationCode;
 import com.link.back.dto.request.AdditionalUserInfoRequest;
@@ -71,6 +74,7 @@ public class UserService {
 	@Value("${codef.demo.Client.Secret}")
 	private String codefSecret;
 
+	//커리어 추가
 	public String signup(UserSignUpDto userSignUpDto) throws Exception {
 
 		if (userRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
@@ -84,7 +88,7 @@ public class UserService {
 			.gender(userSignUpDto.isGender())
 			.birth(userSignUpDto.getBirth())
 			.phoneNumber(userSignUpDto.getPhoneNumber())
-			.rating(userSignUpDto.getRating())
+			.career(userSignUpDto.getCareer())
 			.build();
 
 		userRepository.save(user);
@@ -251,16 +255,17 @@ public class UserService {
 	//user 개인정보 조회
 	@Transactional
 	public UserInfoResponsse getInfo(String token) {
+
 		Long userId = jwtTokenProvider.getUserId(token);
 
-		User user = userRepository.findByUserId(userId)
-			.orElseThrow(() -> new IllegalArgumentException("정보를 찾을 수 없습니다."));
+		User user = userRepository.findMyDataById(userId);
 
+		//이미지, 이름, 참고 url, introduce, skills
 		return new UserInfoResponsse(user);
 	}
 
 	//경력인증 메소드
-	public int careerValidation(UseApiRequest useApiRequest, String token) throws
+	public int careerValidation(UseApiRequest useApiRequest) throws
 		UnsupportedEncodingException,
 		JsonProcessingException,
 		InterruptedException {
@@ -351,15 +356,13 @@ public class UserService {
 	}
 
 	//user추가정보 입력
-	public void updateAdditionalInfo(String token, AdditionalUserInfoRequest additionalUserInfoRequest) {
-		System.out.println("메소드 시작 : " + token);
+	@Transactional
+	public void updateAdditionalInfo(AdditionalUserInfoRequest additionalUserInfoRequest) {
 
-		Long userId = jwtTokenProvider.getUserId(token);
+		if(additionalUserInfoRequest.getEmail().isEmpty()) throw new IllegalArgumentException("사용자의 정보가 불확실합니다.");
+		if(userRepository.findByEmail(additionalUserInfoRequest.getEmail()).isEmpty()) throw new IllegalArgumentException("사용자의 정보가 불확실합니다.");
 
-		if (userRepository.findByUserId(userId).isEmpty())
-			throw new IllegalArgumentException("사용자의 정보가 존재하지 않습니다.");
-
-		User user = userRepository.findByUserId(userId).get();
+		User user = userRepository.findByEmail(additionalUserInfoRequest.getEmail()).get();
 
 		if (!validAdditionalInfo(additionalUserInfoRequest))
 			throw new IllegalArgumentException("잘못된 정보입니다.");
@@ -382,11 +385,11 @@ public class UserService {
 
 			userSkillRepository.save(newSkill);
 		}
-
-		user.addUserInfo(user, userImage, newSkills, additionalUserInfoRequest);
-
+		user.addUserInfo(userImage, newSkills, additionalUserInfoRequest);
 		userRepository.save(user);
 
+		System.out.println(user.getEmail());
+		System.out.println(user.getCareer());
 	}
 
 	//user 정보 수정
@@ -408,6 +411,8 @@ public class UserService {
 
 		for (UserSkill s : userSkills) {
 
+			if(skillRepository.findById(s.getSkill().getSkillId()).isEmpty()) continue;
+
 			UserSkill newSkill = UserSkill.builder()
 				.user(user)
 				.skill(skillRepository.findById(s.getSkill().getSkillId()).get())
@@ -422,7 +427,6 @@ public class UserService {
 		user.updateUser(user, userImage, newSkills, userUpdateInfoRequest);
 
 		userRepository.save(user);
-
 	}
 
 	//로그아웃
@@ -439,8 +443,15 @@ public class UserService {
 	public void deleteUser(String token) {
 
 		long userId = jwtTokenProvider.getUserId(token);
-
+		//엮인 테이블에 있는 정보도 모두 삭제 필요
 		userRepository.deleteById(userId);
+	}
+
+	@Transactional
+	public List<RankingDTO> getTopFive(){
+		List<RankingDTO> rankers = userRepository.findOrderByRatingDesc(PageRequest.of(0, 5));
+		System.out.println(rankers);
+		return rankers;
 	}
 
 	//User 정보 수정할 때 검증할 메소드

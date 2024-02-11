@@ -18,7 +18,6 @@ public class UserSignUpDto {
     private boolean gender;
     private LocalDate birth;
     private String phoneNumber;
-    private int rating;
-
+    private int career;
 
 }

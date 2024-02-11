@@ -9,6 +9,7 @@ import com.link.back.entity.Field;
 import com.link.back.entity.User;
 import com.link.back.entity.UserImage;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -22,6 +23,7 @@ public class UserInfoResponsse {
 	private UserImage image;
 	private boolean registered;
 
+	@Builder
 	public UserInfoResponsse(User user) {
 		this.name = user.getName();
 		this.userSkills = user.getUserSkills().stream()
