@@ -1,6 +1,7 @@
 package com.link.back.dto.request;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 import com.link.back.entity.Field;
@@ -11,6 +12,8 @@ import lombok.Getter;
 
 @Getter
 public class AdditionalUserInfoRequest {
+
+	private String email;
 
 	private List<UserSkill> userSkills;
 

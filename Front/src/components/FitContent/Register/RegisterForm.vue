@@ -3,6 +3,8 @@ import {ref} from "vue";
 import {UserService} from "@/api/UserService.ts";
 import {Builder} from "builder-pattern";
 import {SendEmailRequestDTO} from "@/dto/SendEmailRequestDTO.ts";
+import {EditValidCareerDTO} from "@/dto/EditValidCareerDTO.ts";
+import Store from "@/store";
 
 const userService = new UserService();
 
@@ -16,8 +18,23 @@ const lastNumber = ref<string>('');
 const year = ref<number>();
 const month = ref<number>();
 const day = ref<number>();
+const career = ref<number>(0);
 const gender = ref<boolean>();
+const telecom = ref<number>(0);
 
+const dropdownOpen = ref<boolean>(false);
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+const setTelecom = (index: number) => {
+  telecom.value = index;
+};
+
+const telecomOptions = ref([
+  'SKT' ,
+  'KT' ,
+  'LG U+'
+]);
 const verification = ref<boolean>(false);
 const currentYear = new Date().getFullYear();// 올해 연도
 
@@ -127,7 +144,75 @@ const register = function () {
       .phoneNumber(firstNumber.value + secondNumber.value + lastNumber.value)
       .gender(gender.value)
       .build();
+
   userService.sign(user);
+
+}
+
+const validCareer = async function() {
+
+  if(!name.value){
+    alert("이름을 입력해주세요")
+    return;
+  }
+  if (!year.value || year.value < 1900 || year.value > currentYear) {
+    alert("생일(연도)을 정확이 입력해주세요")
+    return;
+  }
+  //월은 1 이상 12 이하
+  if (!month.value || month.value < 1 || month.value > 12) {
+    alert("생일(월)을 정확이 입력해주세요")
+    return;
+  }
+  //일 제한
+  if (!day.value || day.value < 1 || day.value > 31) {
+    alert("생일(일)을 정확이 입력해주세요")
+    return;
+  }
+  //4, 6, 9, 11월은 30일임
+  if ((month.value == 4 || month.value == 6 || month.value == 9 || month.value == 11) && day.value == 31) {
+    alert("생일(일)을 정확이 입력해주세요")
+    return;
+  }
+  //2월일 때는 연도에 따라서 29일
+  if (month.value == 2) {
+    const isLeap = (year.value % 4 == 0 && (year.value % 100 != 0 || year.value % 400 == 0));
+
+    if (day.value > 29 || (day.value == 29 && !isLeap)) {
+      alert("생일(일)을 정확이 입력해주세요")
+      return;
+    }
+  }
+  if(!telecom){
+    alert("통신사를 골라주세요")
+  }
+
+  if(firstNumber.value !== "010" || secondNumber.value.length != 4 || lastNumber.value.length != 4){
+    alert("전화번호가 제대로 입력되었는지 확인해주세요")
+    return;
+  }
+  else {
+    if(!(/\d/.test(firstNumber.value)) || !(/\d/.test(secondNumber.value)) || !(/\d/.test(lastNumber.value)) ) {
+      alert("전화번호에는 숫자만 입력해주세요")
+      return;
+    }
+  }
+
+  const data = Builder<EditValidCareerDTO>()
+      .userName(name.value)
+      .identity(year.value.toString() + month.value.toString() + day.value.toString())
+      .telecom(telecom.value.toString())
+      .phoneNo(firstNumber.value + secondNumber.value + lastNumber.value)
+      .build();
+
+  career.value = await userService.validCareer(data);
+
+  // -1이면 실패하는 느낌으로 ㄱㄱ
+  if(career.value === -1){
+    career.value = 0;
+    alert("다시 인증해주세요");
+    return;
+  }
 }
 
 const validEmail = async function () {
@@ -176,10 +261,31 @@ const validEmail = async function () {
     <div class="register-content-block">
       <h2>핸드폰 번호</h2>
       <div class="register-content-detail" style="gap: 6px; line-height: 39px">
+        <div class="dropdown-container" @click="toggleDropdown">
+          <div class="dropdown-box">
+            <div style="flex: 9; text-align: left">{{ telecomOptions[telecom] }}</div>
+            <svg fill="none" height="6" style="margin:auto" viewBox="0 0 12 6" width="12"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L6 5L11 1" stroke="#303030" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+          </div>
+
+          <div v-if="dropdownOpen" class="dropdown-content">
+            <div v-for="(item, index) in telecomOptions" :key="index" @click="setTelecom(index)">{{ item }}</div>
+          </div>
+        </div>
         <input v-model="firstNumber" class="input-text" type="text">-
         <input v-model="secondNumber" class="input-text" type="text">-
         <input v-model="lastNumber" class="input-text" type="text">
       </div>
+    </div>
+
+    <h2>관련 경력</h2>
+    <div class="detail-content-container">
+      <div class="text-input" style="width: 100%; display: flex;">
+        <div class="year" >{{career}} 년차</div>
+      </div>
+      <div @click = "validCareer" class="button">경력인증</div>
     </div>
     <div class="register-content-block">
       <h2>성별</h2>
@@ -201,6 +307,57 @@ const validEmail = async function () {
 <style scoped>
 input:focus {
   outline: #7D3CFF 1px solid;
+}
+
+.dropdown-box {
+  color: #606060;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 9px 15px 10px;
+  border-radius: 5px;
+  border: 1px solid #303030;
+  width: 100%;
+  display: flex;
+  height: 40px;
+}
+
+.dropdown-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-content {
+  color: #606060;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 9px 18px 10px;
+  border-radius: 5px;
+  border: 1px solid #303030;
+  width: 100%;
+  position: absolute;
+  min-width: max-content;
+  z-index: 2;
+  background: white;
+  top: 0;
+}
+
+.button {
+  transition: color 0.3s ease;
+  border-radius: 5px;
+  background: #7D3BFF;
+  border: #7D3CFF 1px solid;
+  color: #F2F2F2;
+  height: 40px;
+  line-height: 39px;
+  flex: 1;
+  padding-left: 20px;
+  padding-right: 20px;
+  min-width: max-content;
 }
 
 .register-button {
@@ -265,5 +422,23 @@ h2 {
   width: 100%;
   padding: 10px;
   font-size: 16px;
+}
+
+.text-input {
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #303030;
+  padding: 10px;
+  color: #2b2b2b;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.detail-content-container {
+  display: flex;
+  gap: 20px;
 }
 </style>
