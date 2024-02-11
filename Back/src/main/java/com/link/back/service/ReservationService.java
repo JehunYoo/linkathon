@@ -68,7 +68,7 @@ public class ReservationService {
 
 	public boolean checkReservation(Long reservationId, Long userId) {
 		Optional<Reservation> reservation = reservationRepository.findById(reservationId);
-		return reservation.filter(value -> !value.isMyReservation(userId)).isPresent();
+		return reservation.filter(value -> value.isMyReservation(userId)).isPresent();
 	}
 
 	private boolean isOverlappedReservation(User user, LocalDateTime reservationDateTime) {

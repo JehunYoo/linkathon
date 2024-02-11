@@ -43,7 +43,7 @@ public class ReservationController {
 	public List<ReservationResponse> getMyReservation(
 		@RequestHeader(value = "Authorization", required = true) String token) {
 
-		Long myUserId = jwtTokenProvider.getUserId(token);
+		Long myUserId = this.getUserIdFromToken(token);
 		return reservationService.getMyReservations(myUserId);
 	}
 
@@ -51,7 +51,7 @@ public class ReservationController {
 	public void postReservation(@RequestHeader(value = "Authorization", required = true) String token,
 		@RequestBody @NotNull ReservationRequest reservationRequest) {
 
-		Long myUserId = jwtTokenProvider.getUserId(token);
+		Long myUserId = this.getUserIdFromToken(token);
 		reservationService.createMyReservation(myUserId, reservationRequest);
 	}
 
@@ -60,7 +60,7 @@ public class ReservationController {
 		@PathVariable("reservation_id") Long reservationId,
 		@RequestBody @NotNull ReservationRequest reservationRequest) {
 
-		Long myUserId = jwtTokenProvider.getUserId(token);
+		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(myUserId, reservationId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -72,7 +72,7 @@ public class ReservationController {
 	public ResponseEntity<Void> deleteReservation(@PathVariable("reservation_id") Long reservationId,
 		@RequestHeader(value = "Authorization", required = true) String token) {
 
-		Long myUserId = jwtTokenProvider.getUserId(token);
+		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(myUserId, reservationId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -88,7 +88,7 @@ public class ReservationController {
 		OpenViduJavaClientException,
 		OpenViduHttpException {
 
-		Long myUserId = jwtTokenProvider.getUserId(token);
+		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(myUserId, reservationId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -107,7 +107,7 @@ public class ReservationController {
 		OpenViduJavaClientException,
 		OpenViduHttpException {
 
-		Long myUserId = jwtTokenProvider.getUserId(token);
+		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(myUserId, reservationId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -119,6 +119,11 @@ public class ReservationController {
 		ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
 		Connection connection = session.createConnection(properties);
 		return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+	}
+
+	private Long getUserIdFromToken(String token) {
+		if (token == null) return null;
+		return jwtTokenProvider.getUserId(token);
 	}
 
 }
