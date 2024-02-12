@@ -14,6 +14,16 @@ const clickedModal = ref<Number>();
 const handleModalClose = (num: number) => {
   clickedModal.value = num;
 }
+const clickedModal1 = ref<Number>();
+
+const handleModalClose1 = (num: number) => {
+  clickedModal1.value = num;
+}
+const clickedModal2 = ref<Number>();
+
+const handleModalClose2 = (num: number) => {
+  clickedModal2.value = num;
+}
 const teamBuildingService = new TeamBuildingService();
 const teamService = new TeamService();
 const refTeam: Ref<RecruitTeamDTO | undefined> = ref();
@@ -22,8 +32,20 @@ const refTeamId = ref<number>(0);
 onMounted(async () => {
   refTeam.value = await teamBuildingService.getRecruitTeam();
   refTeamId.value = (await teamService.getActiveTeamId()).id;
-  console.log(refTeam.value)
+  isLeader.value = await teamBuildingService.getIsLeader();
 })
+
+const acceptApply = (userId: number) => {
+  teamBuildingService.postAcceptApply(userId, refTeam.value?.teamId)
+  location.href = "/myPage?mode=4"
+}
+
+const refuseApply = (userId: number) => {
+  teamBuildingService.deleteRefuseApply(userId, refTeam.value?.teamId)
+  location.href = "/myPage?mode=4"
+}
+
+const isLeader = ref<Boolean>();
 
 </script>
 
@@ -32,8 +54,8 @@ onMounted(async () => {
     <h1>모집중인 팀</h1>
     <div class="remove-button">프로젝트 삭제</div>
   </div>
-  <h2>{{refTeam?.teamName}}</h2>
-  <p class="desc">{{refTeam?.teamDesc}}</p>
+  <h2>{{ refTeam?.teamName }}</h2>
+  <p class="desc">{{ refTeam?.teamDesc }}</p>
   <div class="content">
     <div class="fx1">
       <h2>현재 팀원</h2>
@@ -42,7 +64,9 @@ onMounted(async () => {
           <template v-for="(data, i) in refTeam?.members['JOINED']">
             <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
               <ModalMember :userInfo="data">
-                <ModalButton button-text="추방하기" @click="teamService.deleteMember(data.userId)"/>
+                <template v-if="isLeader">
+                  <ModalButton button-text="추방하기" @click="teamService.deleteMember(data.userId)"/>
+                </template>
               </ModalMember>
             </Modal>
             <UserCard @click="handleModalClose(i+1)" :userInfo="data" :t="true"/>
@@ -55,13 +79,17 @@ onMounted(async () => {
       <div class="list">
         <template v-if="refTeam?.members['APPLIED']">
           <template v-for="(data, i) in refTeam?.members['APPLIED']">
-            <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
+<!--            <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">-->
+            <Modal v-if="clickedModal1===i+1" @closeModal="handleModalClose1">
               <ModalMember :userInfo="data">
-                <ModalButton button-text="면접 예약"/>
-                <ModalButton button-text="신청 수락"/>
+                <template v-if="isLeader">
+                  <ModalButton button-text="면접 예약"/>
+                  <ModalButton button-text="수락" @click="acceptApply(data.userId)"/>
+                  <ModalButton button-text="거절" @click="refuseApply(data.userId)"/>
+                </template>
               </ModalMember>
             </Modal>
-            <UserCard @click="handleModalClose(i+1)" :userInfo="data" :t="true"/>
+            <UserCard @click="handleModalClose1(i+1)" :userInfo="data" :t="true"/>
           </template>
         </template>
       </div>
@@ -71,13 +99,15 @@ onMounted(async () => {
       <div class="list">
         <template v-if="refTeam?.members['SUGGESTED']">
           <template v-for="(data, i) in refTeam?.members['SUGGESTED']">
-            <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
+            <Modal v-if="clickedModal2===i+1" @closeModal="handleModalClose2">
               <ModalMember :userInfo="data">
-                <ModalButton button-text="면접 예약"/>
-                <ModalButton button-text="권유 취소" @click="teamService.deleteSuggestionByTeam(refTeamId, data.userId)"/>
+                <template v-if="isLeader">
+                  <ModalButton button-text="면접 예약"/>
+                  <ModalButton button-text="권유 취소" @click="teamService.deleteSuggestionByTeam(refTeamId, data.userId)"/>
+                </template>
               </ModalMember>
             </Modal>
-            <UserCard @click="handleModalClose(i+1)" :userInfo="data" :t="true"/>
+            <UserCard @click="handleModalClose2(i+1)" :userInfo="data" :t="true"/>
           </template>
         </template>
       </div>
@@ -182,7 +212,8 @@ h3 {
   max-width: 600px;
   margin-top: 12px;
 }
+
 .desc {
- margin-top: 16px;
+  margin-top: 16px;
 }
 </style>

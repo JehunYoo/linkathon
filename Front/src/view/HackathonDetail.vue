@@ -9,7 +9,7 @@ import store from "@/store/hackathon.ts";
 import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
 
 const route = useRoute();
-const hackathonService : HackathonService = new HackathonService();
+const hackathonService: HackathonService = new HackathonService();
 const hackathonDetail = ref({} as HackathonInfoDTO);
 onMounted(async () => {
   const queryId = route.query.id;
@@ -31,7 +31,7 @@ function formatDate(date: Date): string {
 const mode = ref<Number>(0);
 if (store.getters.getStatusName === "모집중") {
   mode.value = 0;
-} else if(store.getters.getStatusName === "진행중") {
+} else if (store.getters.getStatusName === "진행중") {
   mode.value = 1;
 } else {
   mode.value = 2;
@@ -41,7 +41,7 @@ if (store.getters.getStatusName === "모집중") {
 <template>
   <template v-if="hackathonDetail">
     <h1>
-      제 1회 교육관련 웹 / 앱 서비스 제작 해커톤
+      {{ hackathonDetail.hackathonName }}
     </h1>
     <div class="title-container">
       <div class="hackathon-banner-list-container">

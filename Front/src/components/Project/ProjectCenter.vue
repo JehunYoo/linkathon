@@ -2,7 +2,7 @@
 
 import ProjectAnalyse from "@/components/Project/ProjectAnalyse.vue";
 import GitAnalyse from "@/components/Project/GitAnalyse.vue";
-import {onMounted, PropType, Ref, ref} from "vue";
+import {onMounted, PropType, Ref, ref, watch} from "vue";
 import {ProjectDetailDto} from "@/dto/projectDTO.ts";
 import projectStorage from "@/store/projectStorage.ts";
 import router from "@/router";
@@ -18,6 +18,21 @@ const props = defineProps({
   },
 });
 
+const owner = ref('');
+const repo = ref('');
+
+watch(() => props.projectDetail, async (newVal) => {
+  if (newVal) {
+    const urlParts = props.projectDetail?.projectUrl.split("/");
+    owner.value = urlParts[urlParts.length - 2];
+    repo.value = urlParts[urlParts.length - 1];
+    gitStatusRef.value = await projectService.getProjectContributions(owner.value, repo.value);
+//@ts-nocheck
+    for (let i = 0; i < gitStatusRef.value.length; i++) {
+      totalCommits += gitStatusRef.value[i].commits;
+    }
+  }
+});
 const projectService = projectStorage.getters.getProjectService;
 
 const deleteProject = (projectId: number) => {
@@ -26,12 +41,14 @@ const deleteProject = (projectId: number) => {
 }
 const gitStatusRef: Ref<GitStatusDTO[]> = ref([]);
 let totalCommits = 0;
+
 onMounted(async () => {
-  gitStatusRef.value = await projectService.getProjectContributions("jooyun-1", "Quicklog");
-//@ts-nocheck
-  for (let i = 0; i < gitStatusRef.value.length; i++) {
-    totalCommits += gitStatusRef.value[i].commits;
-  }
+  // console.log(owner,repo,owner.value,repo.value)
+//   gitStatusRef.value = await projectService.getProjectContributions(owner, repo);
+// //@ts-nocheck
+//   for (let i = 0; i < gitStatusRef.value.length; i++) {
+//     totalCommits += gitStatusRef.value[i].commits;
+//   }
 })
 
 </script>
