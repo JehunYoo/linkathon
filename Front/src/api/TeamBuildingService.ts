@@ -4,6 +4,11 @@ import {CatchError} from "@/util/error.ts";
 import {SkillCategoryResponseDto} from "@/dto/tmpDTOs/SkillTypeDTO.ts";
 import {RecruitTeamDTO} from "@/dto/tmpDTOs/RecruitTeamDTO.ts";
 import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
+import {TeamResponseDto} from "@/dto/tmpDTOs/teamDTO.ts";
+<<<<<<< Front/src/api/TeamBuildingService.ts
+=======
+import {MemberDetailResponseDto} from "@/dto/tmpDTOs/memberDTO.ts";
+>>>>>>> Front/src/api/TeamBuildingService.ts
 
 const apiService = new ApiService();
 
@@ -41,8 +46,8 @@ class TeamBuildingService {
     }
 
     @CatchError
-    async getSuggestedTeam(): Promise<AppliedTeamDTO | undefined> {
-        return (await apiService.getData(true, `${url}/teams/suggested`)).data as AppliedTeamDTO;
+    async getSuggestedTeam(teamId: number): Promise<AppliedTeamDTO | undefined> {
+        return (await apiService.getData(true, `${url}/teams/suggested?teamId=${teamId}`)).data as AppliedTeamDTO;
     }
 
     @CatchError
@@ -57,6 +62,48 @@ class TeamBuildingService {
         return response.data;
     }
 
+    @CatchError
+    async getTeam(teamId: number): Promise<TeamResponseDto> {
+        const response = await apiService.getData(false, `${url}/teams/${teamId}`);
+        return response.data;
+    }
+
+    @CatchError
+    async postAppliedTeam(num: number | undefined)  {
+        await apiService.postData(true,`${url}/teams/${num}/members/apply`, '')
+    }
+
+    @CatchError
+    async deleteAppliedTeam(teamId : number) {
+        await apiService.deleteData(true, `${url}/teams/${teamId}/members/apply`, '')
+    }
+
+    @CatchError
+    async postAcceptApply(userId: number, teamId: number | undefined) {
+        await apiService.postData(true, `${url}/teams/${teamId}/members/${userId}/apply`,'')
+    }
+
+    @CatchError
+    async deleteRefuseApply(userId: number, teamId: number | undefined) {
+        await apiService.deleteData(true, `${url}/teams/${teamId}/members/${userId}/apply`,'')
+    }
+
+    @CatchError
+    async getIsLeader(): Promise<Boolean> {
+        return (await apiService.getData(true, `${url}/teams/leader`)).data as Boolean;
+    }
+
+    @CatchError
+    async getTeamDetailByTeamId(teamId: number): Promise<TeamResponseDto> {
+        const response = await apiService.getData(false, `${url}/teams/${teamId}`);
+        return response.data;
+    }
+
+    @CatchError
+    async getMemberDetailByUserId(userId: number): Promise<MemberDetailResponseDto> {
+        const response = await apiService.getData(false, `${url}/teams/recruit/detail/${userId}`);
+        return response.data;
+    }
 }
 
 export {
