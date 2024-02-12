@@ -59,7 +59,7 @@ class HackathonService {
 
     @CatchError
     async getProceedingLeaderboards(hackathonId: number): Promise<PageableProceedingHackathons> {
-        const response = await apiService.getData(true, `${url}/hackathons/${hackathonId}/proceeding`,undefined)
+        const response = await apiService.getData(false, `${url}/hackathons/${hackathonId}/proceeding`,undefined)
         if (response && response.status === httpStatusCode.OK) {
             console.log("r", response.data)
             return this.toPageableHackathons(response) as PageableProceedingHackathons;

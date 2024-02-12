@@ -175,6 +175,7 @@ class ProjectService {
     async getProjectContributions(owner: String, repo: String): Promise<GitStatusDTO[]> {
         const response = await apiService.getData(true, `${url}/contributions/${owner}/${repo}`);
         if (response && response.status === httpStatusCode.OK) {
+            console.log(owner,repo)
             return response.data as GitStatusDTO[];
         }
         return [] as GitStatusDTO[];

@@ -38,7 +38,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests((authorize) ->
 				authorize.requestMatchers("/api/users/**").permitAll()
 					.requestMatchers("/oauth2/**").permitAll()
-					.requestMatchers("api/**").permitAll()
+					.requestMatchers("/api/**").permitAll()
 					.requestMatchers("/githubLogin/success").permitAll()
 					.requestMatchers("/error").permitAll()
 					.anyRequest().authenticated()
