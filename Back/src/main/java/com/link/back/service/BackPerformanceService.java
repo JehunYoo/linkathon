@@ -44,8 +44,8 @@ public class BackPerformanceService {
 		return new PageImpl<>(backPerformanceResponseDtos,pageable,optBackPerformances.getTotalElements());
 	}
 
-	public BackPerformanceMessageResponseDto getMessageCount(Long backperformanceId) {
-		Map<String,Integer> counts = backPerformanceMessageRepository.countBackPerformanceMessageByMessageStartsWith(backperformanceId);
+	public BackPerformanceMessageResponseDto getMessageCount(Long projectId) {
+		Map<String,Integer> counts = backPerformanceMessageRepository.countBackPerformanceMessageByMessageStartsWith(projectId);
 		return BackPerformanceMessageResponseDto.builder().addCount(Integer.parseInt(String.valueOf(counts.get("AddCount")))).removeCount(Integer.parseInt(String.valueOf(counts.get("RemoveCount")))).changeCount(Integer.parseInt(String.valueOf(counts.get("ChangeCount")))).completeCount(Integer.parseInt(String.valueOf(counts.get("CompleteCount")))).makeCount(Integer.parseInt(String.valueOf(counts.get("MakeCount"))))
 			.mergeCount(Integer.parseInt(String.valueOf(counts.get("MergeCount")))).moveCount(Integer.parseInt(String.valueOf(counts.get("MoveCount")))).refactorCount(Integer.parseInt(String.valueOf(counts.get("RefactorCount")))).replaceCount(Integer.parseInt(String.valueOf(counts.get("ReplaceCount")))).etcCount(Integer.parseInt(String.valueOf(counts.get("EtcCount")))).build();
 

@@ -53,4 +53,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 		"JOIN Hackathon h ON p.team.hackathon.hackathonId = :hackathonId " +
 		"WHERE p.projectStatus = :status ")
 	Page<Project> findByHackathonIdAndProjectStatus(Long hackathonId, ProjectStatus status, Pageable pageable);
+
+	@Query("select p from Project p where p.team.teamId = :teamId")
+	Project findByTeamId(Long teamId);
 }

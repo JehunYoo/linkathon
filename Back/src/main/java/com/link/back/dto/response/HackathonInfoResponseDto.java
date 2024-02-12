@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class HackathonInfoResponseDto {
 
+	private final Long hackathonId;
 	private final String hackathonName;
 	private final String hackathonTopic;
 	private final LocalDate registerDate;
@@ -19,6 +20,7 @@ public class HackathonInfoResponseDto {
 	private final String hackathonOriginImageName;
 
 	public HackathonInfoResponseDto(Hackathon hackathon) {
+		this.hackathonId = hackathon.getHackathonId();
 		this.hackathonName = hackathon.getHackathonName();
 		this.hackathonTopic = hackathon.getHackathonTopic();
 		this.registerDate = hackathon.getRegisterDate();

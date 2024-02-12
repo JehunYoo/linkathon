@@ -6,6 +6,7 @@ import static com.link.back.entity.TeamStatus.*;
 import static java.util.stream.Collectors.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,10 +19,12 @@ import com.link.back.dto.request.UpdateTeamRequestDto;
 import com.link.back.dto.request.UserSearchConditionDto;
 import com.link.back.dto.response.CandidatesResponseDto;
 import com.link.back.dto.response.MemberDetailResponseDto;
+import com.link.back.dto.response.MypageConditionDto;
 import com.link.back.dto.response.RecruitingTeamResponseDto;
 import com.link.back.dto.response.TeamApplicationResponseDto;
 import com.link.back.dto.response.TeamResponseDto;
 import com.link.back.entity.MemberStatus;
+import com.link.back.entity.Project;
 import com.link.back.entity.Team;
 import com.link.back.entity.TeamStatus;
 import com.link.back.entity.User;
@@ -196,5 +199,16 @@ public class TeamBuildingService {
 			.getTeam()
 			.getTeamId();
 		return new RecruitingTeamResponseDto(userTeamRepository.findUserTeamsByTeamId(teamId));
+	}
+
+	public MypageConditionDto findMypageCondition(Long userId) {
+		List<UserTeam> userTeamList = userTeamRepository.findUserTeamsByUserId(userId);
+		boolean hasProject = userTeamList.stream()
+			.filter(userTeam -> userTeam.getMemberStatus() == MemberStatus.JOINED)
+			.map(UserTeam::getTeam)
+			.map(Team::getTeamId)
+			.map(projectRepository::findByTeamId)
+			.anyMatch(Objects::nonNull);
+		return new MypageConditionDto(userTeamList, hasProject);
 	}
 }

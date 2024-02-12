@@ -71,9 +71,9 @@ public class ProjectController {
 			HttpStatus.OK);
 	}
 
-	@GetMapping("/{backperformanceId}/message-count")
-	public ResponseEntity<BackPerformanceMessageResponseDto> getMessageCount(@PathVariable Long backperformanceId){
-		BackPerformanceMessageResponseDto backPerformanceMessageResponseDto = backPerformanceService.getMessageCount(backperformanceId);
+	@GetMapping("/{projectId}/message-count")
+	public ResponseEntity<BackPerformanceMessageResponseDto> getMessageCount(@PathVariable Long projectId){
+		BackPerformanceMessageResponseDto backPerformanceMessageResponseDto = backPerformanceService.getMessageCount(projectId);
 		return new ResponseEntity<>(backPerformanceMessageResponseDto,HttpStatus.OK);
 	}
 	@GetMapping("/contributions/{owner}/{repo}")

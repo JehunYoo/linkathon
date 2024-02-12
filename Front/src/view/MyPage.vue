@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref, Ref, watch} from "vue";
 import MyPageRecruitingTeam from "@/components/MyPage/MyPageRecruitingTeam.vue";
 import MyInfo from "@/components/MyPage/MyInfo.vue";
 import MyPageRecruitTeamInfo from "@/components/MyPage/MyPageRecruitTeamInfo.vue";
 import MyPageMyProject from "@/components/MyPage/MyPageMyProject.vue";
 import MyPageSchedule from "@/components/MyPage/MyPageSchedule.vue";
+import {MyPageService} from "@/api/MyPageService.ts";
+import {MypageConditionDTO} from "@/dto/tmpDTOs/MypageConditionDTO.ts";
 import {TeamService} from "@/api/TeamService.ts";
+import MyPageRecruitTeamInfo1 from "@/components/MyPage/MyPageRecruitTeamInfo1.vue";
 
+const myPageService = new MyPageService();
+const refMyPageCond: Ref<MypageConditionDTO | undefined> = ref();
 const route = useRoute();
 const mode = ref<number>(0);
 const refTeamIds = ref<number[]>();
@@ -15,6 +20,8 @@ const refTeamNames = ref<string[]>();
 const refTeamId = ref<number>(0);
 
 onMounted(async () => {
+  refMyPageCond.value = await myPageService.getMyPageCond();
+  console.log(refMyPageCond.value)
   refTeamIds.value = (await getTeams()).ids;
   refTeamNames.value = (await getTeams()).names;
   refTeamId.value = refTeamIds.value[0];
@@ -26,21 +33,23 @@ const updatePageFromQuery = async () => {
   refTeamIds.value = (await getTeams()).ids;
   refTeamNames.value = (await getTeams()).names;
   refTeamId.value = refTeamIds.value[0];
-  if (isNaN(mode.value)) mode.value=0;
+  if (isNaN(mode.value)) mode.value = 0;
 };
 
 watch([() => route.fullPath], updatePageFromQuery, {immediate: true});
 
 const teamService = new TeamService();
+
 async function getTeams() {
-  const idsResponseDto = await teamService.getBuildingTeamIds();
-  return idsResponseDto;
+  return await teamService.getBuildingTeamIds();
 }
+
 async function acceptSuggestion(teamId: number) {
-  teamService.postSuggestionByUser(teamId);
+  await teamService.postSuggestionByUser(teamId);
 }
+
 async function declineSuggestion(teamId: number) {
-  teamService.deleteSuggestionByUser(teamId);
+  await teamService.deleteSuggestionByUser(teamId);
 }
 
 function updateId(teamId: number) {
@@ -58,13 +67,13 @@ function updateId(teamId: number) {
           <div class="remove-button">신청 취소</div>
         </div>
       </MyPageRecruitTeamInfo>
-      <MyPageRecruitTeamInfo v-else-if="mode===2" :teamId="refTeamId">
+      <MyPageRecruitTeamInfo1 v-else-if="mode===2" :teamId="refTeamId">
         <div class="title-container">
           <h1>권유받은 팀</h1>
           <div class="accept-button" @click="acceptSuggestion(refTeamId)">수락</div>
           <div class="remove-button" @click="declineSuggestion(refTeamId)">거절</div>
         </div>
-      </MyPageRecruitTeamInfo>
+      </MyPageRecruitTeamInfo1>
       <MyPageMyProject v-else-if="mode===3"/>
       <MyPageRecruitingTeam v-else-if="mode===4"/>
       <MyPageSchedule v-else-if="mode===5"/>
@@ -76,26 +85,34 @@ function updateId(teamId: number) {
           <router-link to="?mode=0">내 정보</router-link>
         </td>
       </tr>
-      <tr>
-        <td :class="{'select':mode==1}">
-          <router-link to="?mode=1">신청한 팀</router-link>
-        </td>
-      </tr>
-      <tr>
-        <td :class="{'select':mode==2}">
-          <router-link to="?mode=2">권유받은 팀</router-link>
-        </td>
-      </tr>
-      <tr>
-        <td :class="{'select':mode==3}">
-          <router-link to="?mode=3">내 프로젝트</router-link>
-        </td>
-      </tr>
-      <tr>
-        <td :class="{'select':mode==4}">
-          <router-link to="?mode=4">모집중인 팀</router-link>
-        </td>
-      </tr>
+      <template v-if="refMyPageCond?.applied">
+        <tr>
+          <td :class="{'select':mode==1}">
+            <router-link to="?mode=1">신청한 팀</router-link>
+          </td>
+        </tr>
+      </template>
+      <template v-if="refMyPageCond?.suggested">
+        <tr>
+          <td :class="{'select':mode==2}">
+            <router-link to="?mode=2">권유받은 팀</router-link>
+          </td>
+        </tr>
+      </template>
+      <template v-if="refMyPageCond?.project">
+        <tr>
+          <td :class="{'select':mode==3}">
+            <router-link to="?mode=3">내 프로젝트</router-link>
+          </td>
+        </tr>
+      </template>
+      <template v-if="refMyPageCond?.team">
+        <tr>
+          <td :class="{'select':mode==4}">
+            <router-link to="?mode=4">모집중인 팀</router-link>
+          </td>
+        </tr>
+      </template>
       <tr>
         <td :class="{'select':mode==5}">
           <router-link to="?mode=5">스케쥴 관리</router-link>

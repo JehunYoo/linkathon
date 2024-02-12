@@ -2,9 +2,11 @@ package com.link.back.dto.response;
 
 import static java.util.stream.Collectors.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.link.back.entity.Hackathon;
+import com.link.back.entity.Role;
 import com.link.back.entity.Team;
 import com.link.back.entity.UserTeam;
 
@@ -16,7 +18,8 @@ public class TeamApplicationResponseDto {
 	private final String teamName;
 	private final String teamDesc;
 	private final HackathonInfoResponseDto hackathonInfoResponseDto;
-	private final List<TeamMemberResponseDto> members;
+	private TeamMemberResponseDto leader;
+	private final List<TeamMemberResponseDto> members = new ArrayList<>();
 	private final List<TeamListSimpleResponseDto> teams;
 
 	public TeamApplicationResponseDto(List<Team> teams, Team team, List<UserTeam> members) {
@@ -27,7 +30,13 @@ public class TeamApplicationResponseDto {
 		this.teamDesc = team.getTeamDesc();
 		Hackathon hackathon = team.getHackathon();
 		this.hackathonInfoResponseDto =	new HackathonInfoResponseDto(hackathon);
-		this.members = members.stream().map(TeamMemberResponseDto::new)
-			.collect(toList());
+		members.forEach(member -> {
+			if (member.getRole() == Role.LEADER) {
+				this.leader = new TeamMemberResponseDto(member);
+			} else {
+				this.members.add(new TeamMemberResponseDto(member));
+			}
+		});
+
 	}
 }

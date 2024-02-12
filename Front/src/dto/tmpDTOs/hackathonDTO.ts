@@ -62,6 +62,7 @@ export interface HackathonsResponseDto {
 }
 
 export interface WinnerProjectInfoDto {
+    imgSrc: string;
     projectId: number;
     teamId: number;
     projectName: string;

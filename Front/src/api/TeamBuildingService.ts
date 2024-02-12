@@ -3,6 +3,7 @@ import {TeamMemberFindDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import {CatchError} from "@/util/error.ts";
 import {SkillCategoryResponseDto} from "@/dto/tmpDTOs/SkillTypeDTO.ts";
 import {RecruitTeamDTO} from "@/dto/tmpDTOs/RecruitTeamDTO.ts";
+import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
 
 const apiService = new ApiService();
 
@@ -32,6 +33,16 @@ class TeamBuildingService {
             .join('&');
         const urlWithParams = `${url}/teams/recruit${formattedParams ? `?${formattedParams}` : ''}`;
         return (await apiService.getData(true, urlWithParams)).data as TeamMemberFindDTO;
+    }
+
+    @CatchError
+    async getAppliedTeam(): Promise<AppliedTeamDTO | undefined> {
+        return (await apiService.getData(true, `${url}/teams/applying`)).data as AppliedTeamDTO;
+    }
+
+    @CatchError
+    async getSuggestedTeam(): Promise<AppliedTeamDTO | undefined> {
+        return (await apiService.getData(true, `${url}/teams/suggested`)).data as AppliedTeamDTO;
     }
 
     @CatchError

@@ -1,37 +1,38 @@
-<script lang="ts" setup>
+`<script lang="ts" setup>
 
 import IndexSubMenu from "@/components/Index/IndexSubMenu.vue";
 import {Builder} from "builder-pattern";
 import Tier from "@/components/Tier.vue";
+import {computed, onMounted, ref} from "vue";
+import {UserService} from "@/api/UserService.ts";
+import {RankingUserDTO} from "@/dto/rankingUserDTO.ts";
 
-const dummy = Builder<RankingUserDTO>()
-    .userId(1)
-    .userImgUrl("https://s3.orbi.kr/data/file/united2/9ae8215065324b138e2706aa3ca712fd.jpeg")
-    .rating(290)
-    .referenceUrl("https://github.com/jmg9776")
-    .userName("해린")
-    .introduce("안녕하세요")
-    .build()
+const userService = new UserService();
 
-const dummyList: RankingUserDTO[] = [];
-dummyList.push(dummy);
-dummyList.push(dummy);
-dummyList.push(dummy);
-dummyList.push(dummy);
-dummyList.push(dummy);
+const getRanking = computed(async () => {
+   const response = await userService.getTopFive();
+   return response;
+});
+
+const rankers = ref<RankingUserDTO[]>([]);
+
+onMounted(async () => {
+  rankers.value = await getRanking.value;
+});
+
 </script>
 
 <template>
   <IndexSubMenu style="margin-top: 48px; margin-bottom: 22px" title="이달의 랭킹"/>
   <div class="ranking-container">
-    <div v-for="data in dummyList" class="ranking-card">
-      <img :src="data.userImgUrl" alt="">
+    <div v-for="user in rankers" class="ranking-card">
+      <img :src="user.userImgUrl" alt="">
       <div class="member-info-text">
         <div class="info-text">
-          {{ data.userName }}
-          <Tier :rating="data?.rating" font-size="14px" height="16px" style="margin-left: 8px" width="28px"></Tier>
+          {{ user.name }}
+          <Tier :rating="user?.rating" font-size="14px" height="16px" style="margin-left: 8px" width="28px"></Tier>
         </div>
-        <a :href="data.referenceUrl" aria-label="Visit Github" target="_blank">
+        <a :href="user.referenceUrl" aria-label="Visit Github" target="_blank">
           <svg fill="none" height="18" viewBox="0 0 18 18" width="18" xmlns="http://www.w3.org/2000/svg"
                xmlns:xlink="http://www.w3.org/1999/xlink">
             <rect fill="url(#pattern0)" height="17.2138" rx="3" width="17.9815"/>
@@ -46,7 +47,7 @@ dummyList.push(dummy);
         </a>
       </div>
       <div class="introduce-text">
-        {{ data.introduce }}
+        {{ user.introduce }}
       </div>
     </div>
   </div>

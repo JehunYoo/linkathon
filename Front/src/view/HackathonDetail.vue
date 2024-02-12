@@ -46,12 +46,12 @@ if (store.getters.getStatusName === "모집중") {
     <div class="title-container">
       <div class="hackathon-banner-list-container">
         <div class="list-title-container">
-          <div v-for="title in hackathonDetail.hackathonName" class="list-title">
-            {{ title }}
+          <div class="list-title">
+            {{ hackathonDetail.hackathonName }}
           </div>
         </div>
         <div class="img-container">
-          <img :alt="hackathonDetail.hackathonTopic" :src="hackathonDetail.hackathonImageUrl" class="img">
+          <img :alt="hackathonDetail.hackathonImageUrl" :src="hackathonDetail.hackathonImageUrl" class="img">
         </div>
       </div>
       <div class="text-holder" style="max-width: 290px">

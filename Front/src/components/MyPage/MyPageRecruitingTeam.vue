@@ -29,11 +29,13 @@ onMounted(async () => {
     <h1>모집중인 팀</h1>
     <div class="remove-button">프로젝트 삭제</div>
   </div>
+  <h2>{{refTeam?.teamName}}</h2>
+  <p class="desc">{{refTeam?.teamDesc}}</p>
   <div class="content">
     <div class="fx1">
       <h2>현재 팀원</h2>
       <div class="list">
-        <template v-for="_ in 6">
+        <template v-if="refTeam?.members['JOINED']">
           <template v-for="(data, i) in refTeam?.members['JOINED']">
             <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
               <ModalMember :userInfo="data">
@@ -47,8 +49,9 @@ onMounted(async () => {
     </div>
     <div class="fx1">
       <h2>신청한 사용자</h2>
+
       <div class="list">
-        <template v-for="_ in 6">
+        <template v-if="refTeam?.members['SUGGESTED']">
           <template v-for="(data, i) in refTeam?.members['SUGGESTED']">
             <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
               <ModalMember :userInfo="data">
@@ -64,7 +67,7 @@ onMounted(async () => {
     <div class="fx1">
       <h2>권유한 사용자</h2>
       <div class="list">
-        <template v-for="_ in 6">
+        <template v-if="refTeam?.members['APPLIED']">
           <template v-for="(data, i) in refTeam?.members['APPLIED']">
             <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
               <ModalMember :userInfo="data">
@@ -81,11 +84,12 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-@media screen and (max-width: 1307px){
+@media screen and (max-width: 1307px) {
   .content {
     flex-direction: column;
   }
 }
+
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -97,7 +101,7 @@ onMounted(async () => {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background:#A679FF;
+  background: #A679FF;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -113,7 +117,7 @@ onMounted(async () => {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap:20px;
+  gap: 20px;
   overflow-y: scroll;
   overflow-x: hidden;
   max-height: 460px;
@@ -175,5 +179,8 @@ h3 {
   line-height: 20px; /* 125% */
   max-width: 600px;
   margin-top: 12px;
+}
+.desc {
+ margin-top: 16px;
 }
 </style>
