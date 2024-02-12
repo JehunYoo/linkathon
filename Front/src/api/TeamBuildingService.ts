@@ -5,10 +5,7 @@ import {SkillCategoryResponseDto} from "@/dto/tmpDTOs/SkillTypeDTO.ts";
 import {RecruitTeamDTO} from "@/dto/tmpDTOs/RecruitTeamDTO.ts";
 import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
 import {TeamResponseDto} from "@/dto/tmpDTOs/teamDTO.ts";
-<<<<<<< Front/src/api/TeamBuildingService.ts
-=======
 import {MemberDetailResponseDto} from "@/dto/tmpDTOs/memberDTO.ts";
->>>>>>> Front/src/api/TeamBuildingService.ts
 
 const apiService = new ApiService();
 
