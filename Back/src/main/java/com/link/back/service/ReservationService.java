@@ -10,6 +10,7 @@ import com.link.back.dto.request.ReservationRequest;
 import com.link.back.dto.response.ReservationResponse;
 import com.link.back.entity.Reservation;
 import com.link.back.entity.User;
+import com.link.back.exception.ContentNotFoundException;
 import com.link.back.repository.ReservationRepository;
 import com.link.back.repository.UserRepository;
 
@@ -24,7 +25,7 @@ public class ReservationService {
 
 	public List<ReservationResponse> getMyReservations(Long myUserId) {
 
-		User user = userRepository.getReferenceById(myUserId);
+		User user = findUser(myUserId);
 		List<Reservation> reservations = reservationRepository.findByLeaderOrMember(user, user);
 
 		return reservations.stream().map(reservation ->
@@ -40,7 +41,7 @@ public class ReservationService {
 	}
 
 	public void createMyReservation(Long myUserId, ReservationRequest reservationRequest) {
-		User user = userRepository.getReferenceById(myUserId);
+		User user = findUser(myUserId);
 		if (isOverlappedReservation(user, reservationRequest.reservationDateTime())) // 겹치는 예약 시간 확인
 			throw new RuntimeException();
 		Reservation reservation = Reservation.builder()
@@ -52,7 +53,7 @@ public class ReservationService {
 	}
 
 	public void updateMyReservation(Long reservationId, Long myUserId, ReservationRequest reservationRequest) {
-		User user = userRepository.getReferenceById(myUserId);
+		User user = findUser(myUserId);
 		// if (isUsersReservation(reservationId, myUserId)) // 자신의 예약인지 확인
 		// 	throw new RuntimeException();
 		if (isOverlappedReservation(user, reservationRequest.reservationDateTime())) // 겹치는 예약 시간 확인
@@ -78,6 +79,10 @@ public class ReservationService {
 				return true;
 		}
 		return false;
+	}
+
+	private User findUser(Long userId) {
+		return userRepository.findById(userId).orElseThrow(ContentNotFoundException::new);
 	}
 
 }
