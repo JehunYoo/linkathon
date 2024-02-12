@@ -37,7 +37,7 @@ const shortEncoding = (text: string, cut: number): string => {
         </template>
       </div>
       <div style="display: flex; gap:4px; flex: 1">
-        <template v-for="data in userInfo.skillSets.slice(0,8)">
+        <template v-for="data in userInfo.skillSets?.slice(0,8)">
           <SkillIcon :skill="
           Builder<SkillDTO>().skillType(data.skillType)
           .skillYear(data.skillLevel)
