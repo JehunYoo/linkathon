@@ -2,8 +2,7 @@ import {ApiService} from "@/api/ApiService.ts";
 import {httpStatusCode} from "@/util/httpStatus.ts";
 import {
     BackPerformanceResponseDto,
-    PageableBackPerformance,
-    PageableProjects,
+    PageableBackPerformance, PageableProjects,
     ProjectDetailDto,
     ProjectInfoDTO,
     ProjectRequestDto
@@ -129,7 +128,7 @@ class ProjectService {
     async updateProject(projectId: number, projectRequestDto: ProjectRequestDto, image: File | null): Promise<void> {
         try {
             const data: FormData = new FormData();
-            data.append('project', new Blob([JSON.stringify(projectRequestDto as any)], { type: "application/json" }));
+            data.append('project', new Blob([JSON.stringify(projectRequestDto as any)], {type: "application/json"}));
             data.append('image', image as any);
 
             const response = await apiService.postMultipartData(true, `${url}/${projectId}`, data);
@@ -178,18 +177,24 @@ class ProjectService {
     async getProjectContributions(owner: String, repo: String): Promise<GitStatusDTO[]> {
         const response = await apiService.getData(true, `${url}/contributions/${owner}/${repo}`);
         if (response && response.status === httpStatusCode.OK) {
+            console.log(owner,repo)
             return response.data as GitStatusDTO[];
         }
         return [] as GitStatusDTO[];
     }
 
     @CatchError
-    async getBackMetrics(projectId : number) : Promise<PageableBackPerformance> {
+    async getBackMetrics(projectId: number): Promise<PageableBackPerformance> {
         const response = await apiService.getData(true, `${url}/${projectId}/back-metrics`);
         if (response && response.status === httpStatusCode.OK) {
             return this.toPageableBackMetrics(response) as PageableBackPerformance;
         }
         return {} as PageableBackPerformance;
+    }
+
+    @CatchError
+    async postBackMetrics(projectId: number) {
+        await apiService.postData(true, `${url}/${projectId}/back-metrics`, '');
     }
 
     toPageableBackMetrics = (response: AxiosResponse<any, any>): PageableBackPerformance => {
@@ -204,7 +209,7 @@ class ProjectService {
     }
 
     @CatchError
-    async getBackMetricsMessageCounts(projectId : number) : Promise<BackPerformanceMessageResponseDto> {
+    async getBackMetricsMessageCounts(projectId: number): Promise<BackPerformanceMessageResponseDto> {
         const response = await apiService.getData(true, `${url}/${projectId}/message-count`);
         if (response && response.status === httpStatusCode.OK) {
             console.log(response.data);
@@ -213,6 +218,7 @@ class ProjectService {
         return {} as BackPerformanceMessageResponseDto;
     }
 }
+
 export {
     ProjectService
 }

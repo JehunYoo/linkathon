@@ -60,6 +60,31 @@ class TeamBuildingService {
     }
 
     @CatchError
+    async postAppliedTeam(num: number | undefined)  {
+        await apiService.postData(true,`${url}/teams/${num}/members/apply`, '')
+    }
+
+    @CatchError
+    async deleteAppliedTeam(teamId : number) {
+        await apiService.deleteData(true, `${url}/teams/${teamId}/members/apply`, '')
+    }
+
+    @CatchError
+    async postAcceptApply(userId: number, teamId: number | undefined) {
+        await apiService.postData(true, `${url}/teams/${teamId}/members/${userId}/apply`,'')
+    }
+
+    @CatchError
+    async deleteRefuseApply(userId: number, teamId: number | undefined) {
+        await apiService.deleteData(true, `${url}/teams/${teamId}/members/${userId}/apply`,'')
+    }
+
+    @CatchError
+    async getIsLeader(): Promise<Boolean> {
+        return (await apiService.getData(true, `${url}/teams/leader`)).data as Boolean;
+    }
+
+    @CatchError
     async getTeamDetailByTeamId(teamId: number): Promise<TeamResponseDto> {
         const response = await apiService.getData(false, `${url}/teams/${teamId}`);
         return response.data;
@@ -70,6 +95,7 @@ class TeamBuildingService {
         const response = await apiService.getData(false, `${url}/teams/recruit/detail/${userId}`);
         return response.data;
     }
+
 }
 
 export {

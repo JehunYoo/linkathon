@@ -18,8 +18,8 @@ public class TeamMemberResponseDto {
 	private final String name;
 	private final Integer rating;
 	private final String introduce;
-	private final String userImageUrl;
-	private final String userOriginImageName;
+	private String userImageUrl;
+	private String userOriginImageName;
 	private final String role;
 	private final List<SkillResponseDto> skillSets;
 
@@ -29,12 +29,9 @@ public class TeamMemberResponseDto {
 		this.name = user.getName();
 		this.rating = user.getRating();
 		this.introduce = user.getIntroduce();
-		if (user.getUserImage() != null) {
+		if(user.getUserImage() != null) {
 			this.userImageUrl = user.getUserImage().getUserImageUrl();
 			this.userOriginImageName = user.getUserImage().getUserOriginImageName();
-		} else {
-			this.userImageUrl = null;
-			this.userOriginImageName = null;
 		}
 		this.role = userTeam.getRole().name();
 		this.skillSets = user.getUserSkills().stream()
