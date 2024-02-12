@@ -21,14 +21,17 @@ const shortEncoding = (text: string, cut: number): string => {
     else
       return text
 }
-</script>
 
+const userInfo = props.userInfo;
+
+</script>
 <template>
   <div :class="{'t':!props.t}" class="user-card">
     <img alt="" v-bind:src="userInfo.profileImageURL">
     <div class="text-container">
       <div class="info-text">
-        {{ userInfo.name }}
+
+      {{ userInfo.name }}
         <Tier :rating="userInfo.rating" font-size="14px" height="16px" style="margin-left: 8px" width="28px"></Tier>
       </div>
       <div class="introduce-text">

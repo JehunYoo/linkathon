@@ -6,19 +6,24 @@ import ModalEffect from "@/components/Modal/ModalEffect.vue";
 import {onMounted, Ref, ref} from "vue";
 import {MemberDetailResponseDto} from "@/dto/tmpDTOs/memberDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+import {useRoute} from "vue-router";
+
+const route = useRoute();
 
 const props = defineProps({
-  reservationId: {
-    // required: true,
-    default: 1, // FIXME: 테스트용 예약 아이디
-    type: Number
-  },
+  // reservationId: {
+  //   // required: true,
+  //   default: 1, // FIXME: 테스트용 예약 아이디
+  //   type: Number
+  // },
   guestId: {
     // required: true,
     default: 99, // FIXME: 테스트용 예약 아이디
     type: Number
   }
 });
+
+const reservationId = parseInt(route.params.id as string);
 
 const teamBuildingService = new TeamBuildingService();
 
@@ -35,7 +40,7 @@ onMounted(async () => {
     <ModalEffect text="홍길동님과의 화상 채팅"/>
     <div class="video-container">
       <div class="video-sector">
-        <VideoPlayer :reservation-id="props.reservationId"/>
+        <VideoPlayer :reservation-id="reservationId"/>
       </div>
       <div class="introduce-container">
         <VideoInfo :member-info="memberDetailResponseDto"/>

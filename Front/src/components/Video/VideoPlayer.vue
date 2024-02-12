@@ -5,6 +5,7 @@ import {OpenVidu, Publisher, Session, StreamManager, Subscriber} from "openvidu-
 import {OpenViduService} from "@/api/OpenViduService.ts";
 import {onMounted, Ref, ref, watch} from "vue";
 import {onBeforeRouteLeave} from "vue-router";
+import router from "@/router";
 
 
 class OVManager {
@@ -179,7 +180,9 @@ watch(() => audioStat.value, () => {
   ovManager.setAudioStat(audioStat.value);
 });
 
-const leaveVideoCall = () => {console.log("세션 종료")};
+const leaveVideoCall = () => {
+  router.push("/");
+};
 
 onMounted(() => {
   ovManager.joinSession(reservationId, myVideoEleRef, guestVideoEleRef);
