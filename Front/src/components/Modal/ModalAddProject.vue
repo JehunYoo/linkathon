@@ -25,6 +25,7 @@ const handleRegistration = () => {
   projectRequestDto.projectName = projectName.value;
   projectRequestDto.projectDesc = projectDesc.value;
   projectRequestDto.projectUrl = projectUrl.value;
+  projectRequestDto.teamId = props.teamId;
 
   projectService.createProject(projectRequestDto, newImage.value.files[0]);
   // location.href = "/myPage";
