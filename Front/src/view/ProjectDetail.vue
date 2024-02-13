@@ -60,7 +60,12 @@ const updateProject = (key: string, url: string) => {
   else if (key === 'deployUrl') {
     projectRequestDto.deployUrl = projectDetail.value.deployUrl = url;
   }
-  projectService.updateProject(projectDetail.value.projectId, projectRequestDto, null);
+  projectService.updateProject(projectDetail.value.projectId, projectRequestDto, newImage.value.files[0]);
+}
+
+const changeProjectImage = () => {
+  projectDetail.value.imgSrc = URL.createObjectURL(newImage.value.files[0]);
+  projectService.updateProject(projectDetail.value.projectId, projectRequestDto, newImage.value.files[0]);
 }
 
 const init = async () => {
@@ -84,15 +89,7 @@ watch(() => route.path, () => init());
 // TODO: 해당 팀을 소유한 리더인지 확인 필요
 const isLeader = ref(false);
 
-const imgEdit = ref<boolean>(false);
 const newImage = ref();
-const editStart = () => {
-  if (imgEdit.value) {
-    // update
-    // props.updateProject(e.key, e.url);
-  }
-  imgEdit.value = !imgEdit.value;
-}
 
 </script>
 
@@ -105,10 +102,10 @@ const editStart = () => {
            ref="projectImg">
 
       <template v-if="isLeader">
-        <h1>이미지</h1>
+        <h1 style="margin: 10px 0">이미지 변경</h1>
         <div class="link-content-container">
           <input ref="newImage" id="input"
-                 type="file" name="image" accept="image/*" :multiple="false" @change="console.log('asdad')">
+                 type="file" name="image" accept="image/*" :multiple="false" @change="changeProjectImage">
           <!--      <input v-model="edit.url"  :placeholder="edit.text + ' 입력'">-->
         </div>
       </template>
@@ -206,30 +203,8 @@ img {
   gap: 20px;
 }
 
-.save-button {
-  width: 53px;
-  height: 36px;
-  border-radius: 5px;
-  background: #7D3BFF;
-  border: #7D3BFF solid 1px;
-  color: #F2F2F2;
-  text-align: center;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 35px;
-  transition: color 0.3s ease;
-}
-
-.save-button:hover {
-  background: white;
-  color: #7D3BFF;
-}
-
 input {
   padding-left: 12px;
-  border-radius: 5px;
-  border: 1px solid #303030;
   height: 36px;
   flex: 1;
   color: #606060;
@@ -239,34 +214,10 @@ input {
   line-height: normal;
 }
 
-.button {
-  width: 53px;
-  height: 36px;
-  border-radius: 5px;
-  border: 1px solid #7D3BFF;
-  color: #303030;
-  text-align: center;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 35px;
-  transition: 0.3s ease color;
-}
-
-.button:hover {
-  background: #7D3BFF;
-  color: white;
-}
-
 .link-content-container {
   display: flex;
   gap: 12px;
 }
 
-.link-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
 </style>
 

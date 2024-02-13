@@ -129,6 +129,9 @@ public class ProjectService {
 	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto, MultipartFile image) {
 		Project project = projectRepository.findById(projectId).orElseThrow();
 		ProjectImage projectImage = uploadImage(image);
+		if (projectImage == null) {
+			projectImage = project.getProjectImage();
+		}
 		// if (projectImage == null && project.getProjectImage() != null) { // 기존 이미지 삭제
 		// 	s3Uploader.deleteFile(project.getProjectImage().getProjectImageName());
 		// }
