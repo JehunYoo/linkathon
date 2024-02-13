@@ -62,38 +62,34 @@ function calculateGrade(score: number): string {
 <template>
   <Modal v-if="modalController" @closeModal="modalSwitch">
     <div class="modal-container">
-      <BarChart :data="[refMessageCount.addCount, refMessageCount.removeCount,refMessageCount.changeCount, refMessageCount.completeCount
+      <BarChart :data="[refMessageCount.addCount, refMessageCount.removeCount, refMessageCount.makeCount, refMessageCount.completeCount
       ,refMessageCount.changeCount, refMessageCount.mergeCount, refMessageCount.refactorCount, refMessageCount.moveCount, refMessageCount.replaceCount, refMessageCount.etcCount]"/>
       <h1 style="">개선 사항</h1>
       <div class="grid">
         <h1 style="text-align: left; margin-bottom: 3px; margin-top: 3px; font-family: Pretendard-Regular,serif">
-          수정 사항 설명
+          수정 메시지 예시
         </h1>
         <h2 style="text-align: left; margin-top: 5px;flex: 1;"></h2>
       </div>
       <div class="content">
         <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
+        <div class="modal-text">Add a private constructor to hide the implicit public one.<br>암시적으로 공개된 생성자를 숨기기 위해 private 생성자를 추가해주세요.</div>
         <h3>• 삭제</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
-        <h3>• 추가</h3>
-        <div class="modal-text">어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다. 어쩌구 저쩌구해야합니다.</div>
+        <div class="modal-text">Remove this unused "example" private field.<br>사용되지 않는 "example" 필드를 삭제해주세요.</div>
+        <h3>• 생성</h3>
+        <div class="modal-text">Make this "public static url" field final<br>'public static url' 필드를 final로 만들어주세요.</div>
+        <h3>• 완료</h3>
+        <div class="modal-text">Complete the task associated to this TODO comment.<br>TODO 주석과 관련된 작업을 완료해주세요.</div>
+        <h3>• 수정</h3>
+        <div class="modal-text">Change the visibility of this constructor to "protected".<br>생성자의 접근제한자를 'protected'로 수정해주세요.</div>
+        <h3>• 병합</h3>
+        <div class="modal-text">Merge this if statement with the enclosing one.<br>이중 if문을 가능한 합쳐주세요.</div>
+        <h3>• 리팩토링</h3>
+        <div class="modal-text">Refactor this method to reduce its Cognitive Complexity.<br>코드의 복잡도를 줄이기 위해 메소드를 리팩토링해주세요.</div>
+        <h3>• 이동</h3>
+        <div class="modal-text">Move parameter "state" after parameters without default value.<br>기본값이 없는 매개변수 뒤에 매개변수 'state'를 따로 이동하십시오.</div>
+        <h3>• 대체</h3>
+        <div class="modal-text">Replace this use of System.out or System.err by a logger<br>System.out 또는 System.err의 사용을 로거로 대체해주세요.</div>
       </div>
     </div>
   </Modal>

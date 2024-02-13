@@ -19,7 +19,7 @@ onMounted(() => {
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['추가', '삭제', '생성', '완료', '수정', '병합', '리팩토링', '이동', '대치', '이외'],
+        labels: ['추가', '삭제', '생성', '완료', '수정', '병합', '리팩토링', '이동', '대체', '이외'],
         datasets: [{
           data: props.data,
           backgroundColor: [
