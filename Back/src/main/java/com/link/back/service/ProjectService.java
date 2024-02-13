@@ -10,6 +10,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +38,7 @@ import com.link.back.repository.UserTeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@EnableScheduling
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -263,5 +266,12 @@ public class ProjectService {
 			}
 		}
 		return projectImage;
+	}
+
+	// 매일 자정에 실행되도록 스케줄링합니다.
+	@Scheduled(cron = "0 0 0 * * *")
+	public void updateHackathonScoresDaily() {
+		// 프로젝트의 hackathon_score를 업데이트하는 메서드를 호출합니다.
+		projectRepository.updateHackathonScore();
 	}
 }
