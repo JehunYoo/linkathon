@@ -27,11 +27,9 @@ const handleModalClose2 = (num: number) => {
 const teamBuildingService = new TeamBuildingService();
 const teamService = new TeamService();
 const refTeam: Ref<RecruitTeamDTO | undefined> = ref();
-const refTeamId = ref<number>(0);
 
 onMounted(async () => {
   refTeam.value = await teamBuildingService.getRecruitTeam();
-  refTeamId.value = (await teamService.getActiveTeamId()).id;
   isLeader.value = await teamBuildingService.getIsLeader();
 })
 
@@ -48,13 +46,23 @@ const refuseApply = (userId: number) => {
 const isLeader = ref<Boolean>();
 
 const deleteTeam = () => {
-  teamBuildingService.deleteTeam(refTeamId.value)
+  teamBuildingService.deleteTeam(<number>refTeam.value?.teamId)
   location.href = "/myPage"
 }
 
 const removeTeam = () => {
-  teamBuildingService.removeTeam(refTeamId.value)
+  teamBuildingService.removeTeam(<number>refTeam.value?.teamId)
   location.href = "/myPage"
+}
+
+const deleteMember = (userId: number) => {
+  teamService.deleteMember(userId);
+  location.href = "/myPage";
+}
+
+const deleteSuggestionByTeam = (userId: number) => {
+  teamService.deleteSuggestionByTeam(<number>refTeam.value?.teamId, userId);
+  location.href = "/myPage";
 }
 
 </script>
@@ -80,7 +88,7 @@ const removeTeam = () => {
             <Modal v-if="clickedModal===i+1" @closeModal="handleModalClose">
               <ModalMember :userInfo="data">
                 <template v-if="isLeader">
-                  <ModalButton button-text="추방하기" @click="teamService.deleteMember(data.userId)"/>
+                  <ModalButton button-text="추방하기" @click="deleteMember(data.userId)"/>
                 </template>
               </ModalMember>
             </Modal>
@@ -118,7 +126,7 @@ const removeTeam = () => {
               <ModalMember :userInfo="data">
                 <template v-if="isLeader">
                   <ModalButton button-text="면접 예약"/>
-                  <ModalButton button-text="권유 취소" @click="teamService.deleteSuggestionByTeam(refTeamId, data.userId)"/>
+                  <ModalButton button-text="권유 취소" @click="deleteSuggestionByTeam(data.userId)"/>
                 </template>
               </ModalMember>
             </Modal>

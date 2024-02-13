@@ -29,13 +29,14 @@ function formatDate(date: Date): string {
 }
 
 const mode = ref<Number>(0);
-if (store.getters.getStatusName === "모집중") {
-  mode.value = 0;
+if (store.getters.getStatusName === "완료됨") {
+  mode.value = 2;
 } else if (store.getters.getStatusName === "진행중") {
   mode.value = 1;
 } else {
-  mode.value = 2;
+  mode.value = 0;
 }
+
 </script>
 
 <template>
@@ -51,7 +52,7 @@ if (store.getters.getStatusName === "모집중") {
           </div>
         </div>
         <div class="img-container">
-          <img :alt="hackathonDetail.hackathonImageUrl" :src="hackathonDetail.hackathonImageUrl" class="img">
+          <img :src="hackathonDetail.hackathonImageUrl" class="img" alt="">
         </div>
       </div>
       <div class="text-holder" style="max-width: 290px">
@@ -74,7 +75,7 @@ if (store.getters.getStatusName === "모집중") {
     </div>
     <HackathonLeaderBoard v-if="mode===1" :id="parseInt(<string>route.query.id)"/>
     <HackathonReward v-else-if="mode===2" :id="parseInt(<string>route.query.id)"/>
-    <HackathonRecruiting v-else :hackathonId="route.query.id"/>
+    <HackathonRecruiting v-else-if="mode===0" :hackathonId="parseInt(<string>route.query.id)"/>
   </template>
 
 </template>
