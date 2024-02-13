@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import HackathonRecruiting from "@/components/Hackathon/HackathonRecruiting.vue";
-import {onMounted, ref, watchEffect} from "vue";
+import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import HackathonLeaderBoard from "@/components/Hackathon/HackathonLeaderBoard.vue";
 import HackathonReward from "@/components/Hackathon/HackathonReward.vue";
@@ -37,7 +37,6 @@ if (store.getters.getStatusName === "완료됨") {
   mode.value = 0;
 }
 
-console.log(hackathonDetail.value.hackathonImageUrl)
 </script>
 
 <template>
@@ -76,7 +75,7 @@ console.log(hackathonDetail.value.hackathonImageUrl)
     </div>
     <HackathonLeaderBoard v-if="mode===1" :id="parseInt(<string>route.query.id)"/>
     <HackathonReward v-else-if="mode===2" :id="parseInt(<string>route.query.id)"/>
-    <HackathonRecruiting v-else-if="mode===0" :hackathonId="route.query.id"/>
+    <HackathonRecruiting v-else-if="mode===0" :hackathonId="parseInt(<string>route.query.id)"/>
   </template>
 
 </template>
