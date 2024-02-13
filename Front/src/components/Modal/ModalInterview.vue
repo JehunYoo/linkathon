@@ -2,6 +2,9 @@
 import {ref} from "vue";
 import DatePicker from 'vue3-datepicker';
 import {TeamService} from "@/api/TeamService.ts";
+import {ReservationService} from "@/api/ReservationService.ts";
+import {Builder} from "builder-pattern";
+import {ReservationRequest} from "@/dto/tmpDTOs/reservationDTO.ts";
 
 const props = defineProps({
   userId: {
@@ -19,6 +22,7 @@ const selectedDate = ref(new Date());
 const selectedTime = ref(-1);
 
 const teamService = new TeamService();
+const reservationService = new ReservationService();
 
 async function suggest() {
   const teamId = (await teamService.getActiveTeamId()).id;
@@ -33,6 +37,41 @@ const selectTime = (num: number) => {
     selectedTime.value = num;
   }
 }
+
+const suggestWithInterview = async () => {
+
+  if (selectedTime.value < 0) {
+    alert("시간을 선택해주세요!");
+    return;
+  }
+
+  const toIsoString = (date: Date, hour: number) => {
+    // let tzo = -date.getTimezoneOffset(), dif = tzo >= 0 ? '+' : '-';
+    const pad = (num: number) => {
+      return (num < 10 ? '0' : '') + num;
+    };
+
+    return date.getFullYear() +
+        '-' + pad(date.getMonth() + 1) +
+        '-' + pad(date.getDate()) +
+        'T' + pad(hour) +
+        ':' + pad(0) +
+        ':' + pad(0);
+        // dif + pad(Math.floor(Math.abs(tzo) / 60)) +
+        // ':' + pad(Math.abs(tzo) % 60);
+  }
+
+  const makeReservation = async () => {
+    await reservationService.registerReservation(Builder<ReservationRequest>()
+        .userId(props.userId)
+        .reservationDateTime(toIsoString(selectedDate.value, selectedTime.value))
+        .build());
+  }
+
+  await suggest();
+  await makeReservation();
+}
+
 </script>
 
 <template>
@@ -63,7 +102,7 @@ const selectTime = (num: number) => {
       <div class="button w" @click="suggest">
         면접 없이 권유하기
       </div>
-      <div class="button p">
+      <div class="button p" @click="suggestWithInterview">
         면접 예약
       </div>
     </div>
