@@ -129,8 +129,8 @@ public class ProjectService {
 	public void updateProject(Long projectId, ProjectRequestDto projectRequestDto, MultipartFile image) {
 		Project project = projectRepository.findById(projectId).orElseThrow();
 		ProjectImage projectImage = uploadImage(image);
-		if (projectImage == null && project.getProjectImage() != null) { // 기존 이미지 삭제
-			s3Uploader.deleteFile(project.getProjectImage().getProjectImageName());
+		if (projectImage == null) {
+			projectImage = project.getProjectImage();
 		}
 		updateProjectEntity(project, projectImage, projectRequestDto);
 		try {
@@ -273,5 +273,19 @@ public class ProjectService {
 	public void updateHackathonScoresDaily() {
 		// 프로젝트의 hackathon_score를 업데이트하는 메서드를 호출합니다.
 		projectRepository.updateHackathonScore();
+	}
+
+	public Boolean checkLeader(Long myUserId, Long project_id) {
+		List<UserTeam> userTeamsByUserId = userTeamRepository.findUserTeamsByUserId(myUserId);
+		if (userTeamsByUserId.isEmpty())
+			return false;
+		Optional<Project> project = projectRepository.findById(project_id);
+		if (project.isEmpty())
+			throw new ContentNotFoundException();
+		for (UserTeam ut: userTeamsByUserId) {
+			if(ut.getRole() == Role.LEADER && project.get().getTeam().getUserTeamList().contains(ut))
+				return true;
+		}
+		return false;
 	}
 }
