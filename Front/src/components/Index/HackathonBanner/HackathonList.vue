@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {PageableHackathonList} from "@/dto/hackathonInfoDTO.ts";
 import {PropType} from "vue";
-import {useRouter} from "vue-router";
 
 const props = defineProps({
   ht : {
@@ -10,11 +9,6 @@ const props = defineProps({
   }
 })
 
-// const goToHackathonDetail = (hackathonId : number) => {
-//   const router = useRouter();
-//   router.push(`/hackathonDetail?id=${hackathonId}`);
-// }
-console.log(props.ht?.hackathons)
 </script>
 
 <template>
