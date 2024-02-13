@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +27,6 @@ import com.link.back.entity.Project;
 import com.link.back.entity.ProjectImage;
 import com.link.back.entity.ProjectLike;
 import com.link.back.entity.ProjectStatus;
-import com.link.back.entity.Role;
 import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
@@ -42,6 +43,7 @@ import com.link.back.repository.UserTeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@EnableScheduling
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -135,9 +137,6 @@ public class ProjectService {
 		if (projectImage == null) {
 			projectImage = project.getProjectImage();
 		}
-		// if (projectImage == null && project.getProjectImage() != null) { // 기존 이미지 삭제
-		// 	s3Uploader.deleteFile(project.getProjectImage().getProjectImageName());
-		// }
 		updateProjectEntity(project, projectImage, projectRequestDto);
 		try {
 			projectRepository.save(project);
@@ -272,6 +271,13 @@ public class ProjectService {
 			}
 		}
 		return projectImage;
+	}
+
+	// 매일 자정에 실행되도록 스케줄링합니다.
+	@Scheduled(cron = "0 0 0 * * *")
+	public void updateHackathonScoresDaily() {
+		// 프로젝트의 hackathon_score를 업데이트하는 메서드를 호출합니다.
+		projectRepository.updateHackathonScore();
 	}
 
 	public Boolean checkLeader(Long myUserId, Long project_id) {
