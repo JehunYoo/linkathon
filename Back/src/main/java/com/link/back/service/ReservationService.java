@@ -27,16 +27,18 @@ public class ReservationService {
 
 	public List<ReservationResponse> getMyReservations(Long myUserId) {
 
-		User user = findUser(myUserId);
-		List<Reservation> reservations = reservationRepository.findByLeaderOrMember(user, user);
+		User me = findUser(myUserId);
+		// List<Reservation> reservations = reservationRepository.findByLeaderOrMember(user, user);
+		LocalDateTime now = LocalDateTime.now();
+		List<Reservation> reservations = reservationRepository.findAllByUserIdFilterByRecently(myUserId, LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth() - 1, 0, 0));
 
 		return reservations.stream().map(reservation ->
 			ReservationResponse.builder()
 				.reservationId(reservation.getReservationId())
 				.userId(
-					reservation.isLeader(user.getUserId()) ? reservation.getMember().getUserId() :
+					reservation.isLeader(me.getUserId()) ? reservation.getMember().getUserId() :
 						reservation.getLeader().getUserId())
-				.isLeader(reservation.isLeader(user.getUserId()))
+				.isLeader(reservation.isLeader(me.getUserId()))
 				.reservationDatetime(reservation.getReservationDateTime())
 				.build()
 		).toList();
