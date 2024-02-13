@@ -69,7 +69,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 }
             }
             chain.doFilter(httpRequest, httpResponse);
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            logger.info(e.getMessage());
             httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("FORBIDDEN");
         }
