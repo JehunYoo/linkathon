@@ -50,11 +50,6 @@ onMounted(async () => {
 const getFrontendReport = async () => {
   refReport.value = await lighthouseService.getLighthouseReport(1);
 }
-
-const updateFrontendReport = () => {
-  alert("요청이 완료되었습니다. 대기열에 따라 처리 시간이 변동되며 평균적으로 페이지 1개당 20~30초가 소모됩니다.")
-  lighthouseService.updateLighthouseReport(1);
-}
 const buildObject = (score: number) => {
   return Builder<PerformanceChartDTO>()
       .centerText((score).toString())
@@ -176,7 +171,6 @@ const detailOpen = (num: number) => {
   </section>
 
   <div class="button-container">
-    <div class="button" @click="updateFrontendReport" v-if="editable">프론트 분석 요청</div>
     <div class="button" @click="modalSwitch()" v-if="refReport.length!==0">분석 상세정보</div>
   </div>
 
