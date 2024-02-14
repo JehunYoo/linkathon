@@ -74,7 +74,7 @@ const modalController = () => {
 </script>
 
 <template>
-  <Modal v-if="modalRef" @closeModal="modalController">
+  <Modal v-if="modalRef && refTeam" @closeModal="modalController">
     <ModalAddProject :teamId="refTeam?.teamId"/>
   </Modal>
   <div class="recruiting-container">

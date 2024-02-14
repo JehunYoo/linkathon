@@ -9,12 +9,11 @@ import {onMounted, Ref, ref, watch} from "vue";
 import {ProjectDetailDto, ProjectRequestDto} from "@/dto/projectDTO.ts";
 import ProjectStore from "@/store/projectStorage.ts";
 import {ProjectService} from "@/api/ProjectService.ts";
-import {onBeforeRouteUpdate, useRoute} from "vue-router";
+import {useRoute} from "vue-router";
 import router from "@/router";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
 import {TeamMemberResponseDto, TeamSkillDto} from "@/dto/tmpDTOs/teamDTO.ts";
 import {SkillType} from "@/dto/tmpDTOs/commonDTO.ts";
-import {TeamService} from "@/api/TeamService.ts";
 
 
 interface TeamRefs {
