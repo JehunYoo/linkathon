@@ -80,7 +80,7 @@ const changeUserImage = async () => {
       <h2>프로필 이미지</h2>
       <div class="detail-content-container">
         <input style="display: none" id="input-file" type="file" ref="newImage" accept="image/*" :multiple="false" @change="changeUserImage">
-        <input v-model="imageName" class="text-input" ><!--v-model="image?.userImageUrl"-->
+        <input v-model="imageName" class="text-input" >
         <label for="input-file" class="button pp">파일 추가</label>
       </div>
     </div>

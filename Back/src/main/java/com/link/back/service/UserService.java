@@ -494,8 +494,7 @@ public class UserService {
 
 	//User 정보 수정할 때 검증할 메소드
 	public boolean validUpdateInfo(UserUpdateInfoRequest userUpdateInfoRequest) {
-		// if (userUpdateInfoRequest.getPassword() == null)
-		// 	return false;
+
 		if (userUpdateInfoRequest.getName() == null)
 			return false;
 		if (userUpdateInfoRequest.getBirth() == null)
