@@ -68,7 +68,7 @@ const addSkill = function (i: number) {
       .skillLevel(year.value)
       .build();
 
-  removeSkill(i);
+  removeSkill(i + 1);
   skillSelectList.value.push(data);
   saveSkill();
 }
