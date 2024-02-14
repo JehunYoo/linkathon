@@ -6,6 +6,7 @@ import ModalTeam from "@/components/Modal/ModalTeam.vue";
 import {HackathonTeamInfo1DTO} from "@/dto/tmpDTOs/HackathonTeamDTO.ts";
 import {Builder} from "builder-pattern";
 import noImg from "@/assets/noimage.webp"
+import {round} from "@kurkle/color";
 const props = defineProps({
   data: {
     type : Object as PropType<HackathonTeamInfo1DTO>,
@@ -75,7 +76,7 @@ function handleImageError(event: any) {
         </div>
         <div style="margin-left: 12px">
           <span class="normal">남은점수 :</span>
-          <span class="high-right">{{ totalPoints }}</span>
+          <span class="high-right">{{ round(totalPoints) }}</span>
           <span class="normal">/ </span>
           <span class="normal">{{ props.data?.teamMaxPoint }}</span>
         </div>

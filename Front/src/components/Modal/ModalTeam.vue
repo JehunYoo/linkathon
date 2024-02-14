@@ -4,6 +4,7 @@ import ModalEffect from "@/components/Modal/ModalEffect.vue";
 import {onMounted, PropType, ref} from "vue";
 import {HackathonTeamInfo1DTO} from "@/dto/tmpDTOs/HackathonTeamDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+import {round} from "@kurkle/color";
 
 const teamBuildingService = new TeamBuildingService();
 
@@ -38,7 +39,7 @@ const applyTeam = (num: number | undefined) => {
 
 <template>
   <ModalEffect v-if="(data?.teamMaxPoint-totalPoint) > 0 && data?.teamMaxMember > data?.teamMember"
-               :text="'남은 점수 '+ (data?.teamMaxPoint-totalPoint) + '점'"/>
+               :text="'남은 점수 '+ round(data?.teamMaxPoint-totalPoint) + '점'"/>
   <div style="padding: 24px;">
     <div class="container">
       <img :src="data?.members?.[0].userImageUrl" alt="" class="img">
