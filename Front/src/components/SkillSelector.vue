@@ -7,7 +7,6 @@ import store from "@/store";
 import {UserSkillDTO} from "@/dto/tmpDTOs/UserSkillDTO.ts";
 import {SkillRequestDto} from "@/dto/tmpDTOs/skillDTO.ts";
 import {UserService} from "@/api/UserService.ts";
-import Store from "@/store";
 
 const userService = new UserService();
 
@@ -41,13 +40,6 @@ const toggleDropdown = () => {
 const clickDropdownMenu = (item: number) => {
   select.value = item;
 };
-const handleSkillSelect = () => {
-  // 공통 db 전용
-  index.value = selectedSkillId.value - 5;
-
-  //내 db 전용
-  // index.value = selectedSkillId.value-1;
-}
 
 const removeSkill = (skillId: number) => {
   const index = skillSelectList.value.findIndex((data) => data.skill.skillId === skillId)

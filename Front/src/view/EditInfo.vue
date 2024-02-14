@@ -11,6 +11,7 @@ import Store from "@/store/index.ts";
 import {UpdateUserDTO} from "@/dto/UpdateUserDTO.ts";
 import router from "@/router";
 import store from "@/store";
+// import {ImageDTO} from "@/dto/ImageDTO.ts";
 
 const userService = new UserService();
 
@@ -31,12 +32,6 @@ const career = ref<number>(0);
 const registered = ref<boolean>(false);
 const introduce = ref<string>('');
 const currentYear = new Date().getFullYear();// 올해 연도
-const image = Builder<UserImageDTO>()
-    .userImageId(2024)
-    .userImageName('user_image1.jpg')
-    .userImageUrl('http://example.com/images/user_image1.jpg')
-    .userOriginImageName('user_image_origin1.jpg')
-    .build();
 
 const dropdownOpen = ref<boolean>(false);
 const telecom = ref<number>(0);
@@ -82,6 +77,11 @@ onMounted(async () => {
   store.commit('setField', beforeInfo.value?.field);
 });
 
+// const newImage = ref();
+// const imageName = ref<string>('');
+// const imageUrl = ref<string>('');
+const image = ref<UserImageDTO>();
+// const s3Img = ref<ImageDTO>();
 
 //경력인증 했는지 확인
 const isValid = ref<boolean>(false);
@@ -226,18 +226,22 @@ const updateUser = function () {
       .referenceUrl(referenceUrl.value)
       .field(field.value)
       .career(career.value)
-      .userImage(image)
+      .userImage(image.value)
       .registered(registered.value)
       .introduce(introduce.value)
       .build()
-
-  console.log(data);
 
   userService.updateUser(data);
 
   //메인으로 이동
   router.push("/")
 }
+
+// const changeUserImage = async () => {
+//   imageName.value = newImage.value.files[0].name;
+//   s3Img.value = await userService.updateImage(newImage.value.files[0]);
+//   imageUrl.value = s3Img.value?.imageUrl;
+// };
 
 </script>
 
