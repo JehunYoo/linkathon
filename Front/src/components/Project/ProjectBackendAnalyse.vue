@@ -30,11 +30,6 @@ const getBackendReport = async () => {
   refMessageCount.value = await projectService.getBackMetricsMessageCounts(1);
 }
 
-const updateBackendReport = () => {
-  alert("요청이 완료되었습니다. 대기열에 따라 처리 시간이 변동되며 평균적으로 1분이 소모됩니다.")
-  projectService.postBackMetrics(1);
-}
-
 const modalController = ref<boolean>(false);
 
 function modalSwitch() {
@@ -129,7 +124,6 @@ function calculateGrade(score: number): string {
     <h2>* 코드 품질과 보안을 개선하기 위한 분석 결과입니다.</h2>
   </section>
   <div class="button-container">
-    <div class="button" @click="updateBackendReport" v-if="editable">백엔드 분석 요청</div>
     <div class="button" @click="modalSwitch()" v-if="refReport.pageable?.totalPages!==0">분석 상세정보</div>
   </div>
 

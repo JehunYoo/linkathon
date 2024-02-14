@@ -125,6 +125,7 @@ h2 {
 }
 
 h1 {
+  margin-right: 30px;
   color: #303030;
   font-size: 20px;
   font-style: normal;

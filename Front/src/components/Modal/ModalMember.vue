@@ -100,7 +100,7 @@ h2 {
   margin-bottom: 23px;
   padding: 0 24px 0px;
   display: flex;
-  max-width: 100%;
+  max-width: 624px;
   flex-wrap: wrap;
   overflow-x: hidden;
   gap: 16px;

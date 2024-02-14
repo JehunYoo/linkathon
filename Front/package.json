@@ -18,7 +18,6 @@
     "vue": "^3.3.8",
     "vue-router": "^4.2.5",
     "vue3-datepicker": "^0.4.0",
-    "vuedraggable": "^4.1.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

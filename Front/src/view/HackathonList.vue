@@ -74,6 +74,7 @@ function updateStatusName() {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .category-button {
@@ -86,7 +87,7 @@ function updateStatusName() {
 
 hr {
   background: #000;
-  margin-top: 48px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 

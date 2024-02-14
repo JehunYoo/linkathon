@@ -91,6 +91,7 @@ class ReservationManager {
           memberRef.name = memberDetailByUserId.name;
           memberRef.introduce = memberDetailByUserId.introduce;
           memberRef.rating = memberDetailByUserId.rating;
+          //@ts-ignore
           memberRef.userImageUrl = memberDetailByUserId.userImageUrl;
           memberRef.skillSets = memberDetailByUserId.skillSets;
     });
