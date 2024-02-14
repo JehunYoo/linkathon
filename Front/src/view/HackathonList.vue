@@ -39,8 +39,8 @@ function updateStatusName() {
 
 <template>
   <h1>도전으로 기회를 얻으세요</h1>
-  <h2>안녕하세요. 백엔드 개발자입니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다. 동해번쩍 서해번쩍 잘합니다.</h2>
-  <div class="button">해커톤 참여방법 알아보기</div>
+  <h2>Link 해커톤은 모두에게 열려있습니다. 지금 당장 팀을 구성해보세요.</h2>
+<!--  <div class="button">해커톤 참여방법 알아보기</div>-->
   <hr>
   <div class="category-button-container">
     <template v-for="(name, i) in listName">

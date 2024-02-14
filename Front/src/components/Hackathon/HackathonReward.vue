@@ -22,7 +22,6 @@ onMounted(async () => {
   firstWinner.value = winnersRef.value[0];
   secondWinner.value = winnersRef.value[1];
   thirdWinner.value = winnersRef.value[2];
-  console.log("a",firstWinner.value.winnerProjectInfoDto.imgSrc,secondWinner)
 })
 
 </script>

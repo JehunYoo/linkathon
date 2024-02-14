@@ -2,14 +2,19 @@ package com.link.back.service;
 
 // import static com.link.back.common.mapper.ProjectMapper.*;
 
+import static com.link.back.entity.MemberStatus.*;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +34,8 @@ import com.link.back.entity.Team;
 import com.link.back.entity.User;
 import com.link.back.entity.UserTeam;
 import com.link.back.exception.ContentNotFoundException;
+import com.link.back.redmine.dto.request.CreateProjectRequest;
+import com.link.back.redmine.dto.request.CreateUserRequest;
 import com.link.back.redmine.service.RedmineProjectService;
 import com.link.back.repository.ProjectImageRepository;
 import com.link.back.repository.ProjectLikeRepository;
@@ -39,6 +46,7 @@ import com.link.back.repository.UserTeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@EnableScheduling
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -60,33 +68,42 @@ public class ProjectService {
 		// TODO: 프로젝트 이미지 받아와서 업로드
 		ProjectImage projectImage = uploadImage(image);
 		Team team = teamRepository.getReferenceById(projectRequestDto.teamId());
+		team.makeProject();
+		List<UserTeam> userTeamList = team.getUserTeamList();
+		for (UserTeam userTeam : userTeamList) {
+			if(userTeam.getMemberStatus() == JOINED) {
+				userTeam.getUser().startProject();
+			} else {
+				userTeamRepository.delete(userTeam);
+			}
+		}
 		Project project = createProjectEntity(team, projectImage, projectRequestDto);
 		Project save = projectRepository.save(project);
 
-		// try {
-		// 	// 레드마인 프로젝트 생성
-		// 	CreateProjectRequest cpr = CreateProjectRequest.builder()
-		// 		.name(projectRequestDto.projectName())
-		// 		.identifier(projectRequestDto.projectName() + save.getProjectId())
-		// 		.build();
-		// 	redmineProjectService.createProject(cpr);
-		//
-		// 	// 레드마인 유저 생성
-		// 	List<String> logins = userTeamRepository.findMembersByTeamId(projectRequestDto.teamId())
-		// 		.stream()
-		// 		.map(userTeam -> {
-		// 			redmineProjectService.createUser(new CreateUserRequest(userTeam.getUser()));
-		// 			return new CreateUserRequest(userTeam.getUser()).getLogin();
-		// 		})
-		// 		.collect(Collectors.toList());
-		//
-		// 	// 레드마인 프로젝트 유저 등록
-		// 	redmineProjectService.addProjectMembers(logins, cpr.getIdentifier());
-		// } catch (RuntimeException re) {
-		// 	if (projectImage != null)
-		// 		s3Uploader.deleteFile(projectImage.getProjectImageName()); // 이미 올라간 S3 이미지 삭제
-		// 	throw re;
-		// }
+		try {
+			// 레드마인 프로젝트 생성
+			CreateProjectRequest cpr = CreateProjectRequest.builder()
+				.name(projectRequestDto.projectName())
+				.identifier("redmine" + save.getProjectId())
+				.build();
+			redmineProjectService.createProject(cpr);
+
+			// 레드마인 유저 생성
+			List<String> logins = userTeamRepository.findMembersByTeamId(projectRequestDto.teamId())
+				.stream()
+				.map(userTeam -> {
+					redmineProjectService.createUser(new CreateUserRequest(userTeam.getUser(), project));
+					return new CreateUserRequest(userTeam.getUser(), project).getLogin();
+				})
+				.collect(Collectors.toList());
+
+			// 레드마인 프로젝트 유저 등록
+			redmineProjectService.addProjectMembers(logins, cpr.getIdentifier());
+		} catch (RuntimeException re) {
+			if (projectImage != null)
+				s3Uploader.deleteFile(projectImage.getProjectImageName()); // 이미 올라간 S3 이미지 삭제
+			throw re;
+		}
 
 	}
 
@@ -132,9 +149,6 @@ public class ProjectService {
 		if (projectImage == null) {
 			projectImage = project.getProjectImage();
 		}
-		// if (projectImage == null && project.getProjectImage() != null) { // 기존 이미지 삭제
-		// 	s3Uploader.deleteFile(project.getProjectImage().getProjectImageName());
-		// }
 		updateProjectEntity(project, projectImage, projectRequestDto);
 		try {
 			projectRepository.save(project);
@@ -269,6 +283,13 @@ public class ProjectService {
 			}
 		}
 		return projectImage;
+	}
+
+	// 매일 자정에 실행되도록 스케줄링합니다.
+	@Scheduled(cron = "0 0 0 * * *")
+	public void updateHackathonScoresDaily() {
+		// 프로젝트의 hackathon_score를 업데이트하는 메서드를 호출합니다.
+		projectRepository.updateHackathonScore();
 	}
 
 	public Boolean checkLeader(Long myUserId, Long project_id) {
