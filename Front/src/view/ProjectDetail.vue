@@ -151,7 +151,7 @@ watch(() => route.path, () => init());
            :src="projectDetail.imgSrc"
            ref="projectImg" alt="">
 
-      <ProjectLink :project-detail="projectDetail" :update-project="updateUrlOfProject" :editable="isLeader"/>
+      <ProjectLink :project-detail="projectDetail" :update-project="updateUrlOfProject" :editable="isLeader" @handle-project-url="modalController"/>
       <template v-if="isMyProject">
         <h1 class="redmineTitle">레드마인</h1>
         <div class="table">
