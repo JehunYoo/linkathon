@@ -39,7 +39,12 @@ const shortEncoding = (text: string, cut: number): string => {
 </script>
 
 <template>
-  <div v-for="(data) in props.dataList" class="project-card">
+  <div v-if="props.dataList?.length===0" style="height: calc(100vh - 530px); width: 100%; position: relative">
+    <div style="font-size: 25px;position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%)">
+      프로젝트가 없습니다.
+    </div>
+  </div>
+  <div v-for="(data) in props.dataList" class="project-card" v-else>
     <div>
       <img :src="data?.imgSrc" alt="" @click="toProjectDetail(data.projectId)">
     </div>
@@ -75,6 +80,7 @@ const shortEncoding = (text: string, cut: number): string => {
   flex: 0 1 auto;
   max-width: calc(100% - 120px);
   position: relative;
+  width: 100%;
 }
 .name-container {
   display: flex;

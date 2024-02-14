@@ -51,18 +51,22 @@ onMounted(() => {
     <h2>분석용 추가 경로 ("/...")</h2>
     <div class="link-container">
       <input class="input" type="text" v-model="newUrl">
-      <div class="save-button" @click="addDeployUrl">추가</div>
+      <div class="save-button" style="width: 100%" @click="addDeployUrl">추가</div>
     </div>
-    <template v-for="(_, i) in deployUrls" :id="i">
+    <div v-for="(_, i) in deployUrls" :id="i.toString" class="button-container">
       <input class="input" type="text" v-model="deployUrls[i]" >
       <div class="delete-button" @click="deleteDeployUrl(i)">삭제</div>
-    </template>
-
+    </div>
     <div class="button" @click="handleRegistration">등록하기</div>
   </div>
 </template>
 
 <style scoped>
+.button-container {
+  display: flex;
+  gap: 16px;
+  justify-content: right;
+}
 
 .link-container {
   display: flex;
@@ -129,12 +133,13 @@ onMounted(() => {
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
-  height: 40px;
-  line-height: 39px;
+  height: 36px;
+  line-height: 35px;
   border: #7D3BFF solid 1px;
   border-radius: 5px;
   background: #7D3BFF;
   transition: 0.3s color ease;
+  width: 400px;
 }
 
 .button:hover {
@@ -146,14 +151,20 @@ textarea {
   resize: none;
 }
 
+@media screen and (max-width: 694px){
+.button {
+  width: 100%;
+}
+}
 h1 {
+
   color: #303030;
   text-align: center;
   font-size: 28px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 h2 {
@@ -165,8 +176,8 @@ h2 {
 }
 
 .input {
-  width: 476px;
-  height: 40px;
+  width: 100%;
+  height: 36px;
   border-radius: 5px;
   border: 1px solid #000;
   font-family: Pretendard-Regular, serif;

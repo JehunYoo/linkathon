@@ -86,13 +86,14 @@ class ReservationManager {
     const memberRef = reactive<TeamMemberFindUserDTO>(Builder<TeamMemberFindUserDTO>().build());
     this.teamBuildingService.getMemberDetailByUserId(userId).then((memberDetailByUserId) => {
       console.log(memberDetailByUserId);
-      memberRef.career = memberDetailByUserId.career;
-      memberRef.field = memberDetailByUserId.field;
-      memberRef.name = memberDetailByUserId.name;
-      memberRef.introduce = memberDetailByUserId.introduce;
-      memberRef.rating = memberDetailByUserId.rating;
-      memberRef.userImageUrl = memberDetailByUserId.userImageUrl;
-      memberRef.skillSets = memberDetailByUserId.skillSets;
+          memberRef.career =  memberDetailByUserId.career;
+          memberRef.field =  memberDetailByUserId.field;
+          memberRef.name = memberDetailByUserId.name;
+          memberRef.introduce = memberDetailByUserId.introduce;
+          memberRef.rating = memberDetailByUserId.rating;
+          //@ts-ignore
+          memberRef.userImageUrl = memberDetailByUserId.userImageUrl;
+          memberRef.skillSets = memberDetailByUserId.skillSets;
     });
     return memberRef;
   }

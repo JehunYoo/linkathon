@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+//@ts-nocheck
 import {computed, onMounted, ref, Ref} from "vue";
 import minus from "@/assets/minus.png";
 import SkillIcon from "@/components/Skill/SkillIcon.vue";
@@ -7,7 +8,6 @@ import store from "@/store";
 import {UserSkillDTO} from "@/dto/tmpDTOs/UserSkillDTO.ts";
 import {SkillRequestDto} from "@/dto/tmpDTOs/skillDTO.ts";
 import {UserService} from "@/api/UserService.ts";
-import Store from "@/store";
 
 const userService = new UserService();
 

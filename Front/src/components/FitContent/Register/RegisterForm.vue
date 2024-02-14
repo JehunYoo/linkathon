@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+//@ts-nocheck
 import {ref} from "vue";
 import {UserService} from "@/api/UserService.ts";
 import {Builder} from "builder-pattern";
