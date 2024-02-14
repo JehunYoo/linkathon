@@ -151,16 +151,7 @@ watch(() => route.path, () => init());
            :src="projectDetail.imgSrc"
            ref="projectImg" alt="">
 
-      <ProjectLink :project-detail="projectDetail" :update-project="updateUrlOfProject" :editable="isLeader" @handle-project-url="modalController"/>
-      <template v-if="isLeader">
-        <h1 style="margin: 10px 0">이미지 변경</h1>
-        <div class="link-content-container">
-          <input ref="newImage" id="input"
-                 type="file" name="image" accept="image/*" :multiple="false" @change="changeProjectImage">
-          <!--      <input v-model="edit.url"  :placeholder="edit.text + ' 입력'">-->
-        </div>
-      </template>
-      <ProjectLink :project-detail="projectDetail" :update-project="updateProject" :editable="isLeader"/>
+      <ProjectLink :project-detail="projectDetail" :update-project="updateUrlOfProject" :editable="isLeader"/>
       <template v-if="isMyProject">
         <h1 class="redmineTitle">레드마인</h1>
         <div class="table">
