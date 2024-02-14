@@ -1,20 +1,26 @@
 <script lang="ts" setup>
 import UserCard from "@/components/User/UserCard.vue";
 import ModalEffect from "@/components/Modal/ModalEffect.vue";
-import {PropType, ref} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {HackathonTeamInfo1DTO} from "@/dto/tmpDTOs/HackathonTeamDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
-import router from "@/router";
 
 const teamBuildingService = new TeamBuildingService();
 
-defineProps({
+const props = defineProps({
   data: {
-    type: Object as PropType<HackathonTeamInfo1DTO>
+    type: Object as PropType<HackathonTeamInfo1DTO>,
+    required: true
   },
   totalPoint: {
-    type: Number
+    type: Number,
+    required: true
   }
+})
+const applyButtonIsValid = ref<Boolean>();
+
+onMounted(async () => {
+  applyButtonIsValid.value = await teamBuildingService.getApplyButtonIsValid(props.data?.teamId);
 })
 
 const clickedModal = ref<Number>();
@@ -35,17 +41,19 @@ const applyTeam = (num: number | undefined) => {
                :text="'남은 점수 '+ (data?.teamMaxPoint-totalPoint) + '점'"/>
   <div style="padding: 24px;">
     <div class="container">
-      <img :src="data?.members?.[0].profileImageURL" alt="" class="img">
+      <img :src="data?.members?.[0].userImageUrl" alt="" class="img">
       <div class="team-container">
         <h1>{{ data?.teamName }}</h1>
         <section>
           {{ data?.teamDesc }}
         </section>
         <div style="display: flex; justify-content: right">
-          <div @click="applyTeam(data?.teamId)"
-              :class="!((data?.teamMaxPoint-totalPoint) > 0 && data?.teamMaxMember > data?.teamMember)?'button':'button-clickable'">
-            참가 신청
-          </div>
+          <template v-if="applyButtonIsValid">
+            <div @click="applyTeam(data?.teamId)"
+                 :class="!((data?.teamMaxPoint-totalPoint) > 0 && data?.teamMaxMember > data?.teamMember)?'button':'button-clickable'">
+              참가 신청
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -113,6 +121,7 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
 }
 
 h1 {

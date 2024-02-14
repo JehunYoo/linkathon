@@ -90,7 +90,7 @@ class ReservationManager {
           memberRef.name = memberDetailByUserId.name;
           memberRef.introduce = memberDetailByUserId.introduce;
           memberRef.rating = memberDetailByUserId.rating;
-          memberRef.profileImageURL = memberDetailByUserId.profileImageURL;
+          memberRef.userImageUrl = memberDetailByUserId.profileImageURL;
           memberRef.skillSets = memberDetailByUserId.skillSets;
     });
     return memberRef;

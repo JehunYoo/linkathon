@@ -17,6 +17,7 @@ import {SkillType} from "@/dto/tmpDTOs/commonDTO.ts";
 import Modal from "@/components/Modal/Modal.vue";
 import ModalAddDeployUrl from "@/components/Modal/ModalAddDeployUrl.vue";
 import {LighthouseService} from "@/api/LighthouseService.ts";
+import {IssueCountResponseDTO} from "@/dto/tmpDTOs/IssueCountResponseDTO.ts";
 
 
 interface TeamRefs {
@@ -42,6 +43,13 @@ const teamRefs: TeamRefs = {
 const isLeader = ref(false);
 const projectImg = ref();
 const deployUrls = ref<string[]>([]);
+const issueCount: Ref<IssueCountResponseDTO | undefined> = ref();
+const isMyProject: Ref<Boolean | undefined> = ref();
+
+onMounted(async () => {
+  issueCount.value = await projectService.getIssueCount(parseInt(<string>route.params.id));
+  isMyProject.value = await projectService.getIsMyProject(parseInt(<string>route.params.id));
+})
 
 const updateUrlOfProject = async (key: string, url: string) => {
   const isHttpUrl = (url: string) => /^(http|https):\/\//i.test(url);
@@ -141,9 +149,58 @@ watch(() => route.path, () => init());
     <div class="side-container">
       <img class="project-image"
            :src="projectDetail.imgSrc"
-           ref="projectImg">
+           ref="projectImg" alt="">
 
       <ProjectLink :project-detail="projectDetail" :update-project="updateUrlOfProject" :editable="isLeader" @handle-project-url="modalController"/>
+      <template v-if="isLeader">
+        <h1 style="margin: 10px 0">이미지 변경</h1>
+        <div class="link-content-container">
+          <input ref="newImage" id="input"
+                 type="file" name="image" accept="image/*" :multiple="false" @change="changeProjectImage">
+          <!--      <input v-model="edit.url"  :placeholder="edit.text + ' 입력'">-->
+        </div>
+      </template>
+      <ProjectLink :project-detail="projectDetail" :update-project="updateProject" :editable="isLeader"/>
+      <template v-if="isMyProject">
+        <h1 class="redmineTitle">레드마인</h1>
+        <div class="table">
+          <ul>
+            <li>할일</li>
+            <li>진행중</li>
+            <li>완료</li>
+          </ul>
+          <ul>
+            <li>
+              <template v-if="issueCount?.issueCount['할 일']">
+                {{ issueCount?.issueCount['할 일'] }}
+              </template>
+              <template v-else>
+                0
+              </template>
+            </li>
+            <li>
+              <template v-if="issueCount?.issueCount['진행중']">
+                {{ issueCount?.issueCount['진행중'] }}
+              </template>
+              <template v-else>
+                0
+              </template>
+            </li>
+            <li>
+              <template v-if="issueCount?.issueCount['완료']">
+                {{ issueCount?.issueCount['완료'] }}
+              </template>
+              <template v-else>
+                0
+              </template>
+            </li>
+          </ul>
+        </div>
+<!--        <a :href="`http://localhost:9090/projects/redmine${route.params.id}`" target="_blank" class="issueButton">이슈-->
+<!--          관리하기</a>-->
+        <a :href="`http://i10a602.p.ssafy.io:3000/projects/redmine${route.params.id}`" target="_blank" class="issueButton">이슈
+          관리하기</a>
+      </template>
     </div>
     <project-center :project-detail="projectDetail" :editable="isLeader"/>
     <div class="side-container">
@@ -158,7 +215,7 @@ watch(() => route.path, () => init());
                   .skillName(skill.skillName)
                   .skillType(skill.skillType)
                   .skillImgUrl(skill.skillImageUrl)
-                  .build()" height="28px" radius="3px" style="border-bottom: 1px solid" width="28px"/>
+                  .build()" height="28px" radius="3px" width="28px"/>
             </div>
           </div>
         </div>
@@ -201,10 +258,10 @@ h2 {
 
 .skill-list-container {
   margin-bottom: 20px;
-  max-width: 250px;
+  max-width: 300px;
   flex: 1;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -251,5 +308,57 @@ input {
   gap: 12px;
 }
 
+.table {
+  border: 1px solid #b2b2b2;
+  border-radius: 10px;
+}
+
+.table ul {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #b2b2b2;
+}
+
+.table ul:first-child li {
+  font-weight: 700;
+}
+
+.table ul:last-child {
+  border-bottom: none;
+}
+
+.table ul li {
+  list-style: none;
+  width: calc(100% / 3);
+  text-align: center;
+  padding: 10px;
+  border-right: 1px solid #b2b2b2;
+}
+
+.table ul li:last-child {
+  border-right: none;
+}
+
+h1.redmineTitle {
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+a.issueButton {
+  margin-top: 12px;
+  display: block;
+  height: 34px;
+  border-radius: 5px;
+  background: #7d3bff;
+  border: #7d3bff solid 1px;
+  line-height: 33px;
+  color: #FFF;
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: lighter;
+  transition: 0.3s ease color;
+  text-decoration: none;
+}
 </style>
 

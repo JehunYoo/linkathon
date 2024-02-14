@@ -3,9 +3,11 @@
 import Tier from "@/components/Tier.vue";
 import ModalGithubButton from "@/components/Modal/ModalGithubButton.vue";
 import ModalSkill from "@/components/Modal/ModalSkill.vue";
-import {PropType} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {TeamFindSkillDTO, TeamMemberFindUserDTO} from "@/dto/tmpDTOs/teamBuildingDTO.ts";
 import {Builder} from "builder-pattern";
+
+const teamBuildingService = new TeamBuildingService();
 
 const props = defineProps({
   userInfo: {
@@ -14,6 +16,13 @@ const props = defineProps({
   }
 });
 import {computed} from 'vue';
+import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+
+const buttonIsValid = ref<Boolean>();
+
+onMounted(async () => {
+  buttonIsValid.value = await teamBuildingService.getButtonIsVaild(props.userInfo.userId)
+})
 
 // Computed property to group skills by skillType
 const groupedSkills = computed(() => {
@@ -32,7 +41,7 @@ const groupedSkills = computed(() => {
 
 <template>
   <div class="member-modal-container">
-    <img class="profile" alt="" :src="userInfo.profileImageURL">
+    <img class="profile" alt="" :src="userInfo.userImageUrl">
     <div class="member-info-container">
       <div class="member-info">
         <div class="member-name">{{ userInfo.name }}</div>
@@ -44,11 +53,15 @@ const groupedSkills = computed(() => {
       </div>
       <div class="button-wrapper">
         <div class="button-container">
-          <a :href="userInfo.referenceUrl" target="_blank" class="git-button">
-            <ModalGithubButton/>
-          </a>
+          <template v-if="userInfo.referenceUrl">
+            <a :href="userInfo.referenceUrl" target="_blank" class="git-button">
+              <ModalGithubButton/>
+            </a>
+          </template>
           <div class="button-right-container">
-            <slot/>
+            <template v-if="buttonIsValid">
+              <slot/>
+            </template>
           </div>
         </div>
       </div>

@@ -26,6 +26,7 @@ onMounted(async () => {
 
 const getBackendReport = async () => {
   refReport.value = await projectService.getBackMetrics(1);
+  console.log(refReport)
   refMessageCount.value = await projectService.getBackMetricsMessageCounts(1);
 }
 
