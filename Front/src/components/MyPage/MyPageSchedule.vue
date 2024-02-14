@@ -86,19 +86,22 @@ class ReservationManager {
     const memberRef = reactive<TeamMemberFindUserDTO>(Builder<TeamMemberFindUserDTO>().build());
     this.teamBuildingService.getMemberDetailByUserId(userId).then((memberDetailByUserId) => {
       console.log(memberDetailByUserId);
-          memberRef.career =  memberDetailByUserId.career;
-          memberRef.field =  memberDetailByUserId.field;
-          memberRef.name = memberDetailByUserId.name;
-          memberRef.introduce = memberDetailByUserId.introduce;
-          memberRef.rating = memberDetailByUserId.rating;
-          memberRef.userImageUrl = memberDetailByUserId.userImageUrl;
-          memberRef.skillSets = memberDetailByUserId.skillSets;
+      memberRef.career = memberDetailByUserId.career;
+      memberRef.field = memberDetailByUserId.field;
+      memberRef.name = memberDetailByUserId.name;
+      memberRef.introduce = memberDetailByUserId.introduce;
+      memberRef.rating = memberDetailByUserId.rating;
+      memberRef.userImageUrl = memberDetailByUserId.userImageUrl;
+      memberRef.skillSets = memberDetailByUserId.skillSets;
     });
     return memberRef;
   }
 
-  moveToVideo(reservationId: number) {
-    router.push(`/video/${reservationId}`);
+  moveToVideo(reservationId: number, guestId: number) {
+    console.log(reservationId, guestId);
+    router.push({
+      path: `video/${reservationId}/${guestId}`
+    });
   }
 
   formatDate(date: Date) {
@@ -160,7 +163,7 @@ watch(() => route.path, () => {
     <div class="user-card-container">
       <div style="flex: 1;">
         <UserCard v-for="val in arr" :user-info="reservationManager.getMemberDetail(val.userId)"
-                  @click="reservationManager.moveToVideo(val.reservationId)"/>
+                  @click="reservationManager.moveToVideo(val.reservationId, val.userId)"/>
       </div>
     </div>
   </template>
