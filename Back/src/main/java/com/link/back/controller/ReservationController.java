@@ -89,10 +89,12 @@ public class ReservationController {
 	}
 
 	@PostMapping("/{reservation_id}/sessions")
-	public ResponseEntity<String> initializeSession(  // 오픈 비두 세션 초기화
+	public ResponseEntity<Void> initializeSession(  // 오픈 비두 세션 초기화
 		@RequestHeader(value = "Authorization", required = true) String token,
 		@PathVariable("reservation_id") Long reservationId,
-		@RequestBody(required = false) Map<String, Object> params) throws ResponseStatusException {
+		@RequestBody(required = false) Map<String, Object> params) throws
+		OpenViduJavaClientException,
+		OpenViduHttpException {
 
 		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(reservationId, myUserId))
@@ -101,46 +103,32 @@ public class ReservationController {
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID 정보로 세션 ID 생성
 		params.put("customSessionId", sessionId);
 		SessionProperties properties = SessionProperties.fromJson(params).build();
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		try {
-			Session session = openVidu.createSession(properties);
-		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-			e.printStackTrace(pw);
-			// throw new ResponseStatusException(HttpStatus.CONFLICT, e.printStackTrace();, e.getCause());
-
+		Session session = openVidu.createSession(properties);
+		if (session == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return ResponseEntity.ok(sw.toString());
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/{reservation_id}/sessions/connections")
 	public ResponseEntity<String> createConnection( // 오픈 비두 토큰 발급
 		@RequestHeader(value = "Authorization", required = true) String token,
 		@PathVariable("reservation_id") Long reservationId,
-		@RequestBody(required = false) Map<String, Object> params) {
+		@RequestBody(required = false) Map<String, Object> params) throws
+		OpenViduJavaClientException,
+		OpenViduHttpException {
 
 		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(reservationId, myUserId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID로 세션 ID 생성
-		Session session;
-		try {
-			session = openVidu.getActiveSession(sessionId);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "AA: " + e.toString(), e.getCause());
-		}
+		Session session = openVidu.getActiveSession(sessionId);
 		if (session == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-		Connection connection;
-		try {
-			connection = session.createConnection(properties);
-		} catch (Exception e) {
-			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "BB: " + e.toString(), e.getCause());
-
-		}
+		Connection connection = session.createConnection(properties);
 		return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
 	}
 
