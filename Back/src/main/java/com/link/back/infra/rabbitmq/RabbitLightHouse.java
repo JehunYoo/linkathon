@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import com.link.back.service.LighthouseService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class RabbitLightHouse {
 	private final RabbitTemplate rabbitTemplate;

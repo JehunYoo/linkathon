@@ -1,6 +1,7 @@
 package com.link.back.infra.rabbitmq;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.link.back.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class RabbitPublisher {
 	private final RabbitTemplate rabbitTemplate;
