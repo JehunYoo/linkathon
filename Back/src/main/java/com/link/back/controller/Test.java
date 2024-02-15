@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
 	@GetMapping("/test")
 	ResponseEntity<?> test() {
-		return ResponseEntity.ok("HIASDAS");
+		return ResponseEntity.ok("KUAAA");
 	}
 }
