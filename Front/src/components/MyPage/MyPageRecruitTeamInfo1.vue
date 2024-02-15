@@ -14,12 +14,12 @@ const router =  useRouter();
 const team = ref<number>(0);
 const refTeamId = ref<number>(0);
 
-async function acceptSuggestion() {
+const acceptSuggestion = async () => {
   await teamService.postSuggestionByUser(refTeamId.value);
   location.href = "/myPage";
 }
 
-async function declineSuggestion() {
+const declineSuggestion = async () => {
   await teamService.deleteSuggestionByUser(refTeamId.value);
   location.href = "/myPage";
 }
@@ -59,8 +59,8 @@ onMounted(async () => {
   <hr>
   <div class="title-container">
     <h1 class="btn">{{ refTeam?.teamName }}</h1>
-    <div class="accept-button" @click="acceptSuggestion()">수락</div>
-    <div class="remove-button" @click="declineSuggestion()">거절</div>
+    <div class="accept-button" @click="acceptSuggestion">수락</div>
+    <div class="remove-button" @click="declineSuggestion">거절</div>
   </div>
   <h1 class="teamDesc">{{ refTeam?.teamDesc }}</h1>
   <h1>해커톤 정보</h1>
@@ -77,7 +77,7 @@ onMounted(async () => {
   <h1>현재 팀원</h1>
   <div class="user-card-container">
     <div v-for="(data, i) in refTeam?.members" class="user-card">
-        <UserCard :userInfo="data"/>
+      <UserCard :userInfo="data"/>
     </div>
   </div>
 </template>
