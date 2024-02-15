@@ -77,6 +77,10 @@ table {
   border-spacing: 0;
 }
 
+a {
+  cursor: pointer;
+}
+
 * {
   box-sizing: border-box;
   -webkit-user-select:none;
