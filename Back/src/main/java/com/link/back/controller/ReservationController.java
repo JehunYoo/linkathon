@@ -1,5 +1,7 @@
 package com.link.back.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +89,7 @@ public class ReservationController {
 	}
 
 	@PostMapping("/{reservation_id}/sessions")
-	public ResponseEntity<Void> initializeSession(  // 오픈 비두 세션 초기화
+	public ResponseEntity<String> initializeSession(  // 오픈 비두 세션 초기화
 		@RequestHeader(value = "Authorization", required = true) String token,
 		@PathVariable("reservation_id") Long reservationId,
 		@RequestBody(required = false) Map<String, Object> params) throws ResponseStatusException {
@@ -99,12 +101,15 @@ public class ReservationController {
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID 정보로 세션 ID 생성
 		params.put("customSessionId", sessionId);
 		SessionProperties properties = SessionProperties.fromJson(params).build();
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
 		try {
 			Session session = openVidu.createSession(properties);
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, e.toString(), e.getCause());
+			e.printStackTrace(pw);
+			// throw new ResponseStatusException(HttpStatus.CONFLICT, e.printStackTrace();, e.getCause());
 		}
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(sw.toString());
 	}
 
 	@PostMapping("/{reservation_id}/sessions/connections")
