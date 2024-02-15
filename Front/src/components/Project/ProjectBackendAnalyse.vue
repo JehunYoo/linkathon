@@ -119,7 +119,7 @@ function calculateSecurityGrade(score: number): string {
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue((500-data.codeSmells)/5).centerText(calculateGrade((500-data.codeSmells)/5)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue((data.codeSmells)/5).centerText(calculateGrade((500-data.codeSmells)/5)).build()"/>
           <h2>코드 악취</h2>
         </div>
         <div class="chart">
