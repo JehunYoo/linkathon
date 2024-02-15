@@ -34,6 +34,6 @@ public class UserInfoResponsse {
 		this.career = user.getCareer();
 		this.image = user.getUserImage();
 		this.registered = user.isRegistered();
-		this.rating = user.rating;
+		this.rating = user.getRating();
 	}
 }
