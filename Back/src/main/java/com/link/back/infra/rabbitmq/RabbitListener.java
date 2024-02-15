@@ -57,8 +57,6 @@ public class RabbitListener {
 			double duplications = 0.0;
 			double securityRating = 0.0;
 			double vulnerabilities = 0.0;
-			backPerformanceMessageRepository.deleteAll();
-			backPerformanceRepository.deleteAll();
 			for (JsonNode measure : measuresNode) {
 				String metric = measure.get("metric").asText();
 				String value = measure.get("value").asText();
