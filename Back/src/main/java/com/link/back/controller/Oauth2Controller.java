@@ -51,7 +51,7 @@ public class Oauth2Controller {
 
 	// 부분부분 메소드화
 	// 깃허브 계정이 없다면 올 수 없음
-	@GetMapping("/oauth2/github")
+	@GetMapping("/api/oauth2/github")
 	public void githubLogin(@RequestParam String code, HttpServletResponse response) throws IOException {
 
 		RestTemplate tokenRequestTemplate = new RestTemplate();
