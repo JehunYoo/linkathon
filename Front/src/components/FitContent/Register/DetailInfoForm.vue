@@ -42,7 +42,6 @@ const addUserInfo = function () {
       .email(email.value)
       .userSkills(skills.value)
       .field(field.value)
-      .career(career.value)
       .referenceUrl(referenceUrl.value)
       .introduce(introduce.value)
       .registered(registered.value)
