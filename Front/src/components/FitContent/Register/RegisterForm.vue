@@ -146,6 +146,7 @@ const register = function () {
       .birth(new Date(year.value.toString() + "-" + month.value.toString() + "-" + day.value.toString()))
       .phoneNumber(firstNumber.value + secondNumber.value + lastNumber.value)
       .gender(gender.value)
+      .career(career.value)
       .build();
 
   userService.sign(user);
