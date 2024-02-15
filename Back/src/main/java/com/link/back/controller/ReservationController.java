@@ -139,6 +139,7 @@ public class ReservationController {
 			connection = session.createConnection(properties);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "BB: " + e.toString(), e.getCause());
+
 		}
 		return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
 	}
