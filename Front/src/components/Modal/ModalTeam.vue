@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import UserCard from "@/components/User/UserCard.vue";
 import ModalEffect from "@/components/Modal/ModalEffect.vue";
-import {PropType, ref} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {HackathonTeamInfo1DTO} from "@/dto/tmpDTOs/HackathonTeamDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+import {round} from "@kurkle/color";
 
 const teamBuildingService = new TeamBuildingService();
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object as PropType<HackathonTeamInfo1DTO>,
     required: true
@@ -16,6 +17,11 @@ defineProps({
     type: Number,
     required: true
   }
+})
+const applyButtonIsValid = ref<Boolean>();
+
+onMounted(async () => {
+  applyButtonIsValid.value = await teamBuildingService.getApplyButtonIsValid(props.data?.teamId);
 })
 
 const clickedModal = ref<Number>();
@@ -33,7 +39,7 @@ const applyTeam = (num: number | undefined) => {
 
 <template>
   <ModalEffect v-if="(data?.teamMaxPoint-totalPoint) > 0 && data?.teamMaxMember > data?.teamMember"
-               :text="'남은 점수 '+ (data?.teamMaxPoint-totalPoint) + '점'"/>
+               :text="'남은 점수 '+ round(data?.teamMaxPoint-totalPoint) + '점'"/>
   <div style="padding: 24px;">
     <div class="container">
       <img :src="data?.members?.[0].userImageUrl" alt="" class="img">
@@ -43,10 +49,12 @@ const applyTeam = (num: number | undefined) => {
           {{ data?.teamDesc }}
         </section>
         <div style="display: flex; justify-content: right">
-          <div @click="applyTeam(data?.teamId)"
-              :class="!((data?.teamMaxPoint-totalPoint) > 0 && data?.teamMaxMember > data?.teamMember)?'button':'button-clickable'">
-            참가 신청
-          </div>
+          <template v-if="applyButtonIsValid">
+            <div @click="applyTeam(data?.teamId)"
+                 :class="!((data?.teamMaxPoint-totalPoint) > 0 && data?.teamMaxMember > data?.teamMember)?'button':'button-clickable'">
+              참가 신청
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -118,6 +126,7 @@ h2 {
 }
 
 h1 {
+  margin-right: 30px;
   color: #303030;
   font-size: 20px;
   font-style: normal;

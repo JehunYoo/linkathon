@@ -25,6 +25,8 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['handleProjectUrl']);
+
 const editList: EditLink[] = reactive([]);
 
 watch(
@@ -41,7 +43,7 @@ watch(
       editList.push(
           Builder<EditLink>()
               .url(ref(props.projectDetail?.deployUrl))
-              .text("프로젝트 링크")
+              .text("프로젝트 배포 링크")
               .isEditing(false)
               .key("deployUrl")
               .build()
@@ -64,6 +66,11 @@ watch(
 //   editRef.push(temp);
 // }
 const editStart = (e: EditLink) => {
+  console.log(e.key);
+  if (e.key == 'deployUrl') {
+    emit('handleProjectUrl');
+    return;
+  }
   if (e.isEditing) {
     props.updateProject(e.key, e.url);
   }
@@ -77,7 +84,7 @@ const editStart = (e: EditLink) => {
     <h1>링크</h1>
     <template v-for="(edit) in editList">
       <div class="link-content-container" v-if="!edit.isEditing">
-        <div style="flex: 1; padding-top: 3px">
+        <div style="flex: 1; padding-top: 3px; overflow: hidden;">
           <h2>{{ edit.text }}</h2>
           <h3>{{ edit.url }}</h3>
         </div>
@@ -131,7 +138,7 @@ input {
 }
 
 .button {
-  width: 53px;
+  min-width: 53px;
   height: 36px;
   border-radius: 5px;
   border: 1px solid #7D3BFF;

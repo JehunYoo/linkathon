@@ -1,10 +1,5 @@
 package com.link.back.infra.rabbitmq;
 
-import static com.link.back.config.AppConstant.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +8,8 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.link.back.entity.BackPerformance;
@@ -24,7 +19,6 @@ import com.link.back.repository.BackPerformanceMessageRepository;
 import com.link.back.repository.BackPerformanceRepository;
 import com.link.back.repository.ProjectRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +36,8 @@ public class RabbitListener {
 		value = @Queue(name="sonarqube_response_queue"),
 		key = "sonarqube_response_queue")
 	)
+
+	@Transactional
 	public void receiveMessage(String message) {
 		// result 저장
 		try {
