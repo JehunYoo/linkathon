@@ -86,12 +86,10 @@ public class ReservationController {
 	}
 
 	@PostMapping("/{reservation_id}/sessions")
-	public ResponseEntity<Void> initializeSession(  // 오픈 비두 세션 초기화
+	public ResponseEntity<String> initializeSession(  // 오픈 비두 세션 초기화
 		@RequestHeader(value = "Authorization", required = true) String token,
 		@PathVariable("reservation_id") Long reservationId,
-		@RequestBody(required = false) Map<String, Object> params) throws
-		OpenViduJavaClientException,
-		OpenViduHttpException {
+		@RequestBody(required = false) Map<String, Object> params) {
 
 		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(reservationId, myUserId))
@@ -100,8 +98,13 @@ public class ReservationController {
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID 정보로 세션 ID 생성
 		params.put("customSessionId", sessionId);
 		SessionProperties properties = SessionProperties.fromJson(params).build();
-		Session session = openVidu.createSession(properties);
-		return new ResponseEntity<>(HttpStatus.OK);
+		StringBuilder sb = new StringBuilder();
+		try {
+			Session session = openVidu.createSession(properties);
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			sb.append(e.getMessage()).append(" : ");
+		}
+		return ResponseEntity.ok(sb.toString());
 	}
 
 	@PostMapping("/{reservation_id}/sessions/connections")
