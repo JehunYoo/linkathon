@@ -119,6 +119,7 @@ img {
   flex-direction: row;
   gap: 20px;
   flex-wrap: wrap;
+  cursor: pointer;
 }
 
 .hackathon-banner-list-container {

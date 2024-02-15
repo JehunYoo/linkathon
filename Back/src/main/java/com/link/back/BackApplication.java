@@ -7,14 +7,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import jakarta.annotation.PostConstruct;
+
 @EnableFeignClients
 @EnableScheduling
-
 @SpringBootApplication
 public class BackApplication {
-
+	@PostConstruct
+	public void started() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+	}
 	public static void main(String[] args) {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));	// EC2에서도 Tomcat 서버의 시간을 서울 시간으로 변경한다.
 		SpringApplication.run(BackApplication.class, args);
 	}
 
