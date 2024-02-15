@@ -6,7 +6,9 @@ import {onMounted, watch, Ref, ref} from "vue";
 import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
 import {useRoute, useRouter} from "vue-router";
+import {TeamService} from "@/api/TeamService.ts";
 
+const teamService = new TeamService();
 const teamBuildingService = new TeamBuildingService();
 const refTeam: Ref<AppliedTeamDTO | undefined> = ref();
 const route = useRoute();
@@ -15,12 +17,12 @@ const team = ref<number>(0);
 const refTeamId = ref<number>(0);
 
 const acceptSuggestion = (teamId : number) => {
-  teamService.postSuggestionByUser(teamId.value);
+  teamService.postSuggestionByUser(teamId);
   location.href = "/myPage";
 }
 
 const declineSuggestion = (teamId : number) => {
-  teamService.deleteSuggestionByUser(teamId.value);
+  teamService.deleteSuggestionByUser(teamId);
   location.href = "/myPage";
 }
 
@@ -59,6 +61,7 @@ onMounted(async () => {
   <hr>
   <div class="title-container">
     <h1 class="btn">{{ refTeam?.teamName }}</h1>
+    {{refTeam?.teamId}}
     <div class="accept-button" @click="acceptSuggestion(refTeam?.teamId)">수락</div>
     <div class="remove-button" @click="declineSuggestion(refTeam?.teamId)">거절</div>
   </div>
