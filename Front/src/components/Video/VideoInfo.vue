@@ -68,9 +68,9 @@ const changeToKorean = (field: string): string => {
       <ModalSkill v-for="[key, value] in skillMap" :skill-info="value" :title="key.toString()" font-size="18px"
                   font-weight="500" margin-bottom="10px"/>
     </div>
-    <div class="button">
-      합류 요청
-    </div>
+<!--    <div class="button">-->
+<!--      합류 요청-->
+<!--    </div>-->
   </div>
 </template>
 

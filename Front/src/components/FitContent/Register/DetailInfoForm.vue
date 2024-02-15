@@ -15,7 +15,7 @@ const email = computed(() => String(Store.state.email));
 const skills = computed(() => Store.state.skillSelectList);
 const referenceUrl = ref<string>('');
 const field = computed(() => String(Store.state.field));
-const career = ref<number>(0);
+// const career = ref<number>(0);
 const registered = ref<boolean>(false);
 const introduce = ref<string>('');
 
