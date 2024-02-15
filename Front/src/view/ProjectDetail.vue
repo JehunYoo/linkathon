@@ -19,7 +19,7 @@ import ModalAddDeployUrl from "@/components/Modal/ModalAddDeployUrl.vue";
 import {LighthouseService} from "@/api/LighthouseService.ts";
 import {IssueCountResponseDTO} from "@/dto/tmpDTOs/IssueCountResponseDTO.ts";
 
-const {VITE_VUE_API_URL, VITE_VUE_API_LIVE_URL} = import.meta.env;
+const {VITE_VUE_API_LIVE_URL} = import.meta.env;
 
 interface TeamRefs {
   skillsRef: Ref<TeamSkillDto[]>

@@ -3,7 +3,7 @@
 import VideoPlayer from "@/components/Video/VideoPlayer.vue";
 import VideoInfo from "@/components/Video/VideoInfo.vue";
 import ModalEffect from "@/components/Modal/ModalEffect.vue";
-import {onMounted, PropType, Ref, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import {MemberDetailResponseDto} from "@/dto/tmpDTOs/memberDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
 import router from "@/router";
@@ -11,7 +11,7 @@ import {useRoute} from "vue-router";
 
 const route = useRoute();
 
-const reservationId = route.params.rid;
+const reservationId = parseInt(route.params.rid as string);
 const guestId = route.params.uid;
 
 const teamBuildingService = new TeamBuildingService();
