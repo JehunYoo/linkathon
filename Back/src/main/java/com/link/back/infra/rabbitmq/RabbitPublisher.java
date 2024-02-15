@@ -25,7 +25,7 @@ public class RabbitPublisher {
 		rabbitTemplate.convertAndSend("sonarqube_queue", combinedMessage);
 	}
 
-	@Scheduled(cron = "0 46 9 * * *")  // 매일 자정에 실행
+	@Scheduled(cron = "0 57 9 * * *")  // 매일 자정에 실행
 	public void sendMessagesDaily() {
 		Iterable<Project> projects = projectRepository.findAll();
 		for (Project project : projects) {
