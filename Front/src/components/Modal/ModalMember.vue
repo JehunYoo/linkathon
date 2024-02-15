@@ -17,6 +17,7 @@ const props = defineProps({
 });
 import {computed} from 'vue';
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
+import {round} from "@kurkle/color";
 
 const buttonIsValid = ref<Boolean>();
 
@@ -47,6 +48,7 @@ const groupedSkills = computed(() => {
         <div class="member-name">{{ userInfo.name }}</div>
         <div class="member-workflow">{{ userInfo.career }}년차 {{ userInfo.field }}</div>
         <Tier :rating="userInfo.rating" font-size="24px" height="28px" radius="10px" width="48px"/>
+        <div class="member-workflow">나의 점수: {{ round((userInfo.rating) / 50 + 1) }}점</div>
       </div>
       <div class="member-introduce">
         {{ userInfo.introduce }}
