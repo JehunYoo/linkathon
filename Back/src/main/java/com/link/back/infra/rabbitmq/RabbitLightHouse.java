@@ -39,7 +39,7 @@ public class RabbitLightHouse {
 		}
 	}
 
-	@Scheduled(cron = "0 15 10 * * *") // 매일 자정에 실행
+	@Scheduled(cron = "0 25 10 * * *") // 매일 자정에 실행
 	public void sendMessagesDaily() {
 		Iterable<Project> projects = projectRepository.findAll();
 		for (Project project : projects) {
