@@ -117,7 +117,7 @@ public class Oauth2Controller {
 			Optional<User> userOptional = userRepository.findByEmail(email);
 
 			if (userOptional.isEmpty()) {
-				String registerUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/register")
+				String registerUrl = UriComponentsBuilder.fromUriString("https://i10a602.p.ssafy.io/register")
 					.queryParam("email", email)
 					.build()
 					//이 부분은 더 확인해봐야함
