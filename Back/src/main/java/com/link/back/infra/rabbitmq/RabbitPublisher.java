@@ -22,7 +22,6 @@ public class RabbitPublisher {
 	public void sendMessages(Long projectId) {
 		String gitUrl = projectRepository.findById(projectId).get().getProjectUrl();
 		String combinedMessage = projectId + " " + gitUrl;
-		System.out.println(combinedMessage);
 		rabbitTemplate.convertAndSend("sonarqube_queue", combinedMessage);
 	}
 
