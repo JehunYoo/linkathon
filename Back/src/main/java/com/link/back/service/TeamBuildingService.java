@@ -246,10 +246,11 @@ public class TeamBuildingService {
 			user.getRating() / 50 + 1 > hackathon.getMaxPoint() - nowPoint) {
 			return false;
 		}
-		return userTeamRepository.findUserTeamsByUserId(userId).stream()
-			.noneMatch(userTeam -> userTeam.getUser().getJoinStatus() || userTeam.getTeam()
-				.getTeamId()
-				.equals(team.getTeamId()));
+		// return userTeamRepository.findUserTeamsByUserId(userId).stream()
+		// 	.noneMatch(userTeam -> userTeam.getUser().getJoinStatus() || userTeam.getTeam()
+		// 		.getTeamId()
+		// 		.equals(team.getTeamId()));
+		return true;
 	}
 
 	public Boolean findApplyButtonIsVaild(Long teamId, Long userId) {
