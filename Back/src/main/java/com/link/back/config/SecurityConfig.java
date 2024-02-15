@@ -48,7 +48,6 @@ public class SecurityConfig {
                                 .requestMatchers("api/**").permitAll()
                                 .requestMatchers("/githubLogin/success").permitAll()
                                 .requestMatchers("/error").permitAll()
-                            .requestMatchers("/login").permitAll()
                                 .anyRequest().authenticated()
                 )
             .cors(withDefaults())
