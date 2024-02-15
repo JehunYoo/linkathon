@@ -105,6 +105,7 @@ public class ReservationController {
 		PrintWriter pw = new PrintWriter(sw);
 		try {
 			Session session = openVidu.createSession(properties);
+
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace(pw);
 			// throw new ResponseStatusException(HttpStatus.CONFLICT, e.printStackTrace();, e.getCause());
