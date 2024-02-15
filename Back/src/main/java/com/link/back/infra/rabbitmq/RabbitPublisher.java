@@ -9,6 +9,7 @@ import com.link.back.dto.response.ProjectResponseDto;
 import com.link.back.entity.Project;
 import com.link.back.repository.ProjectRepository;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,13 +26,17 @@ public class RabbitPublisher {
 		rabbitTemplate.convertAndSend("sonarqube_queue", combinedMessage);
 	}
 
-	@Scheduled(cron = "0 40 12 * * *", zone = "Asia/Seoul")  // 매일 자정에 실행
+	// @Scheduled(cron = "0 40 12 * * *", zone = "Asia/Seoul")  // 매일 자정에 실행
+	@Scheduled(fixedRate = 1000)
 	public void sendMessagesDaily() {
 		Iterable<Project> projects = projectRepository.findAll();
 		for (Project project : projects) {
 			sendMessages(project.getProjectId());
 		}
 	}
-
+	@PostConstruct
+	private void onStartup() {
+		sendMessagesDaily();
+	}
 
 }
