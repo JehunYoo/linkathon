@@ -108,6 +108,7 @@ public class ReservationController {
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace(pw);
 			// throw new ResponseStatusException(HttpStatus.CONFLICT, e.printStackTrace();, e.getCause());
+
 		}
 		return ResponseEntity.ok(sw.toString());
 	}
