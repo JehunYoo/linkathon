@@ -122,6 +122,17 @@ const handleEditSchedule = () => {
   alert('수정되었습니다.');
 }
 
+const handleClickReservation = (val: ReservationResponse) => {
+  const d = new Date(val.reservationDatetime);
+  const now = new Date();
+  const diff = Math.abs(now.getTime() - d.getTime()) / (1000 * 60 * 60);
+  if (diff > 1){
+    alert("지금 입장 가능한 시간이 아닙니다.");
+    return;
+  }
+  reservationManager.moveToVideo(val.reservationId, val.userId);
+}
+
 onMounted(() => {
   scheduleManager.initScheduleSet(selectedTime.value);
   reservationManager.getMyReservations().then(map => {
@@ -164,7 +175,7 @@ watch(() => route.path, () => {
     <div class="user-card-container">
       <div style="flex: 1;">
         <UserCard v-for="val in arr" :user-info="reservationManager.getMemberDetail(val.userId)"
-                  @click="reservationManager.moveToVideo(val.reservationId, val.userId)"/>
+                  @click="handleClickReservation(val)"/>
       </div>
     </div>
   </template>
