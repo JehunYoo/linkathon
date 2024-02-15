@@ -9,14 +9,10 @@ import ThinDonutChart from "@/components/Chart/ThinDonutChart.vue";
 import {Builder} from "builder-pattern";
 import {BackPerformanceMessageResponseDto} from "@/dto/BackPerformanceMessageResponseDto.ts";
 
-const props = defineProps({
+defineProps({
   editable: {
     type: Boolean,
     default: true
-  },
-  projectId: {
-    type : Number,
-    require : true
   }
 });
 
@@ -24,17 +20,25 @@ const projectService = new ProjectService();
 let refReport: Ref<PageableBackPerformance> = ref({} as PageableBackPerformance);
 const refMessageCount: Ref<BackPerformanceMessageResponseDto> = ref({} as BackPerformanceMessageResponseDto);
 
+// 현재 URI 가져오기
+const currentUri = window.location.href;
+// URI에서 숫자 부분 추출
+const regex = /\/(\d+)$/;
+const match = currentUri.match(regex);
+let extractedNumber = 0;
+if (match) {
+  extractedNumber = parseInt(match[1]);
+}
+
 onMounted(async () => {
   await getBackendReport();
 })
 
 //@ts-nocheck
 const getBackendReport = async () => {
-  if (props.projectId) {
-    refReport.value = await projectService.getBackMetrics(props.projectId);
+    refReport.value = await projectService.getBackMetrics(extractedNumber);
     console.log(refReport)
-    refMessageCount.value = await projectService.getBackMetricsMessageCounts(props.projectId);
-  }
+    refMessageCount.value = await projectService.getBackMetricsMessageCounts(extractedNumber);
 }
 
 const modalController = ref<boolean>(false);

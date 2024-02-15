@@ -8,16 +8,23 @@ import Modal from "@/components/Modal/Modal.vue";
 import RadarChart from "@/components/Chart/RadarChart.vue";
 import {round} from "@kurkle/color";
 
-const props = defineProps({
+// 현재 URI 가져오기
+const currentUri = window.location.href;
+// URI에서 숫자 부분 추출
+const regex = /\/(\d+)$/;
+const match = currentUri.match(regex);
+let extractedNumber = 0;
+if (match) {
+  extractedNumber = parseInt(match[1]);
+}
+
+defineProps({
   editable: {
     type: Boolean,
     default: true
-  },
-  projectId: {
-    type : Number,
-    require : true
   }
 });
+
 const calculateAverageScores = (reports: Report[]) => {
   const scoreSums = new Map<string, number>();
   const scoreCounts = new Map<string, number>();
@@ -49,13 +56,11 @@ let refReport: Ref<Report[]> = ref([]);
 
 onMounted(async () => {
   await getFrontendReport();
-})
-
+});
 const getFrontendReport = async () => {
-  if (props.projectId) {
-    refReport.value = await lighthouseService.getLighthouseReport(props.projectId);
-  }
+    refReport.value = await lighthouseService.getLighthouseReport(extractedNumber);
 }
+
 const buildObject = (score: number) => {
   return Builder<PerformanceChartDTO>()
       .centerText((score).toString())
@@ -80,6 +85,7 @@ const detail = ref<number>(-1);
 const detailOpen = (num: number) => {
   detail.value = num;
 }
+
 </script>
 
 <template>
