@@ -37,8 +37,7 @@ class UserService {
 
         try {
             // 추출한 URL로 리다이렉트 수행
-            window.location.href = "https://i10a602.p.ssafy.io/api/login/oauth2/authorization/google?redirect_uri=https://i10a602.p.ssafy.io/api/login/oauth2/code/google"
-
+            window.location.href = "https://i10a602.p.ssafy.io:8080/oauth2/authorization/google?redirect_uri=https://i10a602.p.ssafy.io:8080/api/oauth2/authorization/google"
         } catch (error) {
             console.error('Error during Google login:', error);
             // 에러 처리 로직 추가
