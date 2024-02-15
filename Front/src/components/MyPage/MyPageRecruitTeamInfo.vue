@@ -118,6 +118,7 @@ h2 {
 
 
 .title-container {
+  margin-top: 16px;
   display: flex;
   gap: 10px;
 }
@@ -149,14 +150,17 @@ h2 {
 .teamListBox {
   display: flex;
   align-items: center;
-  width: 400px;
+  flex-wrap: wrap;
+  width: 100%;
   justify-content: flex-start;
 }
 
 .teamBtn {
-  width: 80px;
+  white-space: nowrap;
   margin-right: 16px;
   margin-bottom: 8px;
+  padding: 7px 13px;
+  border-radius: 8px;
 }
 
 .teamDesc {
@@ -167,10 +171,13 @@ h2 {
 
 .click {
   color: #303030;
+  border: 1px #303030 solid;
 }
 
 .nonClick {
-  color: #7d3bff;
+  color: white;
+  border: 1px #7d3bff solid;
+  background: #7d3bff;
 }
 
 @media screen and (max-width: 697px) {
