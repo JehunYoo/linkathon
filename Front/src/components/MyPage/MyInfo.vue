@@ -169,6 +169,7 @@ h2 {
   border-radius: 10px;
   width: 200px;
   height: 200px;
+  object-fit: cover;
 }
 
 .info-text {

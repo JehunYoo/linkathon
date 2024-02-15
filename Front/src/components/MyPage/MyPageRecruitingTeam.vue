@@ -84,12 +84,12 @@ const modalController = () => {
   </Modal>
   <div class="recruiting-container">
     <h1>모집중인 팀</h1>
-    <template v-if="isLeader">
+    <div v-if="isLeader" style="display: flex">
       <template v-if="refTeam?.teamMaxMember === refTeam?.teamMember">
-        <div class="remove-button" @click="modalController">해커톤 참가</div>
+        <div class="apply-button" @click="modalController">해커톤 참가</div>
       </template>
       <div class="remove-button" @click="deleteTeam">팀 삭제</div>
-    </template>
+    </div>
     <template v-else>
       <div class="remove-button" @click="removeTeam">팀 떠나기</div>
     </template>
@@ -158,6 +158,27 @@ const modalController = () => {
 </template>
 
 <style scoped>
+
+.apply-button {
+  width: 110px;
+  height: 34px;
+  border-radius: 5px;
+  background: #7d3bff;
+  border: #7d3bff solid 1px;
+  color: #F2F2F2;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 33px;
+  transition: color 0.3s ease;
+}
+
+.apply-button:hover {
+  background: white;
+  color: #7d3bff;
+}
+
 @media screen and (max-width: 1307px) {
   .content {
     flex-direction: column;
@@ -218,6 +239,7 @@ const modalController = () => {
   font-weight: 700;
   line-height: 33px;
   transition: color 0.3s ease;
+  margin-left: 16px;
 }
 
 .remove-button:hover {
@@ -227,6 +249,8 @@ const modalController = () => {
 
 .recruiting-container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 h1 {
@@ -235,6 +259,7 @@ h1 {
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
+  min-width: 200px;
 }
 
 h2 {
