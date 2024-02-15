@@ -62,7 +62,7 @@ onMounted(async () => {
     <section>
       {{ props.projectDetail.projectDesc }}
     </section>
-    <ProjectAnalyse :editable="editable"/>
+    <ProjectAnalyse :editable="editable" :projectId="props.projectDetail?.projectId"/>
     <template v-if="gitStatusRef && gitStatusRef.length > 0">
       <GitAnalyse :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
     </template>

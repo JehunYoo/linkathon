@@ -9,11 +9,15 @@ import ThinDonutChart from "@/components/Chart/ThinDonutChart.vue";
 import {Builder} from "builder-pattern";
 import {BackPerformanceMessageResponseDto} from "@/dto/BackPerformanceMessageResponseDto.ts";
 
-defineProps({
+const props = defineProps({
   editable: {
     type: Boolean,
     default: true
   },
+  projectId: {
+    type : Number,
+    require : true
+  }
 });
 
 const projectService = new ProjectService();
@@ -24,10 +28,13 @@ onMounted(async () => {
   await getBackendReport();
 })
 
+//@ts-nocheck
 const getBackendReport = async () => {
-  refReport.value = await projectService.getBackMetrics(1);
-  console.log(refReport)
-  refMessageCount.value = await projectService.getBackMetricsMessageCounts(1);
+  if (props.projectId) {
+    refReport.value = await projectService.getBackMetrics(props.projectId);
+    console.log(refReport)
+    refMessageCount.value = await projectService.getBackMetricsMessageCounts(props.projectId);
+  }
 }
 
 const modalController = ref<boolean>(false);
@@ -66,6 +73,7 @@ function calculateSecurityGrade(score: number): string {
     return 'A';
   }
 }
+
 </script>
 
 <template>
@@ -129,7 +137,7 @@ function calculateSecurityGrade(score: number): string {
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(data.securityRating * 100).centerText(calculateSecurityGrade((data.securityRating * 100))).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue((1/data.securityRating) * 100).centerText(calculateSecurityGrade((data.securityRating * 100))).build()"/>
           <h2>보안</h2>
         </div>
       </template>

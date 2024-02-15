@@ -8,11 +8,15 @@ import Modal from "@/components/Modal/Modal.vue";
 import RadarChart from "@/components/Chart/RadarChart.vue";
 import {round} from "@kurkle/color";
 
-defineProps({
+const props = defineProps({
   editable: {
     type: Boolean,
     default: true
   },
+  projectId: {
+    type : Number,
+    require : true
+  }
 });
 const calculateAverageScores = (reports: Report[]) => {
   const scoreSums = new Map<string, number>();
@@ -48,7 +52,9 @@ onMounted(async () => {
 })
 
 const getFrontendReport = async () => {
-  refReport.value = await lighthouseService.getLighthouseReport(1);
+  if (props.projectId) {
+    refReport.value = await lighthouseService.getLighthouseReport(props.projectId);
+  }
 }
 const buildObject = (score: number) => {
   return Builder<PerformanceChartDTO>()
