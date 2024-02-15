@@ -1,5 +1,7 @@
 package com.link.back.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.link.back.dto.request.ReservationRequest;
 import com.link.back.dto.response.ReservationResponse;
@@ -89,7 +92,7 @@ public class ReservationController {
 	public ResponseEntity<String> initializeSession(  // 오픈 비두 세션 초기화
 		@RequestHeader(value = "Authorization", required = true) String token,
 		@PathVariable("reservation_id") Long reservationId,
-		@RequestBody(required = false) Map<String, Object> params) {
+		@RequestBody(required = false) Map<String, Object> params) throws ResponseStatusException {
 
 		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(reservationId, myUserId))
@@ -98,34 +101,44 @@ public class ReservationController {
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID 정보로 세션 ID 생성
 		params.put("customSessionId", sessionId);
 		SessionProperties properties = SessionProperties.fromJson(params).build();
-		StringBuilder sb = new StringBuilder();
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
 		try {
 			Session session = openVidu.createSession(properties);
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-			sb.append(e.getMessage()).append(" : ");
+			e.printStackTrace(pw);
+			// throw new ResponseStatusException(HttpStatus.CONFLICT, e.printStackTrace();, e.getCause());
 		}
-		return ResponseEntity.ok(sb.toString());
+		return ResponseEntity.ok(sw.toString());
 	}
 
 	@PostMapping("/{reservation_id}/sessions/connections")
 	public ResponseEntity<String> createConnection( // 오픈 비두 토큰 발급
 		@RequestHeader(value = "Authorization", required = true) String token,
 		@PathVariable("reservation_id") Long reservationId,
-		@RequestBody(required = false) Map<String, Object> params) throws
-		OpenViduJavaClientException,
-		OpenViduHttpException {
+		@RequestBody(required = false) Map<String, Object> params) {
 
 		Long myUserId = this.getUserIdFromToken(token);
 		if (!reservationService.checkReservation(reservationId, myUserId))
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 		String sessionId = "RS-" + Long.toString(reservationId); // 예약 ID로 세션 ID 생성
-		Session session = openVidu.getActiveSession(sessionId);
+		Session session;
+		try {
+			session = openVidu.getActiveSession(sessionId);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "AA: " + e.toString(), e.getCause());
+		}
 		if (session == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-		Connection connection = session.createConnection(properties);
+		Connection connection;
+		try {
+			connection = session.createConnection(properties);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "BB: " + e.toString(), e.getCause());
+		}
 		return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
 	}
 
