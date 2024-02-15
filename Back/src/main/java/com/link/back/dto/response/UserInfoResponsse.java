@@ -22,6 +22,7 @@ public class UserInfoResponsse {
 	private int career;
 	private UserImage image;
 	private boolean registered;
+	private int rating;
 
 	@Builder
 	public UserInfoResponsse(User user) {
@@ -33,5 +34,6 @@ public class UserInfoResponsse {
 		this.career = user.getCareer();
 		this.image = user.getUserImage();
 		this.registered = user.isRegistered();
+		this.rating = user.rating;
 	}
 }
