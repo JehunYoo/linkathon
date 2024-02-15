@@ -19,15 +19,13 @@ public class RabbitPublisher {
 	private final ProjectRepository projectRepository;
 
 	public void sendMessages(Long projectId) {
-		// todo : Project 테이블에서 gitUrl 가져오는 로직 테스트
-
 		String gitUrl = projectRepository.findById(projectId).get().getProjectUrl();
 		String combinedMessage = projectId + " " + gitUrl;
 		System.out.println(combinedMessage);
 		rabbitTemplate.convertAndSend("sonarqube_queue", combinedMessage);
 	}
 
-	@Scheduled(cron = "0 31 12 * * *", zone = "Asia/Seoul")  // 매일 자정에 실행
+	@Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")  // 매일 자정에 실행
 	public void sendMessagesDaily() {
 		Iterable<Project> projects = projectRepository.findAll();
 		for (Project project : projects) {
