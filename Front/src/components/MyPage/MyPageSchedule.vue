@@ -126,7 +126,7 @@ const handleClickReservation = (val: ReservationResponse) => {
   const d = new Date(val.reservationDatetime);
   const now = new Date();
   const diff = Math.abs(now.getTime() - d.getTime()) / (1000 * 60 * 60);
-  if (diff > 1){
+  if (diff > 2){ // 2시간 이내로 입장
     alert("지금 입장 가능한 시간이 아닙니다.");
     return;
   }
@@ -175,7 +175,7 @@ watch(() => route.path, () => {
     <div class="user-card-container">
       <div style="flex: 1;">
         <UserCard v-for="val in arr" :user-info="reservationManager.getMemberDetail(val.userId)"
-                  @click="handleClickReservation(val)"/>
+                  @click="handleClickReservation(val)"><template v-slot:subInfo><span>예약: {{new Date(val.reservationDatetime).getHours() + ':00'}}</span></template></UserCard>
       </div>
     </div>
   </template>
