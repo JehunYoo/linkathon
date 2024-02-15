@@ -53,6 +53,19 @@ function calculateGrade(score: number): string {
   }
 }
 
+function calculateSecurityGrade(score: number): string {
+  if (score >= 500) {
+    return 'E';
+  } else if (score >= 400) {
+    return 'D';
+  } else if (score >= 300) {
+    return 'C';
+  } else if (score >= 200) {
+    return 'B';
+  } else {
+    return 'A';
+  }
+}
 </script>
 
 <template>
@@ -96,7 +109,7 @@ function calculateGrade(score: number): string {
       <template v-for="data in refReport.backMetrics">
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(100-data.bugs).centerText(calculateGrade(100-data.bugs)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(data.bugs).centerText(calculateGrade(100-data.bugs)).build()"/>
           <h2>버그</h2>
         </div>
         <div class="chart">
@@ -111,13 +124,13 @@ function calculateGrade(score: number): string {
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(100-data.duplications).centerText(calculateGrade(100-data.duplications)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(data.duplications).centerText(data.duplications*100+'%').build()"/>
           <h2>코드 중복</h2>
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(data.securityRating * 100).centerText((data.securityRating * 100).toString()).build()"/>
-          <h2>보안 점수</h2>
+              :pc="Builder<PerformanceChartDTO>().actualValue(data.securityRating * 100).centerText(calculateSecurityGrade((data.securityRating * 100))).build()"/>
+          <h2>보안</h2>
         </div>
       </template>
     </div>
