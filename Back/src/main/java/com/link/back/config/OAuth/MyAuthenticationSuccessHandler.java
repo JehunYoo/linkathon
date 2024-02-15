@@ -47,6 +47,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
 		//존재하는 User인지 확인
 		boolean isExist = oAuth2User.getAttribute("exist");
+
 		//존재하는 User인 경우
 		if (isExist) {
 			Long userId = userRepository.findByEmail(email).get().getUserId();
