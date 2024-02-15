@@ -305,7 +305,7 @@ public class UserService {
 		// 이 과정을 메소드랑 레디스 이용해서 딜레이 줄이기
 		try {
 			// 1분 동안 대기
-			TimeUnit.MINUTES.sleep(1);
+			TimeUnit.SECONDS.sleep(15);
 		} catch (InterruptedException e) {
 			// InterruptedException 처리
 			e.printStackTrace();
