@@ -28,7 +28,12 @@ const introduce = computed(() => data.value?.introduce);
 const referenceUrl = computed(() => data.value?.referenceUrl);
 const Image = computed(() => data.value?.image);
 const career = computed(() => data.value?.career);
+const number = ref<number>(0);
 //const registered = computed(() => data.value?.registered);
+
+if (rating.value != null) {
+  number.value = rating.value / 50 + 1;
+}
 
 function changeToKorean(field: string): string {
   if (field === "FRONTEND") {
@@ -83,7 +88,8 @@ const groupedSkills = computed(() => {
     <div class="text-container">
       <div class="info-text">
         {{name}}
-        <Tier :rating="300" font-size="24px" height="28px" style="margin-left: 12px" width="48px" radius="10px"></Tier>
+        <Tier :rating="rating" font-size="24px" height="28px" style="margin-left: 12px" width="48px" radius="10px"></Tier>
+        {{ number }}
       </div>
       <div class="introduce-text">
         <a :href="referenceUrl" target="_blank">{{referenceUrl}}</a>

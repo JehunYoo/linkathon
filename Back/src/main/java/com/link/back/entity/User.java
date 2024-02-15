@@ -157,7 +157,6 @@ public class User implements UserDetails {
 		//dto 만들기
 		this.userImage = userImage;
 		this.referenceUrl = additionalUserInfoRequest.getReferenceUrl();
-		this.career = additionalUserInfoRequest.getCareer();
 		this.field = additionalUserInfoRequest.getField();
 		this.registered = additionalUserInfoRequest.isRegistered();
 	}
