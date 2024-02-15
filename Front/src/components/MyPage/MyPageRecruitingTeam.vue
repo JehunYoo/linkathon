@@ -144,7 +144,7 @@ const modalController = () => {
             <Modal v-if="clickedModal2===i+1" @closeModal="handleModalClose2">
               <ModalMember :userInfo="data">
                 <template v-if="isLeader">
-                  <ModalButton button-text="면접 예약"/>
+<!--                  <ModalButton button-text="면접 예약"/>-->
                   <ModalButton button-text="권유 취소" @click="deleteSuggestionByTeam(data.userId)"/>
                 </template>
               </ModalMember>
