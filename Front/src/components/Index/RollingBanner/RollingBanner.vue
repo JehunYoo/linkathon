@@ -7,15 +7,52 @@ import {HackathonInfoDTO} from "@/dto/hackathonInfoDTO.ts";
 const dummy: HackathonInfoDTO[] = [];
 dummy.push(
     Builder<HackathonInfoDTO>()
-        .hackathonName(["제1회", "교육관련", "웹/앱 서비스제작", "해커톤"])
-        .registerDate(new Date(2024, 0, 1))
-        .teamDeadlineDate(new Date(2024, 0, 15))
-        .startDate(new Date(2024, 1, 1))
-        .endDate(new Date(2024, 1, 15))
-        .hackathonTopic("교육 기술")
-        .hackathonImageUrl("https://images.unsplash.com/photo-1528301721190-186c3bd85418?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D")
+        .hackathonName(["AI 활용", "페이크 뉴스 및", "사이버 딥페이크 탐지", "개발 해커톤"])
+        .registerDate(new Date(2024, 1, 14))
+        .teamDeadlineDate(new Date(2024, 2, 5))
+        .startDate(new Date(2024, 2, 10))
+        .endDate(new Date(2024, 2, 15))
+        .hackathonTopic("AI")
+        .hackathonImageUrl("https://a602-link-bucket-jm.s3.ap-northeast-2.amazonaws.com/static/hackathonImage/markus-spiske-iar-afB0QQw-unsplash.jpg")
         .build(),
 );
+
+dummy.push(
+    Builder<HackathonInfoDTO>()
+        .hackathonName(["금융", "빅데이터", "해커톤"])
+        .registerDate(new Date(2024, 1, 14))
+        .teamDeadlineDate(new Date(2024, 4, 5))
+        .startDate(new Date(2024, 4, 10))
+        .endDate(new Date(2024, 4, 15))
+        .hackathonTopic("핀테크")
+        .hackathonImageUrl("https://a602-link-bucket-jm.s3.ap-northeast-2.amazonaws.com/static/hackathonImage/%EB%8C%80%ED%95%99%EC%83%9D%ED%95%B4%EC%BB%A4%ED%86%A4.webp")
+        .build(),
+);
+
+dummy.push(
+    Builder<HackathonInfoDTO>()
+        .hackathonName(["글로벌", "스마트 시티", "개발 해커톤"])
+        .registerDate(new Date(2024, 1, 14))
+        .teamDeadlineDate(new Date(2024, 3, 5))
+        .startDate(new Date(2024, 3, 10))
+        .endDate(new Date(2024, 3, 15))
+        .hackathonTopic("IoT")
+        .hackathonImageUrl("https://a602-link-bucket-jm.s3.ap-northeast-2.amazonaws.com/static/hackathonImage/nasa-Q1p7bh3SHj8-unsplash.jpg")
+        .build(),
+);
+
+dummy.push(
+    Builder<HackathonInfoDTO>()
+        .hackathonName(["개인 금융 관리", "앱/웹 개발", "해커톤"])
+        .registerDate(new Date(2024, 1, 14))
+        .teamDeadlineDate(new Date(2024, 5, 5))
+        .startDate(new Date(2024, 5, 10))
+        .endDate(new Date(2024, 5, 15))
+        .hackathonTopic("금융 관리")
+        .hackathonImageUrl("https://a602-link-bucket-jm.s3.ap-northeast-2.amazonaws.com/static/hackathonImage/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5.webp")
+        .build(),
+);
+
 const activeIndex = ref(0);
 
 function formatDate(date: Date) {

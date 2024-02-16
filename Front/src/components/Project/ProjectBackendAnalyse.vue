@@ -50,20 +50,6 @@ function modalSwitch() {
 
 const detail = ref<number>(-1);
 
-function calculateGrade(score: number): string {
-  if (score >= 90) {
-    return 'A';
-  } else if (score >= 80) {
-    return 'B';
-  } else if (score >= 70) {
-    return 'C';
-  } else if (score >= 60) {
-    return 'D';
-  } else {
-    return 'E';
-  }
-}
-
 function calculateSecurityGrade(score: number): string {
   if (score >= 500) {
     return 'E';
@@ -121,7 +107,7 @@ function calculateSecurityGrade(score: number): string {
       <template v-for="data in refReport.backMetrics">
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(data.bugs).centerText(calculateGrade(100-data.bugs)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(100).centerText(data.bugs.toString()).build()"/>
           <h2>버그</h2>
         </div>
         <div class="chart">
@@ -131,7 +117,7 @@ function calculateSecurityGrade(score: number): string {
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue((data.codeSmells)/5).centerText(calculateGrade((500-data.codeSmells)/5)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(100).centerText(data.codeSmells.toString()).build()"/>
           <h2>코드 악취</h2>
         </div>
         <div class="chart">
