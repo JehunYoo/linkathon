@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import ViteImagemin from 'vite-plugin-imagemin';
 
 export default defineConfig({
@@ -20,5 +20,16 @@ export default defineConfig({
     alias: {
       '@': new URL('./src', import.meta.url).pathname
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      }
+    }
   }
-})
+});

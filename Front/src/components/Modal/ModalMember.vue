@@ -46,7 +46,7 @@ const groupedSkills = computed(() => {
     <div class="member-info-container">
       <div class="member-info">
         <div class="member-name">{{ userInfo.name }}</div>
-        <div class="member-workflow">나의 점수: {{ round((userInfo.rating) / 50 + 1) }}점</div>
+        <div class="member-workflow">사용 점수 : {{ round((userInfo.rating) / 50 + 1) }}점</div>
         <Tier :rating="userInfo.rating" font-size="24px" height="28px" radius="10px" width="48px"/>
       </div>
       <div class="member-workflow">{{ userInfo.career }}년차 {{ userInfo.field }}</div>
@@ -85,6 +85,7 @@ const groupedSkills = computed(() => {
   gap: 26px;
   margin-bottom: 16px;
   min-width: max-content;
+  max-width: max-content;
   flex: 1;
 }
 
@@ -106,6 +107,8 @@ h2 {
   flex-wrap: wrap;
   overflow-x: hidden;
   gap: 16px;
+  justify-content: left;
+  justify-items: left;
 }
 
 @media screen and (max-width: 458px) {

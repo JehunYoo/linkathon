@@ -24,15 +24,6 @@ const props = defineProps({
           <img :src="data.hackathonImageUrl" alt="">
         </RouterLink>
       </div>
-
-      <div class="title-container">
-        <div class="title">
-          {{ data.hackathonTopic }}
-        </div>
-        <div class="list-button">
-          <div class="list-button-text">참여하기</div>
-        </div>
-      </div>
     </div>
 
 
