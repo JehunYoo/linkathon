@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import sample1 from "@/assets/another.png";
-import sample2 from "@/assets/my.png";
 import {OpenVidu, Publisher, Session, StreamManager, Subscriber} from "openvidu-browser";
 import {OpenViduService} from "@/api/OpenViduService.ts";
 import {onMounted, Ref, ref, watch} from "vue";
@@ -205,10 +203,10 @@ onBeforeRouteLeave((to) => {
 <template>
   <div class="video-play-container">
     <!--    <img :src="sample1" alt="" class="video">-->
-    <video ref="guestVideoEleRef" :poster="sample1" class="video"></video>
+    <video ref="guestVideoEleRef" class="video"></video>
     <div class="myVideo-container">
       <!--      <img :src="sample2" alt="" class="myVideo" style="max-height: 200px">-->
-      <video ref="myVideoEleRef" :poster="sample2" class="myVideo" style="max-height: 200px"></video>
+      <video ref="myVideoEleRef" class="myVideo" style="max-height: 200px"></video>
     </div>
     <div class="button-container">
       <div class="video-button" @click="changeVideoStat()">
@@ -362,12 +360,14 @@ video {
 }
 
 .video {
+  background: #6F7070;
   border-radius: 10px;
   width: 100%;
   object-fit: cover;
 }
 
 .myVideo {
+  background: #2b2b2b;
   max-width: 300px;
   width: 20vw;
   border-radius: 10px;
