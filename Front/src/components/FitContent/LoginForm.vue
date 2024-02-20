@@ -6,8 +6,8 @@ import googleIcon from "@/assets/google.png";
 
 const userService = new UserService();
 
-const email = ref<string>('');
-const pw = ref<string>('');
+const email = ref<string>('user1@example.com');
+const pw = ref<string>('0000');
 
 const login = function () {
   const user = Builder<LoginUserDTO>()
@@ -60,7 +60,7 @@ const githubLogin = function () {
       </div>
       <div class="social-button">
         <img :src="googleIcon">
-        <div class="button-text google" @click="googleLogin" >
+        <div class="button-text google" @click="googleLogin">
           구글 로그인
         </div>
       </div>
@@ -77,6 +77,7 @@ a {
 a:hover {
   color: #7D3CFF;
 }
+
 .text-input:focus {
   outline: #7D3CFF 2px solid;
 }
