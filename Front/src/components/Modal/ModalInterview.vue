@@ -171,7 +171,7 @@ onMounted(() => {
                 style="width: 100%; min-height: 40px; height: max-content; border: 1px solid #6F7070;
                 ;font-size: 14px; padding-left: 10px; margin-bottom: 16px; font-family: Pretendard-Regular,serif"
                 @update:model-value="handleDate"/>
-    <h2>홍길동님 미팅 가능 시간</h2>
+    <h2>미팅 가능 시간</h2>
     <div class="schedule-menu">
       <div class="as">
         <div :class="!as?'select':'non-select'" @click="clicked(false)">오전</div>

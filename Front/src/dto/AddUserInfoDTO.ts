@@ -9,7 +9,6 @@ export interface AddUserInfoDTO {
     userSkills: UserSkillDTO[];
     referenceUrl: string;
     field: string;
-    career: number;
     userImage: UserImageDTO;
     registered: boolean;
 }

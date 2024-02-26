@@ -6,6 +6,7 @@ import {UserService} from "@/api/UserService.ts";
 import {computed, onMounted, ref} from "vue";
 import {GetUserDataDTO} from "@/dto/GetUserDataDTO.ts";
 import {Builder} from "builder-pattern";
+import {round} from "@kurkle/color";
 
 const userService = new UserService();
 
@@ -26,9 +27,10 @@ const field = computed(() => {
 
 const introduce = computed(() => data.value?.introduce);
 const referenceUrl = computed(() => data.value?.referenceUrl);
-const Image = computed(() => data.value?.UserImage);
+const Image = computed(() => data.value?.image);
 const career = computed(() => data.value?.career);
-//const registered = computed(() => data.value?.registered);
+const rating = computed(() => data.value?.rating);
+const number = computed(() => round(rating.value ? rating.value / 50 + 1 : 0));
 
 function changeToKorean(field: string): string {
   if (field === "FRONTEND") {
@@ -83,12 +85,14 @@ const groupedSkills = computed(() => {
     <div class="text-container">
       <div class="info-text">
         {{name}}
-        <Tier :rating="300" font-size="24px" height="28px" style="margin-left: 12px" width="48px" radius="10px"></Tier>
+        <Tier :rating="rating" font-size="24px" height="28px" style="margin-left: 12px" width="48px" radius="10px"></Tier>
+
       </div>
       <div class="introduce-text">
         <a :href="referenceUrl" target="_blank">{{referenceUrl}}</a>
       </div>
       <div class="introduce-text">
+        <div class="member-workflow">나의 점수: {{ number }}</div>
         안녕하세요. {{ career }}년차 {{ field }} 입니다.
         {{introduce}}
       </div>
@@ -169,6 +173,7 @@ h2 {
   border-radius: 10px;
   width: 200px;
   height: 200px;
+  object-fit: cover;
 }
 
 .info-text {
@@ -211,5 +216,12 @@ h1 {
 .remove-button:hover {
   color: #FF6161;
   background: white;
+}
+
+.member-workflow {
+  color: #303030;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
 }
 </style>

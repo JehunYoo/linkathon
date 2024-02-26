@@ -24,6 +24,15 @@ const logout = () => {
   userService.logout();
 }
 
+import {onMounted} from "vue";
+
+onMounted(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    refToken.value = token;
+    store.dispatch('updateToken', token);
+  }
+})
 
 </script>
 

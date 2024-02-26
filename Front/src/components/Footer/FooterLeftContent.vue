@@ -15,12 +15,15 @@ import FooterYoutubeButton from "@/components/Footer/FooterYoutubeButton.vue";
       <div>제휴문의</div>
     </div>
     <div class="footer-text">
-      푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는
-      칸입니당
+      본 사이트의 콘텐츠는 저작권법의 보호를 받는 바 무단 전재, 복사, 배포 등을 금합니다.
     </div>
     <div class="footer-text">
-      푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는 칸입니당 푸터 내용을 적는
-      칸입니당
+      주윤[팀장]  https://github.com/jooyun-1<br>
+      김지민 https://github.com/jjmsrc<br>
+      마성진 https://github.com/MaSeongJin<br>
+      유제훈 https://github.com/JehunYoo<br>
+      임종률 https://github.com/Jong-Youl<br>
+      조민균 https://github.com/jmg9776<br>
     </div>
     <div class="footer-icon">
       <FooterInstaButton/>
@@ -28,7 +31,7 @@ import FooterYoutubeButton from "@/components/Footer/FooterYoutubeButton.vue";
       <FooterYoutubeButton/>
     </div>
     <div class="footer-copyright">
-      ©2023 LINK. Inc. All rights reserved.
+      ©2024 LINK. Inc. All rights reserved.
     </div>
   </div>
 

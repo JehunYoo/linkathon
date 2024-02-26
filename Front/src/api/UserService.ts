@@ -16,6 +16,7 @@ import {RankingUserDTO} from "@/dto/rankingUserDTO.ts";
 import {SkillRequestDto} from "@/dto/tmpDTOs/skillDTO.ts";
 import {UserSkillDTO} from "@/dto/tmpDTOs/UserSkillDTO.ts";
 import {Builder} from "builder-pattern";
+import {ImageDTO} from "@/dto/ImageDTO.ts";
 
 const apiService = new ApiService();
 
@@ -36,8 +37,7 @@ class UserService {
 
         try {
             // 추출한 URL로 리다이렉트 수행
-            window.location.href = "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:8080/login/oauth2/code/google"
-
+            window.location.href = "https://i10a602.p.ssafy.io:8080/oauth2/authorization/google?redirect_uri=https://i10a602.p.ssafy.io:8080/api/oauth2/authorization/google"
         } catch (error) {
             console.error('Error during Google login:', error);
             // 에러 처리 로직 추가
@@ -48,7 +48,7 @@ class UserService {
 
         try {
             // 추출한 URL로 리다이렉트 수행
-            window.location.href = "https://github.com/login/oauth/authorize/?client_id=131870e79c867e5ae6d5&redirect_uri=http://localhost:8080/oauth2/github"
+            window.location.href = "https://github.com/login/oauth/authorize/?client_id=131870e79c867e5ae6d5&redirect_uri=https://i10a602.p.ssafy.io/api/oauth2/github"
 
         } catch (error) {
             console.error('Error during Google login:', error);
@@ -288,6 +288,16 @@ class UserService {
     async getBeforeEditInfo() :Promise<UpdateUserDTO> {
         const response = await apiService.getData(true, `${authUrl}/getUserBeforeInfo`, );
         return response.data;
+    }
+    @CatchError
+    async updateImage(image: File | null): Promise<ImageDTO>{
+        const data: FormData = new FormData();
+        data.append('image', image as any);
+
+        const response = await apiService.postMultipartData(false, `${nonAuthUrl}/image`, data);
+
+        return response.data;
+
     }
 
 }

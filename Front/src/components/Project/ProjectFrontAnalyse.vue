@@ -8,12 +8,23 @@ import Modal from "@/components/Modal/Modal.vue";
 import RadarChart from "@/components/Chart/RadarChart.vue";
 import {round} from "@kurkle/color";
 
+// 현재 URI 가져오기
+const currentUri = window.location.href;
+// URI에서 숫자 부분 추출
+const regex = /\/(\d+)$/;
+const match = currentUri.match(regex);
+let extractedNumber = 0;
+if (match) {
+  extractedNumber = parseInt(match[1]);
+}
+
 defineProps({
   editable: {
     type: Boolean,
     default: true
-  },
+  }
 });
+
 const calculateAverageScores = (reports: Report[]) => {
   const scoreSums = new Map<string, number>();
   const scoreCounts = new Map<string, number>();
@@ -45,16 +56,11 @@ let refReport: Ref<Report[]> = ref([]);
 
 onMounted(async () => {
   await getFrontendReport();
-})
-
+});
 const getFrontendReport = async () => {
-  refReport.value = await lighthouseService.getLighthouseReport(1);
+    refReport.value = await lighthouseService.getLighthouseReport(extractedNumber);
 }
 
-const updateFrontendReport = () => {
-  alert("요청이 완료되었습니다. 대기열에 따라 처리 시간이 변동되며 평균적으로 페이지 1개당 20~30초가 소모됩니다.")
-  lighthouseService.updateLighthouseReport(1);
-}
 const buildObject = (score: number) => {
   return Builder<PerformanceChartDTO>()
       .centerText((score).toString())
@@ -79,6 +85,7 @@ const detail = ref<number>(-1);
 const detailOpen = (num: number) => {
   detail.value = num;
 }
+
 </script>
 
 <template>
@@ -176,7 +183,6 @@ const detailOpen = (num: number) => {
   </section>
 
   <div class="button-container">
-    <div class="button" @click="updateFrontendReport" v-if="editable">프론트 분석 요청</div>
     <div class="button" @click="modalSwitch()" v-if="refReport.length!==0">분석 상세정보</div>
   </div>
 

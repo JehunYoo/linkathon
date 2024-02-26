@@ -13,26 +13,32 @@ defineProps({
   editable: {
     type: Boolean,
     default: true
-  },
+  }
 });
 
 const projectService = new ProjectService();
 let refReport: Ref<PageableBackPerformance> = ref({} as PageableBackPerformance);
 const refMessageCount: Ref<BackPerformanceMessageResponseDto> = ref({} as BackPerformanceMessageResponseDto);
 
+// 현재 URI 가져오기
+const currentUri = window.location.href;
+// URI에서 숫자 부분 추출
+const regex = /\/(\d+)$/;
+const match = currentUri.match(regex);
+let extractedNumber = 0;
+if (match) {
+  extractedNumber = parseInt(match[1]);
+}
+
 onMounted(async () => {
   await getBackendReport();
 })
 
+//@ts-nocheck
 const getBackendReport = async () => {
-  refReport.value = await projectService.getBackMetrics(1);
-  console.log(refReport)
-  refMessageCount.value = await projectService.getBackMetricsMessageCounts(1);
-}
-
-const updateBackendReport = () => {
-  alert("요청이 완료되었습니다. 대기열에 따라 처리 시간이 변동되며 평균적으로 1분이 소모됩니다.")
-  projectService.postBackMetrics(1);
+    refReport.value = await projectService.getBackMetrics(extractedNumber);
+    console.log(refReport)
+    refMessageCount.value = await projectService.getBackMetricsMessageCounts(extractedNumber);
 }
 
 const modalController = ref<boolean>(false);
@@ -44,17 +50,17 @@ function modalSwitch() {
 
 const detail = ref<number>(-1);
 
-function calculateGrade(score: number): string {
-  if (score >= 90) {
-    return 'A';
-  } else if (score >= 80) {
-    return 'B';
-  } else if (score >= 70) {
-    return 'C';
-  } else if (score >= 60) {
-    return 'D';
-  } else {
+function calculateSecurityGrade(score: number): string {
+  if (score >= 500) {
     return 'E';
+  } else if (score >= 400) {
+    return 'D';
+  } else if (score >= 300) {
+    return 'C';
+  } else if (score >= 200) {
+    return 'B';
+  } else {
+    return 'A';
   }
 }
 
@@ -101,7 +107,7 @@ function calculateGrade(score: number): string {
       <template v-for="data in refReport.backMetrics">
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(100-data.bugs).centerText(calculateGrade(100-data.bugs)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(100).centerText(data.bugs.toString()).build()"/>
           <h2>버그</h2>
         </div>
         <div class="chart">
@@ -111,25 +117,24 @@ function calculateGrade(score: number): string {
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue((500-data.codeSmells)/5).centerText(calculateGrade((500-data.codeSmells)/5)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(100).centerText(data.codeSmells.toString()).build()"/>
           <h2>코드 악취</h2>
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(100-data.duplications).centerText(calculateGrade(100-data.duplications)).build()"/>
+              :pc="Builder<PerformanceChartDTO>().actualValue(data.duplications*100).centerText(data.duplications*100+'%').build()"/>
           <h2>코드 중복</h2>
         </div>
         <div class="chart">
           <ThinDonutChart
-              :pc="Builder<PerformanceChartDTO>().actualValue(data.securityRating * 100).centerText((data.securityRating * 100).toString()).build()"/>
-          <h2>보안 점수</h2>
+              :pc="Builder<PerformanceChartDTO>().actualValue((1/data.securityRating) * 100).centerText(calculateSecurityGrade((data.securityRating * 100))).build()"/>
+          <h2>보안</h2>
         </div>
       </template>
     </div>
     <h2>* 코드 품질과 보안을 개선하기 위한 분석 결과입니다.</h2>
   </section>
   <div class="button-container">
-    <div class="button" @click="updateBackendReport" v-if="editable">백엔드 분석 요청</div>
     <div class="button" @click="modalSwitch()" v-if="refReport.pageable?.totalPages!==0">분석 상세정보</div>
   </div>
 

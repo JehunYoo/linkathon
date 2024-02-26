@@ -28,9 +28,11 @@ const shortEncoding = (text: string, cut: number): string => {
     <img alt="" v-bind:src="userInfo.userImageUrl">
     <div class="text-container">
       <div class="info-text">
-
+        <div class="info-text">
       {{ userInfo.name }}
-        <Tier :rating="userInfo.rating" font-size="14px" height="16px" style="margin-left: 8px" width="28px"></Tier>
+          <Tier :rating="userInfo.rating" font-size="14px" height="16px" style="margin-left: 8px" width="28px"></Tier>
+        </div>
+        <slot name="subInfo" class="sub-info"></slot>
       </div>
       <div class="introduce-text">
         <template v-if="userInfo.introduce">
@@ -82,6 +84,7 @@ img {
 .info-text {
   flex: 1;
   display: flex;
+  justify-content: flex-start;
   color: #303030;
   font-size: 14px;
   font-style: normal;
@@ -104,5 +107,9 @@ img {
   transform: scale(1.01);
   border: #7d3bff 1px solid;
   box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.25);
+}
+
+.sub-info{
+  margin-left: auto;
 }
 </style>

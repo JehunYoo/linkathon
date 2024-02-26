@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/api/users/**").permitAll()
                                 .requestMatchers("/oauth2/**").permitAll()
-                                .requestMatchers("api/**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/githubLogin/success").permitAll()
                                 .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated()
@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2Configurer -> oauth2Configurer
                                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
                                 .successHandler(successHandler)
-                        // .failureHandler(failureHandler)
+                        //.failureHandler(failureHandler)
                 )
                 // JWT 인증을 위하여 직접 구현한 필터를 UsernamePasswordAuthenticationFilter 전에 실행
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -75,6 +75,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 }

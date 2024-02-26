@@ -18,6 +18,7 @@ import Refresh from "@/view/Refresh.vue";
 import Test from "@/view/Test.vue";
 
 const routes = [
+
     {path: '/', component: Index},
     {path: '/recruit', component: Recruit},
     {path: '/register', component: Register},
@@ -25,7 +26,7 @@ const routes = [
     {path: '/findAccount', component: FindAccount},
     {path: '/passwordChange', component: PasswordChange, props: true},
     {path: '/detailInfo', component: DetailInfo, meta:{ dataToSend: null }},
-    {path: '/video/:id', component: Video},
+    {path: '/video/:rid/:uid', name:'videoView', component: Video},
     {path: '/sharedProject', component: SharedProject},
     {
         path: '/projectDetail', redirect: '/myPage?mode=3',
@@ -41,7 +42,11 @@ const routes = [
     {path: '/exit', component: Exit},
     {path: '/editInfo', component: EditInfo},
     {path: '/refresh', component: Refresh},
-    {path: '/test', component:Test}
+    {path: '/test', component: Test},
+    {
+        path: '/:pathMatch(.*)*', // 모든 정의되지 않은 경로를 잡습니다.
+        redirect: '/' // 메인 페이지로 리다이렉트
+    }
 ];
 
 const router = createRouter({

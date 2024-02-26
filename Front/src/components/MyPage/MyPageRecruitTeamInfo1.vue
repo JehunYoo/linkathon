@@ -6,7 +6,9 @@ import {onMounted, watch, Ref, ref} from "vue";
 import {AppliedTeamDTO} from "@/dto/tmpDTOs/AppliedTeamDTO.ts";
 import {TeamBuildingService} from "@/api/TeamBuildingService.ts";
 import {useRoute, useRouter} from "vue-router";
+import {TeamService} from "@/api/TeamService.ts";
 
+const teamService = new TeamService();
 const teamBuildingService = new TeamBuildingService();
 const refTeam: Ref<AppliedTeamDTO | undefined> = ref();
 const route = useRoute();
@@ -14,13 +16,13 @@ const router =  useRouter();
 const team = ref<number>(0);
 const refTeamId = ref<number>(0);
 
-async function acceptSuggestion() {
-  await teamService.postSuggestionByUser(refTeamId.value);
+const acceptSuggestion = (teamId : number) => {
+  teamService.postSuggestionByUser(teamId);
   location.href = "/myPage";
 }
 
-async function declineSuggestion() {
-  await teamService.deleteSuggestionByUser(refTeamId.value);
+const declineSuggestion = (teamId : number) => {
+  teamService.deleteSuggestionByUser(teamId);
   location.href = "/myPage";
 }
 
@@ -59,8 +61,8 @@ onMounted(async () => {
   <hr>
   <div class="title-container">
     <h1 class="btn">{{ refTeam?.teamName }}</h1>
-    <div class="accept-button" @click="acceptSuggestion()">수락</div>
-    <div class="remove-button" @click="declineSuggestion()">거절</div>
+    <div class="accept-button" @click="acceptSuggestion(refTeam?.teamId)">수락</div>
+    <div class="remove-button" @click="declineSuggestion(refTeam?.teamId)">거절</div>
   </div>
   <h1 class="teamDesc">{{ refTeam?.teamDesc }}</h1>
   <h1>해커톤 정보</h1>
@@ -77,12 +79,23 @@ onMounted(async () => {
   <h1>현재 팀원</h1>
   <div class="user-card-container">
     <div v-for="(data, i) in refTeam?.members" class="user-card">
-        <UserCard :userInfo="data"/>
+      <UserCard :userInfo="data"/>
     </div>
   </div>
 </template>
 
 <style scoped>
+
+.accept-button {
+  background: #7D3BFF;
+  border: #7D3BFF solid 1px;
+}
+
+.accept-button:hover {
+  color: #7D3BFF;
+  background: white;
+}
+
 .user-card-container {
   display: flex;
   flex-wrap: wrap;
@@ -118,13 +131,9 @@ h2 {
   margin-top: 0;
 }
 
-.teamDesc {
-  margin-top: 0;
-  font-size: 16px;
-  margin-bottom: 20px;
-}
 
 .title-container {
+  margin-top: 16px;
   display: flex;
   gap: 10px;
 }
@@ -153,34 +162,48 @@ h2 {
   background: white;
 }
 
-.accept-button {
-  background: #7D3BFF;
-  border: #7D3BFF solid 1px;
-}
-
-.accept-button:hover {
-  color: #7D3BFF;
-  background: white;
-}
-
 .teamListBox {
   display: flex;
   align-items: center;
-  width: 400px;
+  flex-wrap: wrap;
+  width: 100%;
   justify-content: flex-start;
 }
 
 .teamBtn {
-  width: 80px;
+  white-space: nowrap;
   margin-right: 16px;
   margin-bottom: 8px;
+  padding: 7px 13px;
+  border-radius: 8px;
+}
+
+.teamDesc {
+  margin-top: 0;
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 
 .click {
   color: #303030;
+  border: 1px #303030 solid;
 }
 
 .nonClick {
-  color: #7d3bff;
+  color: white;
+  border: 1px #7d3bff solid;
+  background: #7d3bff;
+}
+
+@media screen and (max-width: 697px) {
+  .myPage-container {
+    flex-direction: column-reverse;
+  }
+}
+
+@media screen and (min-width: 698px) {
+  .menu {
+    max-width: 255px;
+  }
 }
 </style>

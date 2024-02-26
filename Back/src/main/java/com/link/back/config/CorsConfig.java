@@ -12,10 +12,9 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("https://fe.mgbg.kr");
+        config.addAllowedOrigin("https://link.mgbg.kr");
         config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("http://localhost:4173");
-        config.addAllowedOrigin("http://localhost");
-        config.addAllowedOrigin("https://i10a602.p.ssafy.io");
         config.addAllowedHeader("*"); // header
         config.addAllowedMethod("*"); // method
         config.setAllowCredentials(true);

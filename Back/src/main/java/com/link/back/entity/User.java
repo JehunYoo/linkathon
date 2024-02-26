@@ -129,7 +129,7 @@ public class User implements UserDetails {
 		this.birth = birth;
 		this.phoneNumber = phoneNumber;
 		this.career = career;
-		this.rating = 0;
+		this.rating = career * 50;
 	}
 
 	public void updateUser(UserImage userImage, List<UserSkill> userSkills,  UserUpdateInfoRequest userUpdateInfoRequest){
@@ -157,7 +157,6 @@ public class User implements UserDetails {
 		//dto 만들기
 		this.userImage = userImage;
 		this.referenceUrl = additionalUserInfoRequest.getReferenceUrl();
-		this.career = additionalUserInfoRequest.getCareer();
 		this.field = additionalUserInfoRequest.getField();
 		this.registered = additionalUserInfoRequest.isRegistered();
 	}

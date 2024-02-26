@@ -51,7 +51,7 @@ public class Oauth2Controller {
 
 	// 부분부분 메소드화
 	// 깃허브 계정이 없다면 올 수 없음
-	@GetMapping("/oauth2/github")
+	@GetMapping("/api/oauth2/github")
 	public void githubLogin(@RequestParam String code, HttpServletResponse response) throws IOException {
 
 		RestTemplate tokenRequestTemplate = new RestTemplate();
@@ -78,7 +78,6 @@ public class Oauth2Controller {
 			new HttpEntity<>(headers),
 			GithubProfile.class);
 
-		System.out.println(infoResponse.getBody().getName());
 		//아래서 값 할당
 		long userId = 0;
 
@@ -98,7 +97,7 @@ public class Oauth2Controller {
 			//회원가입 페이지로 보내기
 			else {
 				//여기서 리다이렉트 시켜버리자
-				String registerUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/register")
+				String registerUrl = UriComponentsBuilder.fromUriString("https://i10a602.p.ssafy.io/register")
 					.queryParam("name", name)
 					.build()
 					//이 부분은 더 확인해봐야함
@@ -117,7 +116,7 @@ public class Oauth2Controller {
 			Optional<User> userOptional = userRepository.findByEmail(email);
 
 			if (userOptional.isEmpty()) {
-				String registerUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/register")
+				String registerUrl = UriComponentsBuilder.fromUriString("https://i10a602.p.ssafy.io/register")
 					.queryParam("email", email)
 					.build()
 					//이 부분은 더 확인해봐야함
@@ -139,6 +138,7 @@ public class Oauth2Controller {
 
 		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", token.getRefreshToken())
 			.maxAge(refreshTokenExpireTime)
+			.secure(true)
 			.httpOnly(true)
 			.path("/")
 			.build();
@@ -149,7 +149,7 @@ public class Oauth2Controller {
 		//리프레시 토큰 레디스에 저장 -> 비교목적
 		refreshTokenRepository.save(new RefreshToken(token.getRefreshToken()));
 
-		String targetURL = UriComponentsBuilder.fromUriString("http://localhost:5173/refresh")
+		String targetURL = UriComponentsBuilder.fromUriString("https://i10a602.p.ssafy.io/refresh")
 			.build()
 			//이 부분은 더 확인해봐야함
 			.encode(StandardCharsets.UTF_8)

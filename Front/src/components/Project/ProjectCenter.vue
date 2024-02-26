@@ -27,8 +27,8 @@ watch(() => props.projectDetail, async (newVal) => {
     owner.value = urlParts[urlParts.length - 2];
     repo.value = urlParts[urlParts.length - 1];
     gitStatusRef.value = await projectService.getProjectContributions(owner.value, repo.value);
-//@ts-nocheck
-    for (let i = 0; i < gitStatusRef.value.length; i++) {
+
+    for (let i = 0; i < gitStatusRef.value?.length; i++) {
       totalCommits += gitStatusRef.value[i].commits;
     }
   }
@@ -62,8 +62,8 @@ onMounted(async () => {
     <section>
       {{ props.projectDetail.projectDesc }}
     </section>
-    <ProjectAnalyse :editable="editable"/>
-    <template v-if="gitStatusRef">
+    <ProjectAnalyse :editable="editable" :projectId="props.projectDetail?.projectId"/>
+    <template v-if="gitStatusRef && gitStatusRef.length > 0">
       <GitAnalyse :gitStatus="gitStatusRef" :totalCommits="totalCommits"/>
     </template>
   </div>

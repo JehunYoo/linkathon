@@ -1,5 +1,7 @@
 package com.link.back.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.link.back.dto.request.ReservationRequest;
 import com.link.back.dto.response.ReservationResponse;
@@ -101,7 +104,10 @@ public class ReservationController {
 		params.put("customSessionId", sessionId);
 		SessionProperties properties = SessionProperties.fromJson(params).build();
 		Session session = openVidu.createSession(properties);
-		return new ResponseEntity<>(HttpStatus.OK);
+		if (session == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/{reservation_id}/sessions/connections")

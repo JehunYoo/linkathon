@@ -9,7 +9,7 @@ import {onMounted} from "vue";
 const hackathonsRef: Ref<PageableHackathonList> = ref({} as PageableHackathonList);
 const hackathonService : HackathonService = new HackathonService();
 onMounted(async () => {
-  hackathonsRef.value = await hackathonService.getHackathonList("모집중", 0, 1);
+  hackathonsRef.value = await hackathonService.getHackathonList("모집중", 0, 4);
 });
 
 </script>

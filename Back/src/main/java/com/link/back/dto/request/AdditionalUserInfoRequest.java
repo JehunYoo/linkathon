@@ -21,8 +21,6 @@ public class AdditionalUserInfoRequest {
 
 	private Field field;
 
-	private int career;
-
 	private UserImage userImage;
 
 	private String introduce;
