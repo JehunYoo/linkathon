@@ -17,7 +17,7 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
-@RestController
+//@RestController
 public class OpenViduController {
 	private final OpenVidu openVidu; // 오픈 비두 객체
 

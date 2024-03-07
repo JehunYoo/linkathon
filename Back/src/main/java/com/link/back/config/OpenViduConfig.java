@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.openvidu.java.client.OpenVidu;
 
-@Configuration
+//@Configuration
 public class OpenViduConfig {
 
 	@Value("${OPENVIDU_URL}") // 오픈비두 서버 URL

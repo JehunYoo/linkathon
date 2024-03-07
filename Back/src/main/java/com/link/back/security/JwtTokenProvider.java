@@ -93,8 +93,13 @@ public class JwtTokenProvider {
             if (token.substring(0, 6).equals("Bearer")) {
                 token = token.substring(7);
             }
-            Long userId = Long.parseLong(Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject());
-            return userId;
+            String subject = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+            return Long.parseLong(subject);
         } catch (Exception ignore) {
             return null;
         }

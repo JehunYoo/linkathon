@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
 public class ProjectController {

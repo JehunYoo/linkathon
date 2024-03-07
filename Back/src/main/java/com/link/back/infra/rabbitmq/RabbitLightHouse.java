@@ -18,8 +18,8 @@ import com.link.back.service.LighthouseService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
-@EnableScheduling
+//@Service
+//@EnableScheduling
 @RequiredArgsConstructor
 public class RabbitLightHouse {
 	private final RabbitTemplate rabbitTemplate;

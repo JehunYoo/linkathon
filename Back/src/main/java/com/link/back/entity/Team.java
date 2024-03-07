@@ -55,6 +55,12 @@ public class Team {
 	@OneToMany(mappedBy = "team", cascade = PERSIST)
 	List<TeamSkill> teamSkills = new ArrayList<>();
 
+	@Builder(builderMethodName = "tempBuilder")
+	public Team(Long teamId, TeamStatus teamStatus) {
+		this.teamId = teamId;
+		this.teamStatus = teamStatus;
+	}
+
 	@Builder
 	public Team(String teamName, TeamStatus teamStatus, Integer teamMember, String teamDesc, Hackathon hackathon) {
 		this.teamName = teamName;

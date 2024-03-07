@@ -43,6 +43,13 @@ public class UserTeam {
 	@Enumerated(STRING)
 	private MemberStatus memberStatus;
 
+	@Builder(builderMethodName = "tempBuilder")
+	public UserTeam(User user, Team team, Role role) {
+		this.user = user;
+		this.team = team;
+		this.role = role;
+	}
+
 	@Builder
 	public UserTeam(Long userTeamId, User user, Team team, Role role, MemberStatus memberStatus) {
 		this.userTeamId = userTeamId;

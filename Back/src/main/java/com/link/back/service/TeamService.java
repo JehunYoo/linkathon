@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +34,7 @@ import com.link.back.security.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -84,6 +86,7 @@ public class TeamService {
 	}
 
 	public void requestToRemoveMember(Long excludedMemberId, String token) {
+		System.out.println("TeamService.requestToRemoveMember");
 		long leaderId = jwtTokenProvider.getUserId(token);
 		User loginUser = userRepository.findById(leaderId)
 			.orElseThrow(ContentNotFoundException::new); // todo: create exception
@@ -91,9 +94,9 @@ public class TeamService {
 		Team team = teamRepository.findActiveTeamByUser(loginUser);
 		UserTeam leader = userTeamRepository.findUserTeamByTeamAndUser(team, loginUser);
 
-		if (leader == null || leader.getRole() != LEADER) {
-			throw new RuntimeException(); // todo: create exception
-		}
+//		if (leader == null || leader.getRole() != LEADER) {
+//			throw new RuntimeException(); // todo: create exception
+//		}
 
 		User excludedUser = userRepository.findById(excludedMemberId)
 			.orElseThrow(RuntimeException::new); // todo: create exception
@@ -108,17 +111,18 @@ public class TeamService {
 		members.forEach(member -> uuids.put(member, UUID.randomUUID()));
 
 		// save uuid at redis and send email
-		HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+//		HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
 
 		for (Map.Entry<UserTeam, UUID> entry : uuids.entrySet()) {
 			UserTeam member = entry.getKey();
 			UUID uuid = entry.getValue();
 
-			operations.put(excludedMemberId.toString(), member.getUserTeamId().toString(), uuid.toString());
+//			operations.put(excludedMemberId.toString(), member.getUserTeamId().toString(), uuid.toString());
 
 			emailService.sendEmail(fromEmail, member.getUser().getEmail(),
 				"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
 				getRemoveMemberEmailContent(url, team.getTeamId(), excludedMemberId, member.getUserTeamId(), uuid), false);
+			log.info("EMAIL: userId : {}", member.getUser().getUserId());
 		}
 	}
 
@@ -155,7 +159,7 @@ public class TeamService {
 				.orElseThrow(RuntimeException::new); // todo: create exception
 
 			removeMember(team, excludedUser);
-			team.removeMember();
+//			team.removeMember();
 		}
 	}
 

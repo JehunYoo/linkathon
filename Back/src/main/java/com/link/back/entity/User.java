@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
+@Setter
 public class User implements UserDetails {
 
 	@Id
@@ -117,6 +119,13 @@ public class User implements UserDetails {
 		this.registered = registered;
 	}
 
+
+	@Builder(builderMethodName = "tempBuilder")
+	public User(Long userId, String email, String password) {
+		this.userId = userId;
+		this.email = email;
+		this.password = password;
+	}
 
 	// rating 시작을 일단 0으로
 	@Builder

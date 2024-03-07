@@ -22,7 +22,7 @@ import com.link.back.repository.ProjectRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 @Transactional
 public class RabbitListener {

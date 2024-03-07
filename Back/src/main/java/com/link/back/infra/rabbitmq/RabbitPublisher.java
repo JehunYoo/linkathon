@@ -14,7 +14,7 @@ import com.link.back.repository.ProjectRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
-@Service
+//@Service
 @EnableScheduling
 @RequiredArgsConstructor
 public class RabbitPublisher {

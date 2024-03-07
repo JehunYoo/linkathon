@@ -33,7 +33,7 @@ import io.openvidu.java.client.SessionProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reservations")
 public class ReservationController {

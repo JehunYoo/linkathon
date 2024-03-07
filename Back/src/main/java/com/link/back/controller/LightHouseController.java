@@ -18,7 +18,7 @@ import com.link.back.service.LighthouseService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/lighthouse")
 public class LightHouseController {
