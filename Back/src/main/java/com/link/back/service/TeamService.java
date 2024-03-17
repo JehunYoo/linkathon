@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.link.back.event.email.EmailRequestedEvent;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -44,11 +46,12 @@ public class TeamService {
 	@Value("${spring.mail.username}")
 	private String fromEmail;
 
+	private final ApplicationEventPublisher eventPublisher;
+
 	private final TeamRepository teamRepository;
 	private final UserRepository userRepository;
 	private final UserTeamRepository userTeamRepository;
 	private final SkillRepository skillRepository;
-	private final EmailService emailService; // todo: user Async
 
 	private final JwtTokenProvider jwtTokenProvider;
 
@@ -116,9 +119,10 @@ public class TeamService {
 
 			operations.put(excludedMemberId.toString(), member.getUserTeamId().toString(), uuid.toString());
 
-			emailService.sendEmail(fromEmail, member.getUser().getEmail(),
-				"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
-				getRemoveMemberEmailContent(url, team.getTeamId(), excludedMemberId, member.getUserTeamId(), uuid), false);
+			EmailRequestedEvent emailRequestedEvent = EmailRequestedEvent.of(this, fromEmail, member.getUser().getEmail(),
+					"팀원 " + excludedMember.getUser().getName() + " 삭제 허가 요청",
+					getRemoveMemberEmailContent(url, team.getTeamId(), excludedMemberId, member.getUserTeamId(), uuid));
+			eventPublisher.publishEvent(emailRequestedEvent);
 		}
 	}
 
